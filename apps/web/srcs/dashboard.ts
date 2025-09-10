@@ -180,7 +180,7 @@ export function createDashboardPage(): void {
 	const profileBtn = document.getElementById('profileBtn') as HTMLButtonElement;
 	const matchesBtn = document.getElementById('matchesBtn') as HTMLButtonElement;
 	const tournamentBtn = document.getElementById('tournamentBtn') as HTMLButtonElement;
-	const statsBtn = document.getElementById('tournamentBtn') as HTMLButtonElement;
+	const statsBtn = document.getElementById('statsBtn') as HTMLButtonElement;
 
 	// cache pour limiter les requetes au back
 	const usernameCache = new Map<number, string>();
