@@ -1,7 +1,5 @@
 # transcendement
 
-Transcendence
-
 🚧 Work in Progress / Fixes Needed
 
 🔐 2FA requests – authentication codes not fully functional
