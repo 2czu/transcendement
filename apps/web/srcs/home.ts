@@ -1,4 +1,4 @@
-import { showGamePage, showDashboardPage, showTournamentPage } from './router';
+import { showGamePage, showDashboardPage, showTournamentPage, showStatsPage } from './router';
 import { showSignInPage } from './router';
 
 export function createHomePage(): void {
@@ -45,7 +45,7 @@ export function createHomePage(): void {
 			</button>
 			</div>
 
-			<div class="bg-white rounded-lg shadow-sm p-6 mt-8 mb-8">
+			<div class="bg-white rounded-lg shadow-sm p-6 mt-9 mb-9">
               <div class="flex items-center space-x-4">
                 <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
                   <span class="text-2xl text-green-600">📊</span>
@@ -95,6 +95,13 @@ export function createHomePage(): void {
 		});
 	}
 
+	const statsBtn = document.getElementById('statsBtn') as HTMLButtonElement;
+	if (statsBtn) {
+		statsBtn.addEventListener("click", () => {
+		window.history.pushState({}, '', '/game');
+		showStatsPage();
+		});
+	}
 	const gameBtn = document.getElementById("gameBtn");
 	if (gameBtn) {
 		gameBtn.addEventListener("click", () => {
