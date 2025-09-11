@@ -44,6 +44,23 @@ export function createHomePage(): void {
 				Tournoi (8 joueurs)
 			</button>
 			</div>
+
+			<div class="bg-white rounded-lg shadow-sm p-6 mt-8 mb-8">
+              <div class="flex items-center space-x-4">
+                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
+                  <span class="text-2xl text-green-600">📊</span>
+                </div>
+                <div>
+                  <h3 class="text-lg font-semibold text-green-700">Statistics</h3>
+                  <p class="text-green-600">Graphana statistics</p>
+                </div>
+              </div>
+              <div class="mt-4">
+                <button id="statsBtn" class="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg transition-colors">
+                  View statistics
+                </button>
+              </div>
+        	</div>
 			
 			<pre id="out" class="mt-4 p-3 bg-gray-900 border border-gray-600 rounded text-green-400"></pre>
 		</main>

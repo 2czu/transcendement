@@ -107,23 +107,6 @@ export function createDashboardPage(): void {
             </div>
           </div>
 
-			<div class="bg-white rounded-lg shadow-sm p-6 mb-8">
-              <div class="flex items-center space-x-4">
-                <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center">
-                  <span class="text-2xl text-green-600">📊</span>
-                </div>
-                <div>
-                  <h3 class="text-lg font-semibold text-green-700">Statistics</h3>
-                  <p class="text-green-600">Your game stats and records</p>
-                </div>
-              </div>
-              <div class="mt-4">
-                <button id="statsBtn" class="w-full bg-green-500 hover:bg-green-600 text-white py-2 rounded-lg transition-colors">
-                  View statistics
-                </button>
-              </div>
-        	</div>
-
           <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
             <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
               <span class="text-2xl mr-3">👥</span>
