@@ -24,7 +24,7 @@ export const getProfile = async (db, id) => {
 };
 export const getPersonnalData = async (db, id) => {
     const user = await db.get('SELECT * FROM users WHERE id = ?', [id]);
-    const friends = await db.all('SELECT * FROM friends WHERE user_id = ? OR friends_id = ?', [id, id]);
+    const friends = await db.all('SELECT * FROM friends WHERE user_id = ? OR friend_id = ?', [id, id]);
     const matches = await db.all('SELECT * FROM matches WHERE player1_id = ? OR player2_id = ?', [id, id]);
     const stats = await db.get('SELECT * FROM stats WHERE user_id = ? ', [id]);
     return { user, friends, matches, stats };
@@ -32,19 +32,28 @@ export const getPersonnalData = async (db, id) => {
 export const getUser = async (db, id) => {
     return await db.get('SELECT id, username FROM users WHERE id = ?', [id]);
 };
+export const getAvatar = async (db, id) => {
+    return await db.get('SELECT id, avatar_url FROM users WHERE id = ?', [id]);
+};
 export const anonymiseUser = async (db, id) => {
-    const { user } = await getUser(db, id);
+    const user = await getUser(db, id);
     if (!user)
         return null;
     const username = `username${user.id}`;
     const email = `email${user.id}@anonyme.com`;
-    await db.run('UPDATE users SET username = ?, email = ?, avatar_url = placeholder.jpg WHERE id = ?', [username, email, id]);
+    const avatar = 'placeholder.jpg';
+    await db.run('UPDATE users SET username = ?, email = ?, avatar_url = ? WHERE id = ?', [username, email, avatar, id]);
     return { username, email };
 };
 export const updateUser = async (db, id, updates) => {
     const obj = Object.keys(updates);
     if (obj.length == 0)
         return getUser(db, id);
+    if ('password_hash' in updates && updates.password_hash) {
+        const saltRounds = 10;
+        const hash = await bcrypt.hash(updates.password_hash, saltRounds);
+        updates.password_hash = hash;
+    }
     const Datas = obj.map(obj => `${obj} = ?`).join(', ');
     const values = obj.map(obj => updates[obj]);
     values.push(id);
@@ -99,4 +108,7 @@ export const req_2fa = async (db, id, secret_2fa) => {
 };
 export const updateUserStatus = async (db, id, status) => {
     await db.run(`UPDATE users SET isLogged = ? WHERE id = ?`, status, id);
+};
+export const upload = async (db, id, avatar) => {
+    await db.run("UPDATE users SET avatar_url = ? WHERE id = ?", [avatar, id]);
 };

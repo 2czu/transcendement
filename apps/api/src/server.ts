@@ -1,5 +1,7 @@
 import Fastify from 'fastify'
 import cors from "@fastify/cors";
+import multipart from '@fastify/multipart';
+import fastifyCookie from '@fastify/cookie';
 import bdd from './app.js';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -59,7 +61,6 @@ app.setErrorHandler((error: any, request: any, reply: any) => {
   return reply.status(500).send({ error : 'Internal Server Error'});
 });
 
-
 // Autorise http://localhost:5173 à appeler l'API en dev
 await app.register(cors, {
 	origin: ["http://localhost:5173"],
@@ -68,6 +69,21 @@ await app.register(cors, {
 
 await app.register(fastifyWebsocket);
 
+console.log(__dirname);
+
+await app.register(fastifyStatic, {
+  root: path.join(__dirname, 'routes/uploads'),
+  prefix: '/uploads/',
+});
+
+await app.register(multipart, {
+  limits: {
+    fileSize: 1_000_000,
+    files: 1,
+  }
+});
+
+await app.register(fastifyCookie);
 const db = await bdd();
 
 //routes non protegee par un JWT
@@ -77,6 +93,11 @@ app.addHook('preHandler', (request: any, reply: any, done: any) => {
   if (openPaths.includes(request.routerPath)) {
     done();
     return ;
+  }
+  if (request.raw.url?.startsWith('/uploads/'))
+  {
+      done();
+      return ;
   }
   const url = request.raw.url.split('?')[0];
   if (openPaths.includes(url)) {

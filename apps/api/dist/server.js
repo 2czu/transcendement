@@ -1,5 +1,7 @@
 import Fastify from 'fastify';
 import cors from "@fastify/cors";
+import multipart from '@fastify/multipart';
+import fastifyCookie from '@fastify/cookie';
 import bdd from './app.js';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -15,6 +17,7 @@ import fs from "fs";
 //construire des paths
 import path from "path";
 import { fileURLToPath } from "url";
+import fastifyStatic from '@fastify/static';
 import fastifyWebsocket from '@fastify/websocket';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -54,11 +57,27 @@ async function start() {
         credentials: true
     });
     await app.register(fastifyWebsocket);
+    console.log(__dirname);
+    await app.register(fastifyStatic, {
+        root: path.join(__dirname, 'routes/uploads'),
+        prefix: '/uploads/',
+    });
+    await app.register(multipart, {
+        limits: {
+            fileSize: 1_000_000,
+            files: 1,
+        }
+    });
+    await app.register(fastifyCookie);
     const db = await bdd();
     //routes non protegee par un JWT
     const openPaths = ['/signUp', '/signIn', '/auth/google/callback', '/2fa_req', '/connexionStatus', '/showUsers', '/showStats', '/showFriends', '/showMatches'];
     app.addHook('preHandler', (request, reply, done) => {
         if (openPaths.includes(request.routerPath)) {
+            done();
+            return;
+        }
+        if (request.raw.url?.startsWith('/uploads/')) {
             done();
             return;
         }
