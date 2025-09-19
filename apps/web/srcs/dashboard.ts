@@ -376,7 +376,7 @@ export function createDashboardPage(): void {
 			let userId: number;
 			try {
 				const payload = JSON.parse(atob(token.split('.')[1]));
-				userId = payload.userId; // token : { userId: user.id }
+				userId = payload.userId;
 			} catch (error) {
 				console.error('Error decoding token:', error);
 				return;
@@ -384,22 +384,18 @@ export function createDashboardPage(): void {
 
 			if (!userId) return;
 
-			const response = await fetch(`https://localhost:8443/friendReq/${userId}`, {
-				headers: {
-					'Authorization': `Bearer ${token}`
-				}
+			const response = await fetch('https://localhost:8443/showFriends', {
+				headers: { 'Authorization': `Bearer ${token}` }
 			});
-
-			if (response.ok) {
-				const requests = await response.json();
-				await displayFriendRequests(requests, userId);
-			} else if (response.status === 404) {
+			if (!response.ok) {
 				await displayFriendRequests([], userId);
-			} else {
-				showMessage('Error loading requests', 'error');
+				return;
 			}
+			const all = await response.json();
+			const requests = Array.isArray(all) ? all.filter((r: any) => r.friend_id === userId && r.status === 'pending') : [];
+			await displayFriendRequests(requests, userId);
 		} catch (error) {
-			showMessage('Error loading requests', 'error');
+			await displayFriendRequests([], 0 as any);
 		}
 	}
 
@@ -408,7 +404,6 @@ export function createDashboardPage(): void {
 			const token = localStorage.getItem('auth_token');
 			if (!token) return;
 
-			// permet de recup l'id a partir du token
 			let userId: number;
 			try {
 				const payload = JSON.parse(atob(token.split('.')[1]));
@@ -420,22 +415,19 @@ export function createDashboardPage(): void {
 
 			if (!userId) return;
 
-			const response = await fetch(`https://localhost:8443/friendlist/${userId}`, {
-				headers: {
-					'Authorization': `Bearer ${token}`
-				}
+			// Use 200 endpoint to avoid 404 spam; filter client-side for accepted friends
+			const response = await fetch('https://localhost:8443/showFriends', {
+				headers: { 'Authorization': `Bearer ${token}` }
 			});
-
-			if (response.ok) {
-				const friends = await response.json();
-				await displayFriendsList(friends, userId);
-			} else if (response.status === 404) {
+			if (!response.ok) {
 				await displayFriendsList([], userId);
-			} else {
-				showMessage('Error loading friends list', 'error');
+				return;
 			}
+			const all = await response.json();
+			const friends = Array.isArray(all) ? all.filter((f: any) => (f.user_id === userId || f.friend_id === userId) && f.status === 'accepted') : [];
+			await displayFriendsList(friends, userId);
 		} catch (error) {
-			showMessage('Error loading friends list', 'error');
+			await displayFriendsList([], 0 as any);
 		}
 	}
 
