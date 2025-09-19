@@ -92,6 +92,7 @@ export const signIn = async (db, email, password) => {
     return { token };
 };
 export const req_2fa = async (db, id, secret_2fa) => {
+    console.log(id, secret_2fa);
     const user = await db.get("SELECT * FROM users WHERE user = ?", [id]);
     if (!user)
         return { error: 'user' };

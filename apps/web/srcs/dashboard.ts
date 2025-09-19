@@ -1,16 +1,16 @@
 export function createDashboardPage(): void {
-  const app = document.getElementById('app');
-  if (!app) return;
+	const app = document.getElementById('app');
+	if (!app) return;
 
-  // token check
-  const token = localStorage.getItem('auth_token');
-  if (!token) {
-    window.history.pushState({}, '', '/signIn');
-    window.dispatchEvent(new PopStateEvent('popstate'));
-    return;
-  }
+	// token check
+	const token = localStorage.getItem('auth_token');
+	if (!token) {
+		window.history.pushState({}, '', '/signIn');
+		window.dispatchEvent(new PopStateEvent('popstate'));
+		return;
+	}
 
-  app.innerHTML = `
+	app.innerHTML = `
     <div class="min-h-screen bg-gray-50">
       <div class="container mx-auto px-4 py-8">
         <div class="max-w-4xl mx-auto">
@@ -23,6 +23,9 @@ export function createDashboardPage(): void {
               </div>
               <div class="flex items-center space-x-4">
                 <span class="text-sm text-gray-500">Connected</span>
+                <button id="anonymiseBtn" class="bg-slate-900 hover:bg-slate-700 text-white px-4 py-2 rounded-lg transition-colors">
+                  Anonymise
+                </button>
                 <button id="logoutBtn" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors">
                   Log out
                 </button>
@@ -156,6 +159,7 @@ export function createDashboardPage(): void {
   `;
 
 	const logoutBtn = document.getElementById('logoutBtn') as HTMLButtonElement;
+	const anonymiseBtn = document.getElementById('anonymiseBtn') as HTMLButtonElement;
 	const playGameBtn = document.getElementById('playGameBtn') as HTMLButtonElement;
 	const message = document.getElementById('message') as HTMLDivElement;
 	const searchBtn = document.getElementById('searchBtn') as HTMLButtonElement;
@@ -171,34 +175,34 @@ export function createDashboardPage(): void {
 	async function getUsernameById(id: number): Promise<string> {
 		if (usernameCache.has(id)) return usernameCache.get(id)!;
 		try {
-		const token = localStorage.getItem('auth_token');
-		const res = await fetch(`https://localhost:8443/users/${id}`, {
-			headers: { 'Authorization': `Bearer ${token}` }
-		});
-		if (res.ok) {
-			const data = await res.json();
-			const name = data?.user?.username ?? 'User';
-			usernameCache.set(id, name);
-			return name;
-		}
+			const token = localStorage.getItem('auth_token');
+			const res = await fetch(`https://localhost:8443/users/${id}`, {
+				headers: { 'Authorization': `Bearer ${token}` }
+			});
+			if (res.ok) {
+				const data = await res.json();
+				const name = data?.user?.username ?? 'User';
+				usernameCache.set(id, name);
+				return name;
+			}
 		} catch { }
 		return 'User';
 	}
 
 	async function preloadAllUsernames(): Promise<void> {
 		try {
-		const token = localStorage.getItem('auth_token');
-		if (!token) return;
-		const res = await fetch('https://localhost:8443/showUsers', {
-			headers: { 'Authorization': `Bearer ${token}` }
-		});
-		if (!res.ok) return;
-		const users = await res.json();
-		for (const user of users) {
-			if (typeof user.id === 'number' && typeof user.username === 'string') {
-			usernameCache.set(user.id, user.username);
+			const token = localStorage.getItem('auth_token');
+			if (!token) return;
+			const res = await fetch('https://localhost:8443/showUsers', {
+				headers: { 'Authorization': `Bearer ${token}` }
+			});
+			if (!res.ok) return;
+			const users = await res.json();
+			for (const user of users) {
+				if (typeof user.id === 'number' && typeof user.username === 'string') {
+					usernameCache.set(user.id, user.username);
+				}
 			}
-		}
 		} catch { }
 	}
 
@@ -211,9 +215,48 @@ export function createDashboardPage(): void {
 		message.className = 'mt-6 text-center text-sm text-green-600';
 
 		setTimeout(() => {
-		window.history.pushState({}, '', '/');
-		window.dispatchEvent(new PopStateEvent('popstate'));
+			window.history.pushState({}, '', '/');
+			window.dispatchEvent(new PopStateEvent('popstate'));
 		}, 1000);
+	});
+
+	// anonymise
+	anonymiseBtn.addEventListener('click', async () => {
+		if (!confirm('Confirmer l\'anonymisation de votre compte ? Cette action est irréversible.')) {
+			return;
+		}
+		try {
+			const token = localStorage.getItem('auth_token');
+			if (!token) {
+				showMessage('You must be logged in', 'error');
+				return;
+			}
+			let userId: number | null = null;
+			try {
+				const payload = JSON.parse(atob(token.split('.')[1]));
+				userId = payload.userId;
+			} catch { }
+			const res = await fetch('https://localhost:8443/anonymise', {
+				method: 'PATCH',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${token}`
+				},
+				credentials: 'include',
+				body: JSON.stringify({ id: userId ?? 0 })
+			});
+			if (res.ok) {
+				const data = await res.json().catch(() => ({} as any));
+				const uname = (data as any)?.username ?? 'unknown';
+				const mail = (data as any)?.email ?? 'unknown';
+				showMessage(`Anonymised. New username: ${uname}, email: ${mail}`, 'success');
+			} else {
+				const err = await res.json().catch(() => ({}));
+				showMessage(err.error || 'Failed to anonymise account', 'error');
+			}
+		} catch {
+			showMessage('Failed to anonymise account', 'error');
+		}
 	});
 
 
@@ -243,36 +286,36 @@ export function createDashboardPage(): void {
 	searchBtn.addEventListener('click', async () => {
 		const searchTerm = searchUser.value.trim();
 		if (!searchTerm) {
-		showMessage('Please enter a username', 'error');
-		return;
+			showMessage('Please enter a username', 'error');
+			return;
 		}
 
 		try {
-		const token = localStorage.getItem('auth_token');
-		if (!token) {
-			showMessage('You must be logged in', 'error');
-			return;
-		}
-		const response = await fetch('https://localhost:8443/showUsers', {
-			headers: {
-			'Authorization': `Bearer ${token}`
+			const token = localStorage.getItem('auth_token');
+			if (!token) {
+				showMessage('You must be logged in', 'error');
+				return;
 			}
-		});
-		const users = await response.json();
+			const response = await fetch('https://localhost:8443/showUsers', {
+				headers: {
+					'Authorization': `Bearer ${token}`
+				}
+			});
+			const users = await response.json();
 
-		const filteredUsers = users.filter((user: any) =>
-			user.username.toLowerCase().includes(searchTerm.toLowerCase())
-		);
+			const filteredUsers = users.filter((user: any) =>
+				user.username.toLowerCase().includes(searchTerm.toLowerCase())
+			);
 
-		displaySearchResults(filteredUsers);
+			displaySearchResults(filteredUsers);
 		} catch (error) {
-		showMessage('Error during search', 'error');
+			showMessage('Error during search', 'error');
 		}
 	});
 
 	searchUser.addEventListener('keypress', (e) => {
 		if (e.key === 'Enter') {
-		searchBtn.click();
+			searchBtn.click();
 		}
 	});
 
@@ -285,12 +328,12 @@ export function createDashboardPage(): void {
 	function showMessage(text: string, type: 'success' | 'error' | 'info' = 'info') {
 		message.textContent = text;
 		message.className = `mt-6 text-center text-sm ${type === 'success' ? 'text-green-600' :
-		type === 'error' ? 'text-red-600' : 'text-blue-600'
-		}`;
+			type === 'error' ? 'text-red-600' : 'text-blue-600'
+			}`;
 
 		setTimeout(() => {
-		message.textContent = '';
-		message.className = 'mt-6 text-center text-sm';
+			message.textContent = '';
+			message.className = 'mt-6 text-center text-sm';
 		}, 5000);
 	}
 
@@ -301,9 +344,9 @@ export function createDashboardPage(): void {
 		if (!searchResults || !usersList) return;
 
 		if (users.length === 0) {
-		usersList.innerHTML = '<p class="text-gray-500 text-sm">No user found</p>';
+			usersList.innerHTML = '<p class="text-gray-500 text-sm">No user found</p>';
 		} else {
-		usersList.innerHTML = users.map(user => `
+			usersList.innerHTML = users.map(user => `
 					<div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
 						<div class="flex items-center space-x-3">
 							<div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
@@ -327,72 +370,72 @@ export function createDashboardPage(): void {
 
 	async function loadFriendRequests() {
 		try {
-		const token = localStorage.getItem('auth_token');
-		if (!token) return;
+			const token = localStorage.getItem('auth_token');
+			if (!token) return;
 
-		let userId: number;
-		try {
-			const payload = JSON.parse(atob(token.split('.')[1]));
-			userId = payload.userId; // token : { userId: user.id }
-		} catch (error) {
-			console.error('Error decoding token:', error);
-			return;
-		}
-
-		if (!userId) return;
-
-		const response = await fetch(`https://localhost:8443/friendReq/${userId}`, {
-			headers: {
-			'Authorization': `Bearer ${token}`
+			let userId: number;
+			try {
+				const payload = JSON.parse(atob(token.split('.')[1]));
+				userId = payload.userId; // token : { userId: user.id }
+			} catch (error) {
+				console.error('Error decoding token:', error);
+				return;
 			}
-		});
 
-		if (response.ok) {
-			const requests = await response.json();
-			await displayFriendRequests(requests, userId);
-		} else if (response.status === 404) {
-			await displayFriendRequests([], userId);
-		} else {
-			showMessage('Error loading requests', 'error');
-		}
+			if (!userId) return;
+
+			const response = await fetch(`https://localhost:8443/friendReq/${userId}`, {
+				headers: {
+					'Authorization': `Bearer ${token}`
+				}
+			});
+
+			if (response.ok) {
+				const requests = await response.json();
+				await displayFriendRequests(requests, userId);
+			} else if (response.status === 404) {
+				await displayFriendRequests([], userId);
+			} else {
+				showMessage('Error loading requests', 'error');
+			}
 		} catch (error) {
-		showMessage('Error loading requests', 'error');
+			showMessage('Error loading requests', 'error');
 		}
 	}
 
 	async function loadFriendsList() {
 		try {
-		const token = localStorage.getItem('auth_token');
-		if (!token) return;
+			const token = localStorage.getItem('auth_token');
+			if (!token) return;
 
-		// permet de recup l'id a partir du token
-		let userId: number;
-		try {
-			const payload = JSON.parse(atob(token.split('.')[1]));
-			userId = payload.userId;
-		} catch (error) {
-			console.error('Error decoding token:', error);
-			return;
-		}
-
-		if (!userId) return;
-
-		const response = await fetch(`https://localhost:8443/friendlist/${userId}`, {
-			headers: {
-			'Authorization': `Bearer ${token}`
+			// permet de recup l'id a partir du token
+			let userId: number;
+			try {
+				const payload = JSON.parse(atob(token.split('.')[1]));
+				userId = payload.userId;
+			} catch (error) {
+				console.error('Error decoding token:', error);
+				return;
 			}
-		});
 
-		if (response.ok) {
-			const friends = await response.json();
-			await displayFriendsList(friends, userId);
-		} else if (response.status === 404) {
-			await displayFriendsList([], userId);
-		} else {
-			showMessage('Error loading friends list', 'error');
-		}
+			if (!userId) return;
+
+			const response = await fetch(`https://localhost:8443/friendlist/${userId}`, {
+				headers: {
+					'Authorization': `Bearer ${token}`
+				}
+			});
+
+			if (response.ok) {
+				const friends = await response.json();
+				await displayFriendsList(friends, userId);
+			} else if (response.status === 404) {
+				await displayFriendsList([], userId);
+			} else {
+				showMessage('Error loading friends list', 'error');
+			}
 		} catch (error) {
-		showMessage('Error loading friends list', 'error');
+			showMessage('Error loading friends list', 'error');
 		}
 	}
 
@@ -401,8 +444,8 @@ export function createDashboardPage(): void {
 		if (!friendRequests) return;
 
 		if (requests.length === 0) {
-		friendRequests.innerHTML = '<p class="text-gray-500 text-sm">No pending friend requests</p>';
-		return;
+			friendRequests.innerHTML = '<p class="text-gray-500 text-sm">No pending friend requests</p>';
+			return;
 		}
 
 		const uniqueIds = Array.from(new Set(requests.map(r => r.user_id)));
@@ -438,8 +481,8 @@ export function createDashboardPage(): void {
 		if (!friendsList) return;
 
 		if (friends.length === 0) {
-		friendsList.innerHTML = '<p class="text-gray-500 text-sm">You have no friends yet</p>';
-		return;
+			friendsList.innerHTML = '<p class="text-gray-500 text-sm">You have no friends yet</p>';
+			return;
 		}
 
 		const otherIds = friends.map(f => (f.friend_id === userId ? f.user_id : f.friend_id));
@@ -467,142 +510,142 @@ export function createDashboardPage(): void {
 
 	(window as any).sendFriendRequest = async (friendId: number) => {
 		try {
-		const token = localStorage.getItem('auth_token');
-		if (!token) {
-			showMessage('Missing authentication token', 'error');
-			return;
-		}
+			const token = localStorage.getItem('auth_token');
+			if (!token) {
+				showMessage('Missing authentication token', 'error');
+				return;
+			}
 
-		let userId: number;
-		try {
-			const payload = JSON.parse(atob(token.split('.')[1]));
-			userId = payload.userId;
-			console.log('Decoded token:', payload);
-			console.log('Extracted User ID:', userId);
+			let userId: number;
+			try {
+				const payload = JSON.parse(atob(token.split('.')[1]));
+				userId = payload.userId;
+				console.log('Decoded token:', payload);
+				console.log('Extracted User ID:', userId);
+			} catch (error) {
+				console.error('Error decoding token:', error);
+				showMessage('Error decoding token', 'error');
+				return;
+			}
+
+			if (!userId) {
+				showMessage('User ID not found in token', 'error');
+				return;
+			}
+
+			console.log('Sending friend request:', { userId, friendId });
+
+			const response = await fetch('https://localhost:8443/friendRequest', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${token}`
+				},
+				body: JSON.stringify({
+					user_id: userId,
+					friend_id: friendId
+				})
+			});
+
+			console.log('API response:', response.status, response.statusText);
+
+			if (response.ok) {
+				showMessage('Friend request sent successfully!', 'success');
+				searchUser.value = '';
+				document.getElementById('searchResults')?.classList.add('hidden');
+			} else {
+				const error = await response.json();
+				console.error('API error:', error);
+				showMessage(error.error || 'Error sending friend request', 'error');
+			}
 		} catch (error) {
-			console.error('Error decoding token:', error);
-			showMessage('Error decoding token', 'error');
-			return;
-		}
-
-		if (!userId) {
-			showMessage('User ID not found in token', 'error');
-			return;
-		}
-
-		console.log('Sending friend request:', { userId, friendId });
-
-		const response = await fetch('https://localhost:8443/friendRequest', {
-			method: 'POST',
-			headers: {
-			'Content-Type': 'application/json',
-			'Authorization': `Bearer ${token}`
-			},
-			body: JSON.stringify({
-			user_id: userId,
-			friend_id: friendId
-			})
-		});
-
-		console.log('API response:', response.status, response.statusText);
-
-		if (response.ok) {
-			showMessage('Friend request sent successfully!', 'success');
-			searchUser.value = '';
-			document.getElementById('searchResults')?.classList.add('hidden');
-		} else {
-			const error = await response.json();
-			console.error('API error:', error);
-			showMessage(error.error || 'Error sending friend request', 'error');
-		}
-		} catch (error) {
-		console.error('Error sending friend request:', error);
-		showMessage('Error sending friend request', 'error');
+			console.error('Error sending friend request:', error);
+			showMessage('Error sending friend request', 'error');
 		}
 	};
 
 	(window as any).acceptFriendRequest = async (userId: number, friendId: number) => {
 		try {
-		const token = localStorage.getItem('auth_token');
-		if (!token) return;
+			const token = localStorage.getItem('auth_token');
+			if (!token) return;
 
-		const response = await fetch('https://localhost:8443/friendAccept', {
-			method: 'PATCH',
-			headers: {
-			'Content-Type': 'application/json',
-			'Authorization': `Bearer ${token}`
-			},
-			body: JSON.stringify({
-			user_id: userId,
-			friend_id: friendId
-			})
-		});
+			const response = await fetch('https://localhost:8443/friendAccept', {
+				method: 'PATCH',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${token}`
+				},
+				body: JSON.stringify({
+					user_id: userId,
+					friend_id: friendId
+				})
+			});
 
-		if (response.ok) {
-			showMessage('Friend request accepted!', 'success');
-			loadFriendRequests();
-			loadFriendsList();
-		} else {
-			showMessage('Error accepting friend request', 'error');
-		}
+			if (response.ok) {
+				showMessage('Friend request accepted!', 'success');
+				loadFriendRequests();
+				loadFriendsList();
+			} else {
+				showMessage('Error accepting friend request', 'error');
+			}
 		} catch (error) {
-		showMessage('Error accepting friend request', 'error');
+			showMessage('Error accepting friend request', 'error');
 		}
 	};
 
 	(window as any).refuseFriendRequest = async (userId: number, friendId: number) => {
 		try {
-		const token = localStorage.getItem('auth_token');
-		if (!token) return;
+			const token = localStorage.getItem('auth_token');
+			if (!token) return;
 
-		const response = await fetch('https://localhost:8443/friendRefuse', {
-			method: 'PATCH',
-			headers: {
-			'Content-Type': 'application/json',
-			'Authorization': `Bearer ${token}`
-			},
-			body: JSON.stringify({
-			user_id: userId,
-			friend_id: friendId
-			})
-		});
+			const response = await fetch('https://localhost:8443/friendRefuse', {
+				method: 'PATCH',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${token}`
+				},
+				body: JSON.stringify({
+					user_id: userId,
+					friend_id: friendId
+				})
+			});
 
-		if (response.ok) {
-			showMessage('Friend request declined', 'success');
-			loadFriendRequests();
-		} else {
-			showMessage('Error declining friend request', 'error');
-		}
+			if (response.ok) {
+				showMessage('Friend request declined', 'success');
+				loadFriendRequests();
+			} else {
+				showMessage('Error declining friend request', 'error');
+			}
 		} catch (error) {
-		showMessage('Error declining friend request', 'error');
+			showMessage('Error declining friend request', 'error');
 		}
 	};
 
 	(window as any).removeFriend = async (userId: number, friendId: number) => {
 		try {
-		const token = localStorage.getItem('auth_token');
-		if (!token) return;
+			const token = localStorage.getItem('auth_token');
+			if (!token) return;
 
-		const response = await fetch('https://localhost:8443/deleteFriend', {
-			method: 'DELETE',
-			headers: {
-			'Content-Type': 'application/json',
-			'Authorization': `Bearer ${token}`
-			},
-			body: JSON.stringify({
-			user_id: userId,
-			friend_id: friendId
-			})
-		});
+			const response = await fetch('https://localhost:8443/deleteFriend', {
+				method: 'DELETE',
+				headers: {
+					'Content-Type': 'application/json',
+					'Authorization': `Bearer ${token}`
+				},
+				body: JSON.stringify({
+					user_id: userId,
+					friend_id: friendId
+				})
+			});
 
-		if (response.ok) {
-			showMessage('Friend removed from your list', 'success');
-			loadFriendsList();
-		} else {
-			showMessage('Error removing friend', 'error');
-		}
+			if (response.ok) {
+				showMessage('Friend removed from your list', 'success');
+				loadFriendsList();
+			} else {
+				showMessage('Error removing friend', 'error');
+			}
 		} catch (error) {
-		showMessage('Error removing friend', 'error');
+			showMessage('Error removing friend', 'error');
 		}
 	};
 }
