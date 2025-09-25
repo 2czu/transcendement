@@ -98,8 +98,7 @@ export function createHomePage(): void {
 	const statsBtn = document.getElementById('statsBtn') as HTMLButtonElement;
 	if (statsBtn) {
 		statsBtn.addEventListener("click", () => {
-		window.history.pushState({}, '', '/game');
-		showStatsPage();
+			window.open("http://localhost:3010", "_blank");
 		});
 	}
 	const gameBtn = document.getElementById("gameBtn");
