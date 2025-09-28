@@ -383,15 +383,14 @@ export function createDashboardPage(): void {
 
 			if (!userId) return;
 
-			const response = await fetch('https://localhost:8443/showFriends', {
+			const response = await fetch(`https://localhost:8443/friendReq/${userId}`, {
 				headers: { 'Authorization': `Bearer ${token}` }
 			});
 			if (!response.ok) {
 				await displayFriendRequests([], userId);
 				return;
 			}
-			const all = await response.json();
-			const requests = Array.isArray(all) ? all.filter((r: any) => r.friend_id === userId && r.status === 'pending') : [];
+			const requests = await response.json();
 			await displayFriendRequests(requests, userId);
 		} catch (error) {
 			await displayFriendRequests([], 0 as any);
@@ -414,15 +413,14 @@ export function createDashboardPage(): void {
 
 			if (!userId) return;
 
-			const response = await fetch('https://localhost:8443/showFriends', {
+			const response = await fetch(`https://localhost:8443/friendlist/${userId}`, {
 				headers: { 'Authorization': `Bearer ${token}` }
 			});
 			if (!response.ok) {
 				await displayFriendsList([], userId);
 				return;
 			}
-			const all = await response.json();
-			const friends = Array.isArray(all) ? all.filter((f: any) => (f.user_id === userId || f.friend_id === userId) && f.status === 'accepted') : [];
+			const friends = await response.json();
 			await displayFriendsList(friends, userId);
 		} catch (error) {
 			await displayFriendsList([], 0 as any);
