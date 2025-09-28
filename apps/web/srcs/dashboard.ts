@@ -296,18 +296,17 @@ export function createDashboardPage(): void {
 				showMessage('You must be logged in', 'error');
 				return;
 			}
-			const response = await fetch('https://localhost:8443/showUsers', {
+			const response = await fetch(`https://localhost:8443/checkUser/${encodeURIComponent(searchTerm)}`, {
 				headers: {
 					'Authorization': `Bearer ${token}`
 				}
 			});
-			const users = await response.json();
-
-			const filteredUsers = users.filter((user: any) =>
-				user.username.toLowerCase().includes(searchTerm.toLowerCase())
-			);
-
-			displaySearchResults(filteredUsers);
+			if (response.ok) {
+				const user = await response.json();
+				displaySearchResults([{ id: user.id, username: searchTerm, isLogged: 'unknown' }]);
+			} else {
+				displaySearchResults([]);
+			}
 		} catch (error) {
 			showMessage('Error during search', 'error');
 		}
@@ -415,7 +414,6 @@ export function createDashboardPage(): void {
 
 			if (!userId) return;
 
-			// Use 200 endpoint to avoid 404 spam; filter client-side for accepted friends
 			const response = await fetch('https://localhost:8443/showFriends', {
 				headers: { 'Authorization': `Bearer ${token}` }
 			});

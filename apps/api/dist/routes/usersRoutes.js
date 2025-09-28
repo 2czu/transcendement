@@ -1,4 +1,4 @@
-import { createUser, getUser, updateUser, deleteUser, signIn, req_2fa, getProfile, getPersonnalData, anonymiseUser, upload } from '../controllers/usersController.js';
+import { createUser, checkUser, getUser, updateUser, deleteUser, signIn, req_2fa, getProfile, getPersonnalData, anonymiseUser, upload } from '../controllers/usersController.js';
 import { userResponseSchema, ProfileResponseSchema } from '../schemas/schema.js';
 import { verifyToken } from '../jwt.js';
 import fs from "fs";
@@ -174,6 +174,49 @@ const userRoutes = async (fastify, opts) => {
             const { id } = request.params;
             try {
                 const user = await getProfile(db, id);
+                if (!user) {
+                    reply.code(404).send({ error: "User not found" });
+                    return;
+                }
+                reply.send(user);
+            }
+            catch (err) {
+                reply.code(500).send({ error: 'Failed to fetch user' });
+            }
+        }
+    });
+    fastify.route({
+        method: 'GET',
+        url: "/checkUser/:username",
+        schema: {
+            params: {
+                type: 'object',
+                required: ['username'],
+                properties: {
+                    username: { type: 'string' }
+                }
+            },
+            response: {
+                200: {
+                    type: 'object',
+                    properties: {
+                        id: { type: 'number' }
+                    }
+                },
+                404: {
+                    type: 'object',
+                    properties: {
+                        error: { type: 'string' }
+                    }
+                }
+            }
+        },
+        handler: async (request, reply) => {
+            const { username } = request.params;
+            try {
+                console.log("------------" + username);
+                const user = await checkUser(db, username);
+                console.log(user);
                 if (!user) {
                     reply.code(404).send({ error: "User not found" });
                     return;

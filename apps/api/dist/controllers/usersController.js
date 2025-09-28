@@ -112,3 +112,6 @@ export const updateUserStatus = async (db, id, status) => {
 export const upload = async (db, id, avatar) => {
     await db.run("UPDATE users SET avatar_url = ? WHERE id = ?", [avatar, id]);
 };
+export const checkUser = async (db, username) => {
+    return await db.get('SELECT id FROM users WHERE username = ?', [username]);
+};
