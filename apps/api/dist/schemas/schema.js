@@ -10,6 +10,89 @@ export const userResponseSchema = {
     type: 'object',
     properties: userProperties,
 };
+export const profileProperties = {
+    user: {
+        type: 'object',
+        properties: {
+            username: { type: 'string' },
+            avatar_url: { type: 'string' },
+            isLogged: { type: 'string' }
+        }
+    },
+    friends: {
+        type: 'array',
+        properties: {
+            user_id: { type: 'number' },
+            friend_id: { type: 'number' },
+            status: { type: 'number' }
+        }
+    },
+    matches: {
+        type: 'array',
+        properties: {
+            player1_id: { type: 'number' },
+            player2_id: { type: 'number' },
+            winner_id: { type: 'number' },
+            score_player1: { type: 'number' },
+            score_player2: { type: 'number' },
+            played_at: { type: 'number' }
+        }
+    },
+    stats: {
+        type: 'object',
+        properties: {
+            game_played: { type: 'number' },
+            games_won: { type: 'number' },
+            total_score: { type: 'number' }
+        }
+    }
+};
+export const profileResponseSchema = {
+    type: 'object',
+    properties: profileProperties,
+};
+export const myprofileProperties = {
+    user: {
+        type: 'object',
+        properties: {
+            username: { type: 'string' },
+            email: { type: 'string' },
+            is_2fa: { type: 'boolean' },
+            avatar_url: { type: 'string' }
+        }
+    },
+    friends: {
+        type: 'array',
+        properties: {
+            user_id: { type: 'number' },
+            friend_id: { type: 'number' },
+            status: { type: 'number' }
+        }
+    },
+    matches: {
+        type: 'array',
+        properties: {
+            player1_id: { type: 'number' },
+            player2_id: { type: 'number' },
+            winner_id: { type: 'number' },
+            score_player1: { type: 'number' },
+            score_player2: { type: 'number' },
+            played_at: { type: 'number' }
+        }
+    },
+    stats: {
+        type: 'object',
+        properties: {
+            game_played: { type: 'number' },
+            games_won: { type: 'number' },
+            total_score: { type: 'number' }
+        }
+    }
+};
+export const myprofileResponseSchema = {
+    type: 'object',
+    properties: myprofileProperties,
+};
 export const matchProperties = {
     type: 'array',
     items: {
