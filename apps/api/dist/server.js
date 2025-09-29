@@ -9,9 +9,9 @@ import defaultRoute from "./routes/testRoutes.js";
 import userRoutes from "./routes/usersRoutes.js";
 import matchesRoutes from "./routes/matchesRoutes.js";
 import friendsRoutes from "./routes/friendsRoutes.js";
-import statsRoute from "./routes/statsRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import websocketsRoutes from './routes/websocketsRoutes.js';
+import statsRoutes from './routes/statsRoutes.js';
 import { verifyToken } from './jwt.js';
 //manipulation de fichiers
 import fs from "fs";
@@ -58,6 +58,7 @@ async function start() {
         credentials: true
     });
     await app.register(fastifyWebsocket);
+    console.log(__dirname);
     await app.register(fastifyStatic, {
         root: path.join(__dirname, 'routes/uploads'),
         prefix: '/uploads/',
@@ -116,7 +117,7 @@ async function start() {
     app.register(friendsRoutes, { db });
     app.register(authRoutes, { db });
     app.register(websocketsRoutes, { db });
-    app.register(statsRoute, { db });
+    app.register(statsRoutes, { db });
     const PORT = 8443;
     try {
         app.listen({ port: PORT, host: '0.0.0.0' });

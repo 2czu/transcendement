@@ -1,5 +1,5 @@
 import { createUser, checkUser, getUser, updateUser, deleteUser, signIn, req_2fa, getProfile, getPersonnalData, anonymiseUser, upload } from '../controllers/usersController.js';
-import { userResponseSchema, ProfileResponseSchema } from '../schemas/schema.js';
+import { userResponseSchema, profileResponseSchema, myprofileResponseSchema } from '../schemas/schema.js';
 import { verifyToken } from '../jwt.js';
 import fs from "fs";
 import path from "path";
@@ -161,7 +161,7 @@ const userRoutes = async (fastify, opts) => {
                 }
             },
             response: {
-                200: userResponseSchema,
+                200: profileResponseSchema,
                 404: {
                     type: 'object',
                     properties: {
@@ -173,12 +173,12 @@ const userRoutes = async (fastify, opts) => {
         handler: async (request, reply) => {
             const { id } = request.params;
             try {
-                const user = await getProfile(db, id);
-                if (!user) {
+                const profile = await getProfile(db, id);
+                if (!profile.user) {
                     reply.code(404).send({ error: "User not found" });
                     return;
                 }
-                reply.send(user);
+                reply.send(profile);
             }
             catch (err) {
                 reply.code(500).send({ error: 'Failed to fetch user' });
@@ -233,7 +233,7 @@ const userRoutes = async (fastify, opts) => {
         url: "/myprofile",
         schema: {
             response: {
-                200: ProfileResponseSchema,
+                200: myprofileResponseSchema,
                 404: {
                     type: 'object',
                     properties: {
@@ -245,7 +245,6 @@ const userRoutes = async (fastify, opts) => {
         handler: async (request, reply) => {
             try {
                 const userId = request.user.userId;
-                console.log(`USERID : ${userId}`);
                 const data = await getPersonnalData(db, userId);
                 if (!data.user) {
                     reply.code(404).send({ error: "User not found" });

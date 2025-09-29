@@ -1,7 +1,7 @@
 import { FastifyPluginAsync, FastifyInstance } from 'fastify';
 import { Database } from 'sqlite';
 import { createUser, checkUser, getUser, updateUser, deleteUser, signIn, req_2fa, getProfile, getPersonnalData, anonymiseUser, upload, getAvatar } from '../controllers/usersController.js'
-import { userResponseSchema, ProfileResponseSchema } from '../schemas/schema.js';
+import { userResponseSchema, profileResponseSchema, myprofileResponseSchema } from '../schemas/schema.js';
 import { verifyToken } from '../jwt.js';
 import fs from "fs";
 import path from "path";
@@ -184,7 +184,7 @@ const userRoutes: FastifyPluginAsync <{ db: Database }> = async (fastify: Fastif
 				}
 			},
 			response:  {
-				200: userResponseSchema,
+				200: profileResponseSchema,
 				404: {
 					type: 'object',
 					properties: {
@@ -196,13 +196,13 @@ const userRoutes: FastifyPluginAsync <{ db: Database }> = async (fastify: Fastif
 		handler: async(request: any, reply: any) => {
 		 const { id } = request.params as { id: number };
 			try {
-				const user = await getProfile(db, id);
-				if (!user)
+				const profile = await getProfile(db, id);
+				if (!profile.user)
 				{
 					reply.code(404).send({ error: "User not found"});
 					return ;
 				}
-				reply.send(user);
+				reply.send(profile);
 			} catch (err) {
 				reply.code(500).send({ error: 'Failed to fetch user' }); 
 			}
@@ -256,7 +256,7 @@ const userRoutes: FastifyPluginAsync <{ db: Database }> = async (fastify: Fastif
 		url: "/myprofile",
 		schema: {
 			response:  {
-				200: ProfileResponseSchema,
+				200: myprofileResponseSchema,
 				404: {
 					type: 'object',
 					properties: {
@@ -268,7 +268,6 @@ const userRoutes: FastifyPluginAsync <{ db: Database }> = async (fastify: Fastif
 		handler: async(request: any, reply: any) => {
 			try {
 				const userId = (request as any).user.userId;
-				console.log(`USERID : ${userId}`);
 				const data = await getPersonnalData(db, userId);
 				if (!data.user)
 				{

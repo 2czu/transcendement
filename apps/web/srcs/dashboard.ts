@@ -18,15 +18,15 @@ export function createDashboardPage(): void {
           <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
             <div class="flex justify-between items-center">
               <div>
-                <h1 class="text-3xl font-bold text-gray-900">Dashboard</h1>
-                <p class="text-gray-600 mt-1">Welcome to your personal space</p>
+                <h1 data-i18n="dashboard.dashboard" class="text-3xl font-bold text-gray-900">Dashboard</h1>
+                <p data-i18n="dashboard.welcome" class="text-gray-600 mt-1">Welcome to your personal space</p>
               </div>
               <div class="flex items-center space-x-4">
                 <span class="text-sm text-gray-500">Connected</span>
-                <button id="anonymiseBtn" class="bg-slate-900 hover:bg-slate-700 text-white px-4 py-2 rounded-lg transition-colors">
+                <button data-i18n="dashboard.anonymise" id="anonymiseBtn" class="bg-slate-900 hover:bg-slate-700 text-white px-4 py-2 rounded-lg transition-colors">
                   Anonymise
                 </button>
-                <button id="logoutBtn" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors">
+                <button data-i18n="dashboard.log_out" id="logoutBtn" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors">
                   Log out
                 </button>
               </div>
@@ -42,12 +42,12 @@ export function createDashboardPage(): void {
                   <span class="text-2xl text-indigo-600">👤</span>
                 </div>
                 <div>
-                  <h3 class="text-lg font-semibold text-gray-900">Profile</h3>
-                  <p class="text-gray-600">Manage your information</p>
+                  <h3 data-i18n="dashboard.profile" class="text-lg font-semibold text-gray-900">Profile</h3>
+                  <p data-i18n="dashboard.desc_profile" class="text-gray-600">Manage your information</p>
                 </div>
               </div>
               <div class="mt-4">
-                <button id="profileBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg transition-colors">
+                <button data-i18n="dashboard.button_profile" id="profileBtn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-2 rounded-lg transition-colors">
                   View profile
                 </button>
               </div>
@@ -61,12 +61,12 @@ export function createDashboardPage(): void {
                   <span class="text-2xl text-blue-600">🎮</span>
                 </div>
                 <div>
-                  <h3 class="text-lg font-semibold text-gray-900">Matches</h3>
-                  <p class="text-gray-600">Match history</p>
+                  <h3 data-i18n="dashboard.matches" class="text-lg font-semibold text-gray-900">Matches</h3>
+                  <p data-i18n="dashboard.desc_matches" class="text-gray-600">Match history</p>
                 </div>
               </div>
               <div class="mt-4">
-                <button id="matchesBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition-colors">
+                <button data-i18n="dashboard.button_matches" id="matchesBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition-colors">
                   View matches
                 </button>
               </div>
@@ -81,11 +81,11 @@ export function createDashboardPage(): void {
                 </div>
                 <div>
                   <h3 class="text-lg font-semibold text-gray-900">Pong</h3>
-                  <p class="text-gray-600">Start a Pong game</p>
+                  <p data-i18n="dashboard.desc_pong" class="text-gray-600">Start a Pong game</p>
                 </div>
               </div>
               <div class="mt-4">
-                <button id="playGameBtn" class="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg transition-colors">
+                <button data-i18n="dashboard.button_pong" id="playGameBtn" class="w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded-lg transition-colors">
                   Play
                 </button>
               </div>
@@ -98,12 +98,12 @@ export function createDashboardPage(): void {
                   <span class="text-2xl text-purple-600">🏆</span>
                 </div>
                 <div>
-                  <h3 class="text-lg font-semibold text-gray-900">Tournament</h3>
-                  <p class="text-gray-600">Join the tournament</p>
+                  <h3 data-i18n="dashboard.tournament" class="text-lg font-semibold text-gray-900">Tournament</h3>
+                  <p data-i18n="dashboard.desc_tournament" class="text-gray-600">Join the tournament</p>
                 </div>
               </div>
               <div class="mt-4">
-                <button id="tournamentBtn" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg transition-colors">
+                <button data-i18n="dashboard.button_tournament" id="tournamentBtn" class="w-full bg-purple-600 hover:bg-purple-700 text-white py-2 rounded-lg transition-colors">
                   Join tournament
                 </button>
               </div>
@@ -111,40 +111,40 @@ export function createDashboardPage(): void {
           </div>
 
           <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
-            <h2 class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
+            <h2 data-i18n="dashboard.friends" class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
               <span class="text-2xl mr-3">👥</span>
               Friends Management
             </h2>
             
             <!-- friend request -->
             <div class="mb-8">
-              <h3 class="text-lg font-semibold text-gray-800 mb-4">Send a friend request</h3>
+              <h3 data-i18n="dashboard.send_request" class="text-lg font-semibold text-gray-800 mb-4">Send a friend request</h3>
               <div class="flex gap-4 items-end">
                 <div class="flex-1">
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Search for a user</label>
-                  <input type="text" id="searchUser" placeholder="Username..." 
+                  <label data-i18n="dashboard.search" class="block text-sm font-medium text-gray-700 mb-2">Search for a user</label>
+                  <input data-i18n="dashboard.username_form" type="text" id="searchUser" placeholder="Username..." 
                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
                 </div>
-                <button id="searchBtn" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-lg transition-colors">
+                <button data-i18n="dashboard.search_button" id="searchBtn" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-lg transition-colors">
                   Search
                 </button>
               </div>
               
               <div id="searchResults" class="mt-4 hidden">
-                <h4 class="text-md font-medium text-gray-700 mb-2">Results:</h4>
+                <h4 data-i18n="dashboard.result" class="text-md font-medium text-gray-700 mb-2">Results:</h4>
                 <div id="usersList" class="space-y-2"></div>
               </div>
             </div>
 
             <div class="mb-8">
-              <h3 class="text-lg font-semibold text-gray-800 mb-4">Received friend requests</h3>
+              <h3 data-i18n="dashboard.received_req" class="text-lg font-semibold text-gray-800 mb-4">Received friend requests</h3>
               <div id="friendRequests" class="space-y-3">
-                <p class="text-gray-500 text-sm">Loading requests...</p>
+                <p data-i18n="dashboard.load" class="text-gray-500 text-sm">Loading requests...</p>
               </div>
             </div>
 
             <div>
-              <h3 class="text-lg font-semibold text-gray-800 mb-4">My friends</h3>
+              <h3 data-i18n="dashboard.my_friends class="text-lg font-semibold text-gray-800 mb-4">My friends</h3>
               <div id="friendsList" class="space-y-3">
                 <p class="text-gray-500 text-sm">Loading friends list...</p>
               </div>
@@ -168,9 +168,10 @@ export function createDashboardPage(): void {
 	const matchesBtn = document.getElementById('matchesBtn') as HTMLButtonElement;
 	const tournamentBtn = document.getElementById('tournamentBtn') as HTMLButtonElement;
 
-	// cache pour limiter les requêtes au back
+	// cache pour limiter les requetes au back
 	const usernameCache = new Map<number, string>();
 
+	// la fonction parle d'elle meme
 	async function getUsernameById(id: number): Promise<string> {
 		if (usernameCache.has(id)) return usernameCache.get(id)!;
 		try {
@@ -180,13 +181,29 @@ export function createDashboardPage(): void {
 			});
 			if (res.ok) {
 				const data = await res.json();
-				console.log('reponse /users/' + id, data); // debug
-				const name = data?.username ?? data?.user?.username ?? 'User';
+				const name = data?.user?.username ?? 'User';
 				usernameCache.set(id, name);
 				return name;
 			}
 		} catch { }
 		return 'User';
+	}
+
+	async function preloadAllUsernames(): Promise<void> {
+		try {
+			const token = localStorage.getItem('auth_token');
+			if (!token) return;
+			const res = await fetch('https://localhost:8443/showUsers', {
+				headers: { 'Authorization': `Bearer ${token}` }
+			});
+			if (!res.ok) return;
+			const users = await res.json();
+			for (const user of users) {
+				if (typeof user.id === 'number' && typeof user.username === 'string') {
+					usernameCache.set(user.id, user.username);
+				}
+			}
+		} catch { }
 	}
 
 	// deconnexion
@@ -279,17 +296,18 @@ export function createDashboardPage(): void {
 				showMessage('You must be logged in', 'error');
 				return;
 			}
-			const response = await fetch(`https://localhost:8443/checkUser/${encodeURIComponent(searchTerm)}`, {
+			const response = await fetch('https://localhost:8443/showUsers', {
 				headers: {
 					'Authorization': `Bearer ${token}`
 				}
 			});
-			if (response.ok) {
-				const user = await response.json();
-				displaySearchResults([{ id: user.id, username: searchTerm, isLogged: 'unknown' }]);
-			} else {
-				displaySearchResults([]);
-			}
+			const users = await response.json();
+
+			const filteredUsers = users.filter((user: any) =>
+				user.username.toLowerCase().includes(searchTerm.toLowerCase())
+			);
+
+			displaySearchResults(filteredUsers);
 		} catch (error) {
 			showMessage('Error during search', 'error');
 		}
@@ -301,9 +319,11 @@ export function createDashboardPage(): void {
 		}
 	});
 
-
-	loadFriendRequests();
-	loadFriendsList();
+	// preload
+	preloadAllUsernames().finally(() => {
+		loadFriendRequests();
+		loadFriendsList();
+	});
 
 	function showMessage(text: string, type: 'success' | 'error' | 'info' = 'info') {
 		message.textContent = text;
@@ -364,14 +384,15 @@ export function createDashboardPage(): void {
 
 			if (!userId) return;
 
-			const response = await fetch(`https://localhost:8443/friendReq/${userId}`, {
+			const response = await fetch('https://localhost:8443/showFriends', {
 				headers: { 'Authorization': `Bearer ${token}` }
 			});
 			if (!response.ok) {
 				await displayFriendRequests([], userId);
 				return;
 			}
-			const requests = await response.json();
+			const all = await response.json();
+			const requests = Array.isArray(all) ? all.filter((r: any) => r.friend_id === userId && r.status === 'pending') : [];
 			await displayFriendRequests(requests, userId);
 		} catch (error) {
 			await displayFriendRequests([], 0 as any);
@@ -394,14 +415,16 @@ export function createDashboardPage(): void {
 
 			if (!userId) return;
 
-			const response = await fetch(`https://localhost:8443/friendlist/${userId}`, {
+			// Use 200 endpoint to avoid 404 spam; filter client-side for accepted friends
+			const response = await fetch('https://localhost:8443/showFriends', {
 				headers: { 'Authorization': `Bearer ${token}` }
 			});
 			if (!response.ok) {
 				await displayFriendsList([], userId);
 				return;
 			}
-			const friends = await response.json();
+			const all = await response.json();
+			const friends = Array.isArray(all) ? all.filter((f: any) => (f.user_id === userId || f.friend_id === userId) && f.status === 'accepted') : [];
 			await displayFriendsList(friends, userId);
 		} catch (error) {
 			await displayFriendsList([], 0 as any);
