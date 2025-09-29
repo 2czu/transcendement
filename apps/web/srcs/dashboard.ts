@@ -168,10 +168,9 @@ export function createDashboardPage(): void {
 	const matchesBtn = document.getElementById('matchesBtn') as HTMLButtonElement;
 	const tournamentBtn = document.getElementById('tournamentBtn') as HTMLButtonElement;
 
-	// cache pour limiter les requetes au back
+	// cache pour limiter les requêtes au back
 	const usernameCache = new Map<number, string>();
 
-	// la fonction parle d'elle meme
 	async function getUsernameById(id: number): Promise<string> {
 		if (usernameCache.has(id)) return usernameCache.get(id)!;
 		try {
@@ -181,29 +180,13 @@ export function createDashboardPage(): void {
 			});
 			if (res.ok) {
 				const data = await res.json();
-				const name = data?.user?.username ?? 'User';
+				console.log('reponse /users/' + id, data); // debug
+				const name = data?.username ?? data?.user?.username ?? 'User';
 				usernameCache.set(id, name);
 				return name;
 			}
 		} catch { }
 		return 'User';
-	}
-
-	async function preloadAllUsernames(): Promise<void> {
-		try {
-			const token = localStorage.getItem('auth_token');
-			if (!token) return;
-			const res = await fetch('https://localhost:8443/showUsers', {
-				headers: { 'Authorization': `Bearer ${token}` }
-			});
-			if (!res.ok) return;
-			const users = await res.json();
-			for (const user of users) {
-				if (typeof user.id === 'number' && typeof user.username === 'string') {
-					usernameCache.set(user.id, user.username);
-				}
-			}
-		} catch { }
 	}
 
 	// deconnexion
@@ -318,11 +301,9 @@ export function createDashboardPage(): void {
 		}
 	});
 
-	// preload
-	preloadAllUsernames().finally(() => {
-		loadFriendRequests();
-		loadFriendsList();
-	});
+
+	loadFriendRequests();
+	loadFriendsList();
 
 	function showMessage(text: string, type: 'success' | 'error' | 'info' = 'info') {
 		message.textContent = text;

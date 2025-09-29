@@ -22,7 +22,7 @@ export const createUser = async (db: Database, username: string,email: string, p
 
 export const getProfile = async (db: Database, id: number) => {
 	const user = await db.get('SELECT username, avatar_url, isLogged FROM users WHERE id = ?', [id]);
-	const friends = await db.all('SELECT * FROM friends WHERE user_id = ? OR friends_id = ?', [id, id]);
+	const friends = await db.all('SELECT * FROM friends WHERE user_id = ? OR friend_id = ?', [id, id]);
 	const matches = await db.all('SELECT * FROM matches WHERE player1_id = ? OR player2_id = ?', [id, id]);
 	const stats = await db.get('SELECT * FROM stats WHERE user_id = ? ', [id]);
 	return { user, friends, matches, stats };
