@@ -1,12 +1,10 @@
 🚧 Work in Progress / Fixes Needed
 
-🔐 2FA requests – authentication codes not fully functional
+🔐 General - implementing httpOnly cookies, OAuth, online/offline status
 
-🗄️ Database queries – some inconsistencies (e.g., username retrieval in tournaments)
+📊 Match statistics - implementation pending (Alexandre)
 
-📊 Match statistics – implementation pending (Alexandre)
-
-🤖 AI opponent integration – ongoing development (Nino)
+🤖 AI opponent integration - ongoing development (Nino)
 
 📎 Notes
 
