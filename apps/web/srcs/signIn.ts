@@ -60,44 +60,47 @@ export function createSignInPage(): void {
 		};
 
 		try {
-		const res = await fetch("https://localhost:8443/signIn",
-			{
-			method: "POST",
-			headers: { "Content-Type": "application/json" },
-			body: JSON.stringify(payload),
-			
-			// self signed
-			mode: 'cors'
-			});
+			const res = await fetch("https://localhost:8443/signIn",
+				{
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(payload),
 
-		const data = await res.json();
-		if (!res.ok) {
-			message.textContent = data?.error || "Identifiants invalides";
-			return;
-		}
+					// self signed
+					mode: 'cors'
+				});
 
-		if (data?.require2FA && data?.userId) {
-			pendingUserIdFor2FA = Number(data.userId);
-			twofaContainer.classList.remove('hidden');
-			message.textContent = "2FA requis: entrez le code";
-			return;
-		}
+			const data = await res.json();
+			if (!res.ok) {
+				message.textContent = data?.error || "Identifiants invalides";
+				return;
+			}
 
-		if (data?.token) {
-			localStorage.setItem('auth_token', data.token as string);
-			message.textContent = "Connecté ! Redirection...";
-			setTimeout(() => {
-			window.history.pushState({}, '', '/');
-			window.dispatchEvent(new PopStateEvent('popstate'));
-			}, 500);
-		}
-		else
-			message.textContent = "Réponse inattendue du serveur";
+			if (data?.require2FA && data?.userId) {
+				pendingUserIdFor2FA = Number(data.userId);
+				twofaContainer.classList.remove('hidden');
+				message.textContent = "2FA requis: entrez le code";
+				return;
+			}
+
+			if (data?.token) {
+				localStorage.setItem('auth_token', data.token as string);
+				try {
+					document.cookie = `jwt=${data.token}; Path=/; SameSite=None; Secure`;
+				} catch { }
+				message.textContent = "Connecté ! Redirection...";
+				setTimeout(() => {
+					window.history.pushState({}, '', '/');
+					window.dispatchEvent(new PopStateEvent('popstate'));
+				}, 500);
+			}
+			else
+				message.textContent = "Réponse inattendue du serveur";
 
 		}
 		catch (err) {
-		console.error(err);
-		message.textContent = "Erreur de connexion au serveur";
+			console.error(err);
+			message.textContent = "Erreur de connexion au serveur";
 		}
 	});
 
@@ -116,25 +119,28 @@ export function createSignInPage(): void {
 			}
 			try {
 				const res = await fetch("https://localhost:8443/2fa_req",
-				{
-					method: "POST",
-					headers: { "Content-Type": "application/json" },
-					body: JSON.stringify({ id: pendingUserIdFor2FA, secret_2fa: code }),
-					mode: 'cors'
-				});
+					{
+						method: "POST",
+						headers: { "Content-Type": "application/json" },
+						body: JSON.stringify({ id: pendingUserIdFor2FA, secret_2fa: code }),
+						mode: 'cors'
+					});
 				const data = await res.json();
 				if (!res.ok) {
-				message.textContent = data?.error || "Code 2FA incorrect";
-				return;
+					message.textContent = data?.error || "Code 2FA incorrect";
+					return;
 				}
 				if (data?.token) {
 					localStorage.setItem('auth_token', data.token as string);
+					try {
+						document.cookie = `jwt=${data.token}; Path=/; SameSite=None; Secure`;
+					} catch { }
 					message.textContent = "Connecté ! Redirection...";
 					setTimeout(() => {
 						window.history.pushState({}, '', '/');
 						window.dispatchEvent(new PopStateEvent('popstate'));
 					}, 500);
-					}
+				}
 				else
 					message.textContent = "Réponse inattendue du serveur";
 			}
@@ -147,9 +153,9 @@ export function createSignInPage(): void {
 
 	if (goSignUp) {
 		goSignUp.addEventListener('click', (e) => {
-		e.preventDefault();
-		window.history.pushState({}, '', '/signUp');
-		window.dispatchEvent(new PopStateEvent('popstate'));
+			e.preventDefault();
+			window.history.pushState({}, '', '/signUp');
+			window.dispatchEvent(new PopStateEvent('popstate'));
 		});
 	}
 }

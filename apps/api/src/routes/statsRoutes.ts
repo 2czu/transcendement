@@ -1,6 +1,6 @@
 import { FastifyPluginAsync } from 'fastify';
 import { Database } from 'sqlite';
-import { incrementGameplayed } from '../controllers/statsController.js'
+import { incrementGameplayed, getStats } from '../controllers/statsController.js'
 
 const statsRoute: FastifyPluginAsync <{ db: Database }> = async (fastify: any, opts: any) => {
 	const { db } = opts;
@@ -46,4 +46,42 @@ fastify.route({
 			}
 		}
 	});
+		fastify.route({
+			method: 'GET',
+			url: "/stats",
+			schema: {
+				response:  {
+					200: {
+						type: 'object',
+						properties: {
+							game_played: { type: 'number' },
+							games_won: { type: 'number' },
+							total_score: { type: 'number' },
+							goal_taken: { type: 'number' }
+						}
+					},
+					404: {
+						type: 'object',
+						properties: {
+							error: { type: 'string' }
+						}
+					}
+				}
+			},
+			handler: async(request: any, reply: any) => {
+				const userId = (request as any).user.userId;
+				try {
+					const stats = await getStats(db, userId);
+					if (!stats)
+					{
+						reply.code(404).send({ error: "User not found"});
+						return ;
+					}
+					reply.send(stats);
+				} catch (err) {
+					reply.code(500).send({ error: 'Failed to fetch user stats' }); 
+				}
+			}
+		});
 }
+export default statsRoute;

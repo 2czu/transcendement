@@ -48,7 +48,7 @@ export function createProfilePage(): void {
                   <button id="changeAvatarBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-colors">
                     Change photo
                   </button>
-                  <p class="text-sm text-gray-500 mt-1">Accepted formats: JPG, PNG, GIF (max 5MB)</p>
+                  <p class="text-sm text-gray-500 mt-1">Accepted formats: JPG, PNG (max 1MB)</p>
                 </div>
               </div>
             </div>
@@ -138,8 +138,8 @@ export function createProfilePage(): void {
 		const file = (event.target as HTMLInputElement).files?.[0];
 		if (!file) return;
 
-		if (file.size > 5 * 1024 * 1024) {
-			showMessage('The file is too large (max 5MB)', 'error');
+		if (file.size > 1 * 1024 * 1024) {
+			showMessage('The file is too large (max 1MB)', 'error');
 			return;
 		}
 
@@ -149,16 +149,54 @@ export function createProfilePage(): void {
 		}
 
 		try {
-			const reader = new FileReader();
-			reader.onload = (e) => {
-				const currentAvatar = document.getElementById('currentAvatar');
-				if (currentAvatar) {
-					currentAvatar.innerHTML = `<img src="${e.target?.result}" alt="Avatar" class="w-full h-full object-cover">`;
-				}
-			};
-			reader.readAsDataURL(file);
 
-			// TODO: upload sur le serv
+			const blobUrl = URL.createObjectURL(file);
+			const currentAvatar = document.getElementById('currentAvatar');
+			if (currentAvatar) {
+				currentAvatar.innerHTML = `<img src="${blobUrl}" alt="Avatar" class="w-full h-full object-cover">`;
+			}
+
+			const formData = new FormData();
+			formData.append('avatar', file);
+
+			const token = localStorage.getItem('auth_token');
+			if (!token) {
+				showMessage('You must be logged in', 'error');
+				return;
+			}
+
+			const res = await fetch('https://localhost:8443/avatar', {
+				method: 'POST',
+				headers: {
+					'Authorization': `Bearer ${token}`
+				},
+				body: formData,
+				credentials: 'include'
+			});
+
+			if (!res.ok) {
+				const err = await res.json().catch(() => ({}));
+				showMessage(err.error || 'Error uploading avatar', 'error');
+				URL.revokeObjectURL(blobUrl);
+				return;
+			}
+
+			const tryExt = async (ext: string) => {
+				const url = `https://localhost:8443/uploads/avatar_${userId}.${ext}`;
+				try {
+					const head = await fetch(url + `?t=${Date.now()}`, { method: 'HEAD' });
+					if (head.ok) return url;
+				} catch { }
+				return null;
+			};
+			let avatarUrl = await tryExt('png');
+			if (!avatarUrl) avatarUrl = await tryExt('jpg');
+			if (!avatarUrl) avatarUrl = await tryExt('jpeg');
+			if (!avatarUrl) avatarUrl = `https://localhost:8443/uploads/avatar_${userId}.png`;
+			if (currentAvatar) {
+				currentAvatar.innerHTML = `<img src="${avatarUrl}?t=${Date.now()}" alt="Avatar" class="w-full h-full object-cover">`;
+			}
+			URL.revokeObjectURL(blobUrl);
 			showMessage('Profile picture updated!', 'success');
 		} catch (error) {
 			showMessage('Error updating profile picture', 'error');
@@ -186,7 +224,8 @@ export function createProfilePage(): void {
 				},
 				body: JSON.stringify({
 					username: newUsername
-				})
+				}),
+				credentials: 'include'
 			});
 
 			if (response.ok) {
@@ -210,7 +249,8 @@ export function createProfilePage(): void {
 				method: 'DELETE',
 				headers: {
 					'Authorization': `Bearer ${token}`
-				}
+				},
+				credentials: 'include'
 			});
 
 			if (response.ok) {
@@ -264,12 +304,14 @@ export function createProfilePage(): void {
 	function displayProfileData(data: any) {
 		if (data.user) {
 			username.value = data.user.username || '';
-			email.value = data.user.email || '';
+			email.value = '';
+			email.placeholder = data.user.email || '';
 
 			if (data.user.avatar_url && data.user.avatar_url !== 'placeholder.jpg') {
 				const currentAvatar = document.getElementById('currentAvatar');
 				if (currentAvatar) {
-					currentAvatar.innerHTML = `<img src="${data.user.avatar_url}" alt="Avatar" class="w-full h-full object-cover">`;
+					const url = `https://localhost:8443/uploads/${data.user.avatar_url}`;
+					currentAvatar.innerHTML = `<img src="${url}" alt="Avatar" class="w-full h-full object-cover">`;
 				}
 			}
 

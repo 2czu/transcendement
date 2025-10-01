@@ -12,6 +12,8 @@ import matchesRoutes from "./routes/matchesRoutes.js";
 import friendsRoutes from "./routes/friendsRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import websocketsRoutes from './routes/websocketsRoutes.js';
+import statsRoutes from './routes/statsRoutes.js';
+
 
 import { verifyToken } from './jwt.js';
 
@@ -134,8 +136,7 @@ app.register(matchesRoutes, { db });
 app.register(friendsRoutes, { db });
 app.register(authRoutes, { db });
 app.register(websocketsRoutes, { db });
-
-
+app.register(statsRoutes, { db });
 
 const PORT = 8443;
 try {

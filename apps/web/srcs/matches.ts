@@ -24,11 +24,11 @@ export async function createMatchesPage(): Promise<void> {
 	<div class="min-h-screen bg-gray-50">
 	<div class="max-w-3xl mx-auto px-4 py-8">
 		<div class="flex items-center justify-between mb-6">
-		<h1 class="text-2xl font-bold text-gray-900">Historique des matchs</h1>
-		<button id="backBtn" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Retour</button>
+		<h1 data-i18n="matches.history" class="text-2xl font-bold text-gray-900">Historique des matchs</h1>
+		<button data-i18n="matches.previous_button" id="backBtn" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Retour</button>
 		</div>
 		<div id="list" class="space-y-3">
-		<div class="text-gray-500 text-sm">Chargement...</div>
+		<div data-i18n="matches.load" class="text-gray-500 text-sm">Chargement...</div>
 		</div>
 	</div>
 	</div>

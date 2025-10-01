@@ -17,12 +17,12 @@ import {
 	Color4
 } from '@babylonjs/core';
 
-export class Pong3D
-{
+export class Pong3D {
 	private canvas: HTMLCanvasElement;
 	private engine: Engine;
 	private scene: Scene;
 	private camera: ArcRotateCamera;
+	private resizeObserver?: ResizeObserver;
 
 	private ball: Mesh;
 	private paddle1: Mesh;
@@ -56,7 +56,7 @@ export class Pong3D
 
 	constructor(canvas: HTMLCanvasElement) {
 		this.canvas = canvas;
-		this.engine = new Engine(canvas, true);
+		this.engine = new Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true, disableWebGL2Support: false });
 		this.scene = new Scene(this.engine);
 		this.walls = [];
 
@@ -65,6 +65,11 @@ export class Pong3D
 		this.setupInput();
 		this.setupGameLoop();
 		this.loadPlayerNames();
+
+		// responsive scaling
+		this.resizeCanvas();
+		window.addEventListener('resize', this.onWindowResize);
+		this.attachResizeObserver();
 	}
 
 	private setupScene(): void {
@@ -406,7 +411,7 @@ export class Pong3D
 		this.ball.position = new Vector3(0, 0, 0);
 		this.ballVelocity = new Vector3(
 			0.12 * (Math.random() < 0.5 ? -1 : 1),
-			0.02 * (Math.random() < 0.5 ? -1 : 1), 
+			0.02 * (Math.random() < 0.5 ? -1 : 1),
 			0
 		);
 		this.waiting = true;
@@ -535,8 +540,49 @@ export class Pong3D
 		});
 	}
 
+	private resizeCanvas(): void {
+		const parent = this.canvas.parentElement as HTMLElement | null;
+		const container = (parent?.parentElement as HTMLElement | null) || parent;
+		const availableWidth = container?.clientWidth || window.innerWidth;
+		const availableHeight = window.innerHeight;
+		const aspect = 800 / 500; //  aspect ratio
+		let width = Math.max(280, Math.min(availableWidth, 1200));
+		let height = Math.round(width / aspect);
+		const viewportH = Math.max(availableHeight - 300, 220);
+		if (height > viewportH) {
+			height = viewportH;
+			width = Math.round(height * aspect);
+		}
+		this.canvas.width = width;
+		this.canvas.height = height;
+		this.canvas.style.width = width + 'px';
+		this.canvas.style.height = height + 'px';
+		this.engine.resize();
+	}
+
+	private onWindowResize = (): void => {
+		this.resizeCanvas();
+	};
+
+	private attachResizeObserver(): void {
+		try {
+			const parent = this.canvas.parentElement as HTMLElement | null;
+			const container = (parent?.parentElement as HTMLElement | null) || parent;
+			if (!container || !(window as any).ResizeObserver) return;
+			this.resizeObserver = new ResizeObserver(() => {
+				this.resizeCanvas();
+			});
+			this.resizeObserver.observe(container);
+		} catch { }
+	}
+
 	public dispose(): void {
 		this.hideGameOverScreen();
 		this.engine.dispose();
+		try {
+			window.removeEventListener('resize', this.onWindowResize);
+			this.resizeObserver?.disconnect();
+			this.resizeObserver = undefined;
+		} catch { }
 	}
 }

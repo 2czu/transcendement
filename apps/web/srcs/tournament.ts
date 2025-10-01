@@ -45,7 +45,7 @@ export function createTournamentPage(): void {
     <div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col items-center justify-center px-4 py-8">
       <div class="w-full max-w-6xl bg-gray-800/80 rounded-3xl shadow-2xl p-8 flex flex-col items-center border border-gray-700 backdrop-blur-md">
         <div class="w-full text-center mb-8">
-          <h1 class="text-5xl font-extrabold mb-2 text-white drop-shadow-lg animate-pulse">
+          <h1 data-i18n="tournament.tournament" class="text-5xl font-extrabold mb-2 text-white drop-shadow-lg animate-pulse">
             TOURNAMENT
           </h1>
           <p class="text-lg text-gray-300 mb-1 tracking-wide">8-player tournament</p>
@@ -53,7 +53,7 @@ export function createTournamentPage(): void {
         
         <div class="w-full flex flex-col gap-8 mb-8">
           <div class="w-full bg-gray-900/50 rounded-2xl p-6 border border-gray-600">
-            <h2 class="text-2xl font-bold text-white mb-4 text-center">Brackets</h2>
+            <h2 data-i18n="tournament.brackets" class="text-2xl font-bold text-white mb-4 text-center">Brackets</h2>
             <div id="tournamentBracket" class="space-y-4">
             </div>
           </div>
@@ -61,7 +61,7 @@ export function createTournamentPage(): void {
           <div class="w-full bg-gray-900/50 rounded-2xl p-6 border border-gray-600">
             <h2 class="text-2xl font-bold text-white mb-4 text-center">🎮 Current Match</h2>
             <div id="currentMatch" class="text-center">
-              <p class="text-gray-400">No match in progress</p>
+              <p data-i18n="tournament." class="text-gray-400">No match in progress</p>
             </div>
             
             <div class="mt-6 relative bg-black border-4 rounded-2xl shadow-lg overflow-hidden">

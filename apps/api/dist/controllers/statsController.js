@@ -9,3 +9,7 @@ export const incrementGameplayed = async (db, player1_id, player2_id) => {
     await db.get("UPDATE stats SET game_played = game_played + 1 WHERE id = ? ", [player2_id]);
     return { message: "incremented" };
 };
+export const getStats = async (db, id) => {
+    const stats = await db.get('SELECT game_played, games_won, total_score, goal_taken FROM stats WHERE user_id = ?', [id]);
+    return stats;
+};

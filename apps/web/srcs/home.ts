@@ -36,11 +36,11 @@ export function createHomePage(): void {
 				Tester l'API HTTPS
 			</button>
 			
-			<button id="gameBtn" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
+			<button data-i18n="home.game" id="gameBtn" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
 				Jeu
 			</button>
 			
-			<button id="tournamentBtn" class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors">
+			<button data-i18n="home.tournament" id="tournamentBtn" class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors">
 				Tournoi (8 joueurs)
 			</button>
 			</div>
@@ -98,7 +98,7 @@ export function createHomePage(): void {
 	const statsBtn = document.getElementById('statsBtn') as HTMLButtonElement;
 	if (statsBtn) {
 		statsBtn.addEventListener("click", () => {
-			window.open("http://localhost:3010", "_blank");
+			window.open("http://localhost:3000", "_blank");
 		});
 	}
 	const gameBtn = document.getElementById("gameBtn");

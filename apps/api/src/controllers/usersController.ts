@@ -22,17 +22,17 @@ export const createUser = async (db: Database, username: string,email: string, p
 
 export const getProfile = async (db: Database, id: number) => {
 	const user = await db.get('SELECT username, avatar_url, isLogged FROM users WHERE id = ?', [id]);
-	const friends = await db.all('SELECT * FROM friends WHERE user_id = ? OR friends_id = ?', [id, id]);
-	const matches = await db.all('SELECT * FROM matches WHERE player1_id = ? OR player2_id = ?', [id, id]);
-	const stats = await db.get('SELECT * FROM stats WHERE user_id = ? ', [id]);
+	const friends = await db.all('SELECT user_id, friend_id, status FROM friends WHERE user_id = ? OR friend_id = ?', [id, id]);
+	const matches = await db.all('SELECT player1_id, player2_id, winner_id, score_player1, score_player2, played_at FROM matches WHERE player1_id = ? OR player2_id = ?', [id, id]);
+	const stats = await db.get('SELECT game_played, games_won, total_score FROM stats WHERE user_id = ? ', [id]);
 	return { user, friends, matches, stats };
 };
 
 export const getPersonnalData = async (db: Database, id: number) => {
-	const user = await db.get('SELECT * FROM users WHERE id = ?', [id]);
-	const friends = await db.all('SELECT * FROM friends WHERE user_id = ? OR friend_id = ?', [id, id]);
-	const matches = await db.all('SELECT * FROM matches WHERE player1_id = ? OR player2_id = ?', [id, id]);
-	const stats = await db.get('SELECT * FROM stats WHERE user_id = ? ', [id]);
+	const user = await db.get('SELECT username, email, is_2fa, avatar_url FROM users WHERE id = ?', [id]);
+	const friends = await db.all('SELECT user_id, friend_id, status FROM friends WHERE user_id = ? OR friend_id = ?', [id, id]);
+	const matches = await db.all('SELECT player1_id, player2_id, winner_id, score_player1, score_player2, played_at FROM matches WHERE player1_id = ? OR player2_id = ?', [id, id]);
+	const stats = await db.get('SELECT game_played, games_won, total_score FROM stats WHERE user_id = ? ', [id]);
 	return { user, friends, matches, stats };
 };
 
@@ -116,7 +116,7 @@ export const signIn = async (db: Database, email: string, password: string) => {
 
 export const req_2fa = async (db: Database, id: number, secret_2fa: string) => {
 
-	const user = await db.get("SELECT * FROM users WHERE user = ?", [id]);
+	const user = await db.get("SELECT * FROM users WHERE id = ?", [id]);
 	if (!user)
 		return { error: 'user' };
 	const now = new Date();
@@ -137,4 +137,8 @@ export const updateUserStatus = async (db: Database, id:number, status: boolean)
 
 export const upload = async (db: Database, id: number, avatar: string) => {
 	await db.run("UPDATE users SET avatar_url = ? WHERE id = ?", [avatar, id]);
+};
+
+export const checkUser = async (db: Database, username: string) => {
+	return await db.get('SELECT id FROM users WHERE username = ?', [username]);
 };
