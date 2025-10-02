@@ -149,27 +149,5 @@ if (langSwitcher) {
 		setLanguage(langSwitcher.value as Lang);
 	});
 }
-async function fetchUser(id) {
-    try {
-        const token = localStorage.getItem('auth_token');
-        const res = await fetch(`https://localhost:8443/users/${id}`, {
-            method: 'GET',
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
 
-        if (res.ok) {
-            const data = await res.json();
-            console.log(`------------------Réponse /users/${id} :`, data);
-        } else {
-            console.log(`-------------------Erreur ${res.status} : ${res.statusText}`);
-        }
-    } catch (err) {
-        console.error('///////////////////////Erreur lors de la requête :', err);
-    }
-}
-
-// Exécution au chargement de la page
-window.addEventListener('load', () => {
-    fetchUser(1); // remplace 1 par l'id que tu veux tester
-});
 } 
