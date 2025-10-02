@@ -4,8 +4,8 @@ export default {
 		tournament: "Tournament (8 players)"
 	},
 	dashboard : {
-		dashboard : "dashboard",
-		welcome: "welcome to your personal space",
+		dashboard : "Dashboard",
+		welcome: "Welcome to your personal space",
 		anonymise: "Anonymyse",
 		log_out: "Log out",
 		profile: "Profile",
@@ -14,7 +14,7 @@ export default {
 		matches: "Matches",
 		desc_matches: "Match history",
 		button_matches: "View matches",
-		desc_pong: "start a Pong game",
+		desc_pong: "Start a Pong game",
 		button_pong: "Play",
 		tournament: "Tournament",
 		desc_tournament: "Join the tournament",
@@ -25,7 +25,7 @@ export default {
 		username_form: "Username...",
 		search_button: "Search",
 		result: "Results:",
-		not_found: "no user found",
+		not_found: "No user found",
 		add_button: "Add",
 		received_req: "Received friend requests",
 		loading_req: "Loading requests...",
@@ -34,8 +34,8 @@ export default {
 		no_friends: "You have no friends yet"
 	},
 	matches : {
-		history: "matches history",
-		previous_button: "previous",
+		history: "Matches history",
+		previous_button: "Previous",
 		no_matches: "No matches found",
 		load: "Loading...",
 	},
@@ -43,14 +43,15 @@ export default {
 		play_button: "Play",
 		replay_button: "Replay",
 		back_button: "Back",
-		wins: "wins!",
-		final_scores: "finale score:",
+		wins: "Wins!",
+		final_scores: "Finale score:",
 		back_menu_button: "Back to menu"
 	},
 	tournament: {
-		tournament : "tournament",
+		tournament : "Tournament",
 		desc_tournament: "8-player tournament",
 		brackets: "Brackets",
+		progress: "No match in progress",
 		first_round: "First round",
 		semi_finals : "Semifinals",
 		final: "Final",
@@ -61,8 +62,11 @@ export default {
 		nextmath_button: "Next match",
 		new_tournament_button: "New tournament",
 		back_button: "Back",
+		back_menu_button: "Back to menu",
+		finished: "Tournament finished",
+		restart: "Tournament will automatically restart in 2.5s…",
 	},
-	profile: {
+	profile: { //les plaeholder vont surement peter
 		my_profile: "my profile",
 		personal_info: "Personal Information",
 		profile_pic: "profile picture",
@@ -72,7 +76,7 @@ export default {
 		username_form: "Your username",
 		no_username: "please enter a username",
 		token: "token expired",
-		save_button: "Save",
+		save_button: "Submit",
 		email_cannot: "email cannot be changed",
 		connection_status: "connection status",
 		danger_zone: "Danger zone",
@@ -82,6 +86,6 @@ export default {
 		are_u_sure: "Are you sure you want to delete your account? This action is irreversible.",
 		log_out: "Log out",
 		desc_log_out: "close your current session and return to the home page",
-		Log_out_button: "Log out"
+		log_out_button: "Log out"
 	}
 }

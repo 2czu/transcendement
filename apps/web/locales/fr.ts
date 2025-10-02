@@ -1,0 +1,93 @@
+export default {
+	home : {
+		game: "Jouer",
+		tournament: "Tournois (8 joueurs)"
+	},
+	dashboard : {
+		dashboard : "Tableau de bord",
+		welcome: "Bienvenue dans ton espace personnel",
+		anonymise: "Anonymisation",
+		log_out: "Deconnexion",
+		profile: "Profile",
+		desc_profile: "Gere tes informations",
+		button_profile: "Profile",
+		matches: "Matches",
+		desc_matches: "Historique de matches",
+		button_matches: "Matches",
+		desc_pong: "Lance une partie de Pong",
+		button_pong: "Jouer",
+		tournament: "Tournois",
+		desc_tournament: "rejoins le tournois",
+		button_tournament: "Tournois",
+		friends: "Gestion d'amis",
+		send_request: "Fait une demande d'amis",
+		search: "Cherche une personne",
+		username_form: "Username...",
+		search_button: "Recherche",
+		result: "Resultat:",
+		not_found: "Aucun utilisateur trouve",
+		add_button: "Ajouter",
+		received_req: "Requete d'amis recues",
+		loading_req: "Chargement des requetes...",
+		no_req: "Aucune demande d'amis en attente", //marche a moitie
+		my_friends: "Mes amis",
+		no_friends: "Vous n'avez pas encore d'amis" //marche a moitie
+	},
+	matches : {
+		history: "Historique de matches",
+		previous_button: "Retour",
+		no_matches: "Aucun matche joue",
+		load: "Chargement...",
+	},
+	pong : {
+		play_button: "Jouer",
+		replay_button: "Rejouer",
+		back_button: "Retour",
+		wins: "gagne!",
+		final_scores: "score final:",
+		back_menu_button: "Retour au menu"
+	},
+	tournament: {
+		tournament : "Tournoi",
+		desc_tournament: "Tournoi a 8 joueurs",
+		brackets: "Arbre du tournoi",
+		progress: "Aucun match en cours",
+		first_round: "premier tour",
+		semi_finals : "Demie-finale",
+		final: "Finale",
+		to_be_determined: "A determiner",
+		current_match: "Match en cours",
+		match: "Match #",
+		startmatch_button: "Lancer le match",
+		nextmatch_button: "Match suivant",
+		new_tournament_button: "Nouveau tournoi",
+		back_button: "Retour",
+		back_menu_button: "Retour au menu",
+		finished: "Tournois finis",
+		restart: "Le tournoi va se relancer automatiquement dans 2,5 secondes…",
+
+
+	},
+	profile: { //les plaeholder vont surement peter
+		my_profile: "Mon profil",
+		personal_info: "Informations personnelles",
+		profile_pic: "Image de profile",
+		upload_pic: "Change la photo",
+		formats: "Format accepte: JPG, PNG (max 1MB)",
+		username: "Nom d'utilisateur",
+		username_form: "Your username", //marche po
+		no_username: "Nom d'utilisateur vide",
+		token: "token expire",
+		save_button: "Envoyer",
+		email_cannot: "email ne peux pas etre changer",
+		connection_status: "status de connexion",
+		danger_zone: "Zone dangereuse",
+		delete_my_acc: "Supprimer mon compte",
+		irreversible: "Cette action est irreversible. toutes tes donnees, amis et statistique vont etre efface de facon permanente",
+		delete_button: "Supprimer mon compte",
+		are_u_sure: "Etes vous sur de vouloir supprimer for compte ? Cette action est irreversible.",
+		log_out: "Deconnection",
+		desc_log_out: "Ferme la session actuelle et retourne a la page d'acceuil",
+		log_out_button: "Deconnexion"
+	}
+}

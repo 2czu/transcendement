@@ -25,6 +25,7 @@ export function createSignInPage(): void {
 					class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition">
 			Se connecter
 			</button>
+			<div id="google-button" class="mt-4 flex justify-center"></div>
 
 			<p class="text-sm text-gray-600">Pas de compte ? <a id="goSignUp" href="#" class="text-indigo-600 hover:underline">Créer un compte</a></p>
 		</form>
@@ -37,6 +38,7 @@ export function createSignInPage(): void {
 			<button type="submit" class="w-full bg-green-600 text-white py-2 rounded-lg hover:bg-green-700 transition">Valider 2FA</button>
 			</form>
 		</div>
+
 
 		<p id="message" class="mt-4 text-sm text-yellow-200"></p>
 		</div>
@@ -158,4 +160,62 @@ export function createSignInPage(): void {
 			window.dispatchEvent(new PopStateEvent('popstate'));
 		});
 	}
+	loadGoogleScript("1047189652036-miitijufimvv2qct8rrimpqmcbc5fu64.apps.googleusercontent.com", (response) => {
+		console.log("Google response:", response); // <- voir ce qui arrive réellement
+		if (!response.credential) {
+			message.textContent = "Erreur Google : token manquant";
+			return;
+		}
+		fetch("https://localhost:8443/auth/google/callback", {
+			method: "POST",
+			headers: { "Content-Type": "application/json",  },
+			body: JSON.stringify({ id_token: response.credential }),
+			mode: "cors"
+		})
+		.then(res => res.json())
+		.then(data => {
+			console.log(data.token);
+			if (data?.token) {
+				localStorage.setItem("auth_token", data.token);
+				try {
+					document.cookie = `jwt=${data.token}; Path=/; SameSite=None; Secure`;
+				} catch {}
+				message.textContent = "Connected with google !";
+				setTimeout(() => {
+					window.history.pushState({}, '', '/');
+					window.dispatchEvent(new PopStateEvent('popstate'));
+				}, 500);
+			} else
+				message.textContent = "Problem with Google";
+		})
+		.catch(err => console.error(err));
+	});
 }
+
+
+declare const google: any
+
+function loadGoogleScript(clientId: string, callback: (res: any) => void) {
+	if ((window as any).googleLoaded) return ;
+	(window as any).googleLoaded = true;
+	const script = document.createElement('script');
+	script.src = "https://accounts.google.com/gsi/client";
+	script.async = true;
+	script.defer = true;
+
+	script.onload = () => {
+		google.accounts.id.initialize({
+			client_id: clientId,
+			callback: callback
+		});
+	
+		const btn = document.getElementById("google-button");
+		if (btn) {
+			google.accounts.id.renderButton(
+				btn,
+				{ theme: "outline", width: 320}
+			);
+		}
+	}
+	document.body.appendChild(script);
+};

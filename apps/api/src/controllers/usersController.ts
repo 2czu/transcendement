@@ -3,8 +3,8 @@ import { signToken } from '../jwt.js';
 import bcrypt from 'bcrypt';
 import { sendEmail } from '../controllers/mailsController.js';
 
-export const createUser = async (db: Database, username: string,email: string, password: string, 
-	is_2fa: number, secret_2fa: string | null, avatar_url: string = "placeholder.jpg", isLogged: string = "offline") => {
+export const createUser = async (db: Database, username: string,email: string, password: string | null, 
+	is_2fa: number, secret_2fa: string | null, avatar_url: string = "placeholder.jpg", isLogged: string = "offline", isOAuth: number) => {
 
 	const userExist = await db.get("SELECT 1 FROM users WHERE username = ?", [username]);
 	if (userExist)
@@ -12,9 +12,13 @@ export const createUser = async (db: Database, username: string,email: string, p
 	const emailExist = await db.get("SELECT 1 FROM users WHERE email = ?", [email]);
 	if (emailExist)
 		return { error: 'email' };
+	let hash: string | null = null;
+	if (isOAuth === 0 && password)
+	{
 	const saltRounds = 15;
-	const hash = await bcrypt.hash(password, saltRounds);
-	const result = await db.run(`INSERT INTO users (username, email, password_hash, is_2fa, secret_2fa, avatar_url, isLogged) VALUES (?, ?, ?, ?, ?, ?, ?)`, [username, email, hash, is_2fa, secret_2fa, avatar_url, isLogged]);
+	hash = await bcrypt.hash(password, saltRounds);
+	}
+	const result = await db.run(`INSERT INTO users (username, email, password_hash, is_2fa, secret_2fa, avatar_url, isLogged, isOAuth) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, [username, email, hash, is_2fa, secret_2fa, avatar_url, isLogged, isOAuth]);
 	const user = await db.get('SELECT * FROM users WHERE id = ?', [result.lastID]);
 	await db.run(`INSERT INTO stats (user_id) VALUES (?)`, [result.lastID]);
 	return user;
@@ -98,6 +102,8 @@ export const signIn = async (db: Database, email: string, password: string) => {
 	const user = await db.get("SELECT * FROM users WHERE email = ?", [email]);
 	if (!user)
 		return { error: 'email' };
+	if (user.isOAuth == 1)
+		return { error: 'google account'}
 	const isValid = await bcrypt.compare(password, user.password_hash);
 	if (!isValid)
 		return { error: 'password' };
