@@ -1,5 +1,6 @@
 import { showGamePage, showDashboardPage, showTournamentPage, showStatsPage } from './router';
 import { showSignInPage } from './router';
+import { createGamePage } from './game';
 
 export function createHomePage(): void {
 	const app = document.getElementById('app');
@@ -36,12 +37,16 @@ export function createHomePage(): void {
 				Tester l'API HTTPS
 			</button>
 			
-			<button data-i18n="home.game" id="gameBtn" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
-				Jeu
+			<button data-i18n="home.game" id="gameBtn" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors w-full">
+				🎮 Play Game
 			</button>
 			
-			<button data-i18n="home.tournament" id="tournamentBtn" class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors">
-				Tournoi (8 joueurs)
+			<button id="aiGameBtn" class="px-4 py-2 bg-purple-600 text-white rounded hover:bg-purple-700 transition-colors w-full">
+				🤖 Play vs AI
+			</button>
+			
+			<button data-i18n="home.tournament" id="tournamentBtn" class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition-colors w-full">
+				🏆 Tournament (8 players)
 			</button>
 			</div>
 
@@ -105,16 +110,24 @@ export function createHomePage(): void {
 	const gameBtn = document.getElementById("gameBtn");
 	if (gameBtn) {
 		gameBtn.addEventListener("click", () => {
-		window.history.pushState({}, '', '/game');
-		showGamePage();
+			window.history.pushState({}, '', '/game');
+			showGamePage();
+		});
+	}
+
+	const aiGameBtn = document.getElementById("aiGameBtn");
+	if (aiGameBtn) {
+		aiGameBtn.addEventListener("click", () => {
+			window.history.pushState({}, '', '/game');
+			createGamePage('pve', 'medium');
 		});
 	}
 
 	const tournamentBtn = document.getElementById("tournamentBtn");
 	if (tournamentBtn) {
 		tournamentBtn.addEventListener("click", () => {
-		window.history.pushState({}, '', '/tournament');
-		showTournamentPage();
+			window.history.pushState({}, '', '/tournament');
+			showTournamentPage();
 		});
 	}
 
