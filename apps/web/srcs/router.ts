@@ -7,6 +7,7 @@ import { createDashboardPage } from './dashboard';
 import { createProfilePage } from './profile';
 import { createMatchesPage } from './matches';
 import { createStatsPage } from './stats';
+import { updateTranslations } from './lang';
 
 export function showHomePage(): void {
 	createHomePage();
@@ -87,6 +88,7 @@ export function handleRoute(): void {
 			showHomePage();
 			break;
 	}
+	updateTranslations();
 }
 
 

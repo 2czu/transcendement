@@ -75,7 +75,6 @@ export function createSignUpPage(): void {
 				body: JSON.stringify(payload),
 				mode: 'cors'
 			});
-
 			const data = await res.json();
 			if (res.status === 201) {
 				message.textContent = "Compte créé ! Redirection vers la connexion...";
@@ -101,3 +100,4 @@ export function createSignUpPage(): void {
 		});
 	}
 }
+

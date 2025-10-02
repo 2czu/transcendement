@@ -1,5 +1,6 @@
-import { showGamePage, showDashboardPage, showTournamentPage, showStatsPage } from './router';
+import { showGamePage, showDashboardPage, showTournamentPage, showStatsPage, handleRoute } from './router';
 import { showSignInPage } from './router';
+import { getLanguage, setLanguage, updateTranslations } from './lang';
 
 export function createHomePage(): void {
 	const app = document.getElementById('app');
@@ -8,7 +9,12 @@ export function createHomePage(): void {
 	app.innerHTML = `
 		<div class="min-h-screen bg-black text-white">
 		<!-- Header with user icon -->
-		<header class="flex justify-end p-6">
+		<header class="flex justify-end p-6 space-x-3">
+			<select id="langSwitcher" class="bg-gray-800 text-white rounded px-2 py-1 hover:bg-gray-700 transition-colors">
+				<option value="en">EN</option>
+				<option value="fr">FR</option>
+				<option value="es">ES</option>
+			</select>
 			<button id="userIcon" class="w-10 h-10 bg-gray-800 rounded-full flex items-center justify-center hover:bg-gray-700 transition-colors">
 			<svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
 				<path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"></path>
@@ -99,14 +105,14 @@ export function createHomePage(): void {
 	if (statsBtn) {
 		statsBtn.addEventListener("click", () => {
 		window.history.pushState({}, '', '/game');
-		showStatsPage();
+		handleRoute();
 		});
 	}
 	const gameBtn = document.getElementById("gameBtn");
 	if (gameBtn) {
 		gameBtn.addEventListener("click", () => {
 		window.history.pushState({}, '', '/game');
-		showGamePage();
+		handleRoute();
 		});
 	}
 
@@ -114,7 +120,7 @@ export function createHomePage(): void {
 	if (tournamentBtn) {
 		tournamentBtn.addEventListener("click", () => {
 		window.history.pushState({}, '', '/tournament');
-		showTournamentPage();
+		handleRoute();
 		});
 	}
 
@@ -124,11 +130,46 @@ export function createHomePage(): void {
 		const token = localStorage.getItem('auth_token');
 		if (token) {
 			window.history.pushState({}, '', '/dashboard');
-			showDashboardPage();
+			handleRoute();
 		} else {
 			window.history.pushState({}, '', '/signIn');
-			showSignInPage();
+			handleRoute();
+
 		}
 		});
 	}
+
+const langSwitcher = document.getElementById("langSwitcher") as HTMLSelectElement;
+if (langSwitcher) {
+	// Charger la langue sauvegardée
+	const savedLang = getLanguage();
+	langSwitcher.value = savedLang;
+
+	langSwitcher.addEventListener("change", () => {
+		setLanguage(langSwitcher.value as Lang);
+	});
+}
+async function fetchUser(id) {
+    try {
+        const token = localStorage.getItem('auth_token');
+        const res = await fetch(`https://localhost:8443/users/${id}`, {
+            method: 'GET',
+            headers: { 'Authorization': `Bearer ${token}` }
+        });
+
+        if (res.ok) {
+            const data = await res.json();
+            console.log(`------------------Réponse /users/${id} :`, data);
+        } else {
+            console.log(`-------------------Erreur ${res.status} : ${res.statusText}`);
+        }
+    } catch (err) {
+        console.error('///////////////////////Erreur lors de la requête :', err);
+    }
+}
+
+// Exécution au chargement de la page
+window.addEventListener('load', () => {
+    fetchUser(1); // remplace 1 par l'id que tu veux tester
+});
 } 

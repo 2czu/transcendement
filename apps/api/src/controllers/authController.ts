@@ -9,27 +9,17 @@ export const googleOAuth = async (db: Database, code: string) => {
 	if (!client_id || !client_secret || !client_url) {
   		throw new Error('Missing Google OAuth env variables');
 	}
-
-	const params = new URLSearchParams();
-	params.append('code', code);
-	params.append('client_id', client_id);
-	params.append('client_secret', client_secret);
-	params.append('redirect_uri', client_url);
-	params.append('grant_type', 'authorization_code');
-	const response = await fetch('https://oauth2.googleapis.com/token', {
-		method: 'POST',
-		headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-		body: params.toString(),
-	});
-	if (!response.ok)
-		throw new Error(`error: ${response.statusText}`)
-	const data = await response.json();
-	const decoded = await verifyGoogleToken(data.id_token);
+	const decoded = await verifyGoogleToken(code);
 	if (!decoded)
 		throw new Error('error: Invalid google token bruh');
-	var user = await db.get("SELECT id, email FROM users WHERE email = ?", [decoded.email]);
+	var user = await db.get("SELECT id, email, isOAuth FROM users WHERE email = ?", [decoded.email]);
 	if (!user)
-		user = await createUser(db, decoded.username, decoded.email, '', 0, null, 'placeholder.jpg', 'offline');
+	{
+		user = await createUser(db, decoded.name, decoded.email, null, 0, null, 'placeholder.jpg', 'offline', 1);
+		if (!user || (user as any).error) {
+			throw new Error('Error creating google user')
+		}
+	}
 	const token = signToken({ userId: user.id });
 	return token;
 };

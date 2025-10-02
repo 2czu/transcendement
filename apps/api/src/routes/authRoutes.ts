@@ -1,31 +1,31 @@
 import { FastifyPluginAsync } from 'fastify';
 import { Database } from 'sqlite';
 import { googleOAuth } from '../controllers/authController.js';
-import { friendProperties } from '../schemas/schema.js';
 
 const authRoutes: FastifyPluginAsync <{ db: Database }> = async (fastify: any, opts: any) => {
 	const { db } = opts;
 
 	fastify.route({
-		method: 'GET',
+		method: 'POST',
 		url: "/auth/google/callback",
 		schema: {
-			params: {
+			body: {
 				type : 'object',
-				required: ['code'],
+				required: ['id_token'],
 				properties: {
-					code: {type: 'string' }
+					id_token: {type: 'string' }
 				}
 			},
 			response: {
-				201: { type: 'string' },
+				201: { token: 'string' },
 				},
 			},
 		handler: async(request: any, reply: any) => {
-			const { code } = request.params as { code: string };
+			const { id_token } = request.body as { id_token: string };
 			try {
-				const google = await googleOAuth(db, code);
-				reply.code(201).send(google);
+				const google = await googleOAuth(db, id_token);
+				console.log(google);
+				reply.code(201).send({ token: google });
 			} catch (err: any) {
 				if (err.code === 'SQLITE_CONSTRAINT') {
 						reply.code(409).send({ error: 'Constraint problems' });

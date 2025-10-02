@@ -58,7 +58,6 @@ async function start() {
         credentials: true
     });
     await app.register(fastifyWebsocket);
-    console.log(__dirname);
     await app.register(fastifyStatic, {
         root: path.join(__dirname, 'routes/uploads'),
         prefix: '/uploads/',

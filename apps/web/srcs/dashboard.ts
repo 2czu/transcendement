@@ -144,7 +144,7 @@ export function createDashboardPage(): void {
             </div>
 
             <div>
-              <h3 data-i18n="dashboard.my_friends class="text-lg font-semibold text-gray-800 mb-4">My friends</h3>
+              <h3 data-i18n="dashboard.my_friends" class="text-lg font-semibold text-gray-800 mb-4">My friends</h3>
               <div id="friendsList" class="space-y-3">
                 <p class="text-gray-500 text-sm">Loading friends list...</p>
               </div>
@@ -436,7 +436,7 @@ export function createDashboardPage(): void {
 		if (!friendRequests) return;
 
 		if (requests.length === 0) {
-			friendRequests.innerHTML = '<p class="text-gray-500 text-sm">No pending friend requests</p>';
+			friendRequests.innerHTML = '<p data-i18n="dashboard.no_req" class="text-gray-500 text-sm">No pending friend requests</p>';
 			return;
 		}
 
@@ -473,7 +473,7 @@ export function createDashboardPage(): void {
 		if (!friendsList) return;
 
 		if (friends.length === 0) {
-			friendsList.innerHTML = '<p class="text-gray-500 text-sm">You have no friends yet</p>';
+			friendsList.innerHTML = '<p data-i18n="dashboard.no_friends" class="text-gray-500 text-sm">You have no friends yet</p>';
 			return;
 		}
 

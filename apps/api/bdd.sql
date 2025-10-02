@@ -2,12 +2,13 @@ CREATE TABLE IF NOT EXISTS users (
 	id INTEGER PRIMARY KEY AUTOINCREMENT,
 	username TEXT UNIQUE NOT NULL,
 	email TEXT UNIQUE NOT NULL,
-	password_hash TEXT NOT NULL,
+	password_hash TEXT,
 	is_2fa BOOLEAN DEFAULT FALSE,
 	secret_2fa TEXT,
 	timer_2fa DATETIME DEFAULT CURRENT_TIMESTAMP,
 	avatar_url TEXT,
 	isLogged TEXT CHECK(isLogged IN ('offline', 'online')) DEFAULT 'offline',
+	isOAuth BOOLEAN DEFAULT FALSE,
 	created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 );
 

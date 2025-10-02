@@ -31,34 +31,34 @@ export function createProfilePage(): void {
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
               </svg>
             </button>
-            <h1 class="text-3xl font-bold text-gray-900">My Profile</h1>
+            <h1 data-i18n="profile.my_profile" class="text-3xl font-bold text-gray-900">My Profile</h1>
           </div>
 
           <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
-            <h2 class="text-xl font-semibold text-gray-900 mb-4">Personal Information</h2>
+            <h2 data-i18n="profile.personal_info" class="text-xl font-semibold text-gray-900 mb-4">Personal Information</h2>
             
             <div class="mb-6">
-              <label class="block text-sm font-medium text-gray-700 mb-2">Profile picture</label>
+              <label data-i18n="profile.profile_pic" class="block text-sm font-medium text-gray-700 mb-2">Profile picture</label>
               <div class="flex items-center space-x-4">
                 <div id="currentAvatar" class="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center overflow-hidden">
                   <span class="text-3xl text-indigo-600">👤</span>
                 </div>
                 <div class="flex-1">
                   <input type="file" id="avatarInput" accept="image/*" class="hidden">
-                  <button id="changeAvatarBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-colors">
+                  <button data-i18n="profile.upload_pic" id="changeAvatarBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-colors">
                     Change photo
                   </button>
-                  <p class="text-sm text-gray-500 mt-1">Accepted formats: JPG, PNG (max 1MB)</p>
+                  <p data-i18n="profile.formats" class="text-sm text-gray-500 mt-1">Accepted formats: JPG, PNG (max 1MB)</p>
                 </div>
               </div>
             </div>
 
             <div class="mb-6">
-              <label for="username" class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+              <label data-i18n="profile.username" for="username" class="block text-sm font-medium text-gray-700 mb-2">Username</label>
               <div class="flex space-x-2">
-                <input type="text" id="username" placeholder="Your username" 
+                <input data-i18n="profile.username_form"  type="text" id="username" placeholder="Your username" 
                        class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                <button id="saveUsernameBtn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors">
+                <button data-i18n="profile.save_button"  id="saveUsernameBtn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors">
                   Save
                 </button>
               </div>
@@ -69,11 +69,11 @@ export function createProfilePage(): void {
               <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
               <input type="email" id="email" readonly 
                      class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-500">
-              <p class="text-sm text-gray-500 mt-1">Email cannot be changed</p>
+              <p data-i18n="profile.email_cannot" class="text-sm text-gray-500 mt-1">Email cannot be changed</p>
             </div>
 
             <div class="mb-6">
-              <label class="block text-sm font-medium text-gray-700 mb-2">Connection status</label>
+              <label data-i18n="profile.connection_status" class="block text-sm font-medium text-gray-700 mb-2">Connection status</label>
               <div class="flex items-center space-x-2">
                 <span id="statusIndicator" class="w-3 h-3 bg-green-500 rounded-full"></span>
                 <span id="statusText" class="text-sm text-gray-600">Online</span>
@@ -82,24 +82,24 @@ export function createProfilePage(): void {
           </div>
 
           <div class="bg-white rounded-lg shadow-sm p-6 border border-red-200">
-            <h2 class="text-xl font-semibold text-red-700 mb-4">Danger zone</h2>
+            <h2 data-i18n="profile.danger_zone" class="text-xl font-semibold text-red-700 mb-4">Danger zone</h2>
             
             <div class="mb-4">
-              <h3 class="text-lg font-medium text-red-700 mb-2">Delete my account</h3>
-              <p class="text-sm text-gray-600 mb-4">
+              <h3 data-i18n="profile.delete_my_acc" class="text-lg font-medium text-red-700 mb-2">Delete my account</h3>
+              <p data-i18n="profile.irreversible" class="text-sm text-gray-600 mb-4">
                 This action is irreversible. All your data, friends, and statistics will be permanently deleted.
               </p>
-              <button id="deleteAccountBtn" class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg transition-colors">
+              <button data-i18n="profile.delete_button" id="deleteAccountBtn" class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg transition-colors">
                 Delete my account
               </button>
             </div>
 
             <div>
-              <h3 class="text-lg font-medium text-gray-700 mb-2">Log out</h3>
-              <p class="text-sm text-gray-600 mb-4">
+              <h3 data-i18n="profile.log_out" class="text-lg font-medium text-gray-700 mb-2">Log out</h3>
+              <p data-i18n="profile.desc_log_out" class="text-sm text-gray-600 mb-4">
                 Close your current session and return to the home page.
               </p>
-              <button id="logoutBtn" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg transition-colors">
+              <button data-i18n="profile.log_out_button" id="logoutBtn" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg transition-colors">
                 Log out
               </button>
             </div>

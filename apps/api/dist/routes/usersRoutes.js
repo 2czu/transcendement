@@ -34,9 +34,13 @@ const userRoutes = async (fastify, opts) => {
         handler: async (request, reply) => {
             const { username, email, password, is_2fa, avatar_url = "placeholder.jpg", isLogged = "offline", secret_2fa = null, } = request.body;
             try {
-                const user = await createUser(db, username, email, password, is_2fa, secret_2fa, avatar_url, isLogged);
+                const user = await createUser(db, username, email, password, is_2fa, secret_2fa, avatar_url, isLogged, 0);
                 if (user?.error == 'username') {
                     reply.code(409).send({ error: 'Username unavalaible' });
+                    return;
+                }
+                if (user?.error == 'google account') {
+                    reply.code(409).send({ error: 'Please use the google button' });
                     return;
                 }
                 if (user?.error == 'email') {

@@ -55,9 +55,14 @@ const userRoutes: FastifyPluginAsync <{ db: Database }> = async (fastify: Fastif
 				isLogged: string,
 			};
 			try {
-				const user = await createUser(db, username, email, password, is_2fa, secret_2fa, avatar_url, isLogged);
+				const user = await createUser(db, username, email, password, is_2fa, secret_2fa, avatar_url, isLogged, 0);
 				if (user?.error == 'username') {
 					reply.code(409).send({ error: 'Username unavalaible' });
+					return ;
+				}
+				if (user?.error == 'google account')
+				{
+					reply.code(409).send({ error: 'Please use the google button'})
 					return ;
 				}
 				if (user?.error == 'email') {

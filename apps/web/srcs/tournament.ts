@@ -59,9 +59,9 @@ export function createTournamentPage(): void {
           </div>
           
           <div class="w-full bg-gray-900/50 rounded-2xl p-6 border border-gray-600">
-            <h2 class="text-2xl font-bold text-white mb-4 text-center">🎮 Current Match</h2>
+            <h2 data-i18n="tournament.current_match" class="text-2xl font-bold text-white mb-4 text-center">🎮 Current Match</h2>
             <div id="currentMatch" class="text-center">
-              <p data-i18n="tournament." class="text-gray-400">No match in progress</p>
+              <p data-i18n="tournament.progress" class="text-gray-400">No match in progress</p>
             </div>
             
             <div class="mt-6 relative bg-black border-4 rounded-2xl shadow-lg overflow-hidden">
@@ -84,16 +84,16 @@ export function createTournamentPage(): void {
         </div>
         
         <div class="flex flex-wrap gap-4 justify-center w-full">
-          <button id="startMatchBtn" class="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 text-white font-bold rounded-xl shadow-lg transition-all duration-200">
+          <button data-i18n="tournament.startmatch_button" id="startMatchBtn" class="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 text-white font-bold rounded-xl shadow-lg transition-all duration-200">
         	Start match
           </button>
-          <button id="nextMatchBtn" class="px-6 py-3 bg-gradient-to-r from-green-600 to-green-400 hover:from-green-700 hover:to-green-500 text-white font-bold rounded-xl shadow-lg transition-all duration-200">
+          <button data-i18n="tournament.nextmatch_button" id="nextMatchBtn" class="px-6 py-3 bg-gradient-to-r from-green-600 to-green-400 hover:from-green-700 hover:to-green-500 text-white font-bold rounded-xl shadow-lg transition-all duration-200">
             Next match
           </button>
-          <button id="restartTournamentBtn" class="px-6 py-3 bg-gradient-to-r from-purple-600 to-purple-400 hover:from-purple-700 hover:to-purple-500 text-white font-bold rounded-xl shadow-lg transition-all duration-200">
+          <button data-i18n="tournament.new_tournament_button" id="restartTournamentBtn" class="px-6 py-3 bg-gradient-to-r from-purple-600 to-purple-400 hover:from-purple-700 hover:to-purple-500 text-white font-bold rounded-xl shadow-lg transition-all duration-200">
             New tournament
           </button>
-          <button id="backBtn" class="px-6 py-3 bg-gradient-to-r from-gray-700 to-gray-500 hover:from-gray-800 hover:to-gray-600 text-white font-bold rounded-xl shadow-lg transition-all duration-200">
+          <button data-i18n="tournament.back_button" id="backBtn" class="px-6 py-3 bg-gradient-to-r from-gray-700 to-gray-500 hover:from-gray-800 hover:to-gray-600 text-white font-bold rounded-xl shadow-lg transition-all duration-200">
             🏠 Back
           </button>
         </div>
@@ -357,7 +357,7 @@ function generateBracketHTML(): string {
 	let html = '';
 
 	html += '<div class="mb-6">';
-	html += '<h3 class="text-lg font-bold text-blue-400 mb-2">First round</h3>';
+	html += '<h3 data-i18n="tournament.first_round" class="text-lg font-bold text-blue-400 mb-2">First round</h3>';
 	for (let i = 0; i < 4; i++) {
 		const match = tournament.matches[i];
 		html += generateMatchHTML(match, i);
@@ -365,7 +365,7 @@ function generateBracketHTML(): string {
 	html += '</div>';
 
 	html += '<div class="mb-6">';
-	html += '<h3 class="text-lg font-bold text-green-400 mb-2">Semifinals</h3>';
+	html += '<h3 data-i18n="tournament.semi_finals" class="text-lg font-bold text-green-400 mb-2">Semifinals</h3>';
 	for (let i = 4; i < 6; i++) {
 		const match = tournament.matches[i];
 		html += generateMatchHTML(match, i);
@@ -373,7 +373,7 @@ function generateBracketHTML(): string {
 	html += '</div>';
 
 	html += '<div>';
-	html += '<h3 class="text-lg font-bold text-yellow-400 mb-2">Final</h3>';
+	html += '<h3 data-i18n="tournament.final" class="text-lg font-bold text-yellow-400 mb-2">Final</h3>';
 	const finalMatch = tournament.matches[6];
 	html += generateMatchHTML(finalMatch, 6);
 	html += '</div>';
@@ -592,16 +592,16 @@ function showTournamentWinnerOverlay(name: string): void {
 	overlay.innerHTML = `
 		<div class="bg-gray-900 border-2 border-yellow-500 rounded-2xl p-8 max-w-md w-full mx-4 text-center shadow-2xl">
 		<div class="mb-6">
-			<h2 class="text-3xl font-bold text-white mb-2">🏆 Tournament finished</h2>
+			<h2 data-i18n="tournament.finished" class="text-3xl font-bold text-white mb-2">🏆 Tournament finished</h2>
 			<div class="text-6xl mb-4">🥇</div>
 			<h3 class="text-2xl font-bold text-yellow-400 mb-2">${name} won the tournament!</h3>
-			<p class="text-sm text-gray-400">Tournament will automatically restart in 2.5s…</p>
+			<p data-i18n="tournament.restart" class="text-sm text-gray-400">Tournament will automatically restart in 2.5s…</p>
 		</div>
 		<div class="flex flex-col gap-3">
-			<button id="tournamentRestartBtn" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">
+			<button data-i18n="tournament.new_tournament_button" id="tournamentRestartBtn" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">
 			🔄 New tournament
 			</button>
-			<button id="tournamentBackBtn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">
+			<button data-i18n="tournament.back_menu_button" id="tournamentBackBtn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">
 			🏠 Back to menu
 			</button>
 		</div>
