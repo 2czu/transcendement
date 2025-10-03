@@ -10,6 +10,12 @@ export function createGamePage(): void {
 
 	app.innerHTML = `
 		<div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col items-center justify-center px-4 py-8">
+		<button id="homeBtn" aria-label="Home" title="Home" class="absolute top-4 left-4 bg-white text-black border rounded p-2 shadow-sm hover:bg-gray-100">
+		<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+			<path stroke-linecap="round" stroke-linejoin="round" d="M3 9.75L12 3l9 6.75V21a.75.75 0 01-.75.75H3.75A.75.75 0 013 21V9.75z" />
+			<path stroke-linecap="round" stroke-linejoin="round" d="M9 21V12h6v9" />
+		</svg>
+		</button>
 		<div class="w-full max-w-3xl bg-gray-800/80 rounded-3xl shadow-2xl p-8 flex flex-col items-center border border-gray-700 backdrop-blur-md">
 			<div class="w-full text-center mb-8">
 			<h1 class="text-5xl font-extrabold mb-2 text-white drop-shadow-lg animate-pulse">
@@ -44,9 +50,10 @@ export function createGamePage(): void {
 			<button data-i18n="pong.replay_button" id="replayBtn" class="px-8 py-3 bg-gradient-to-r from-green-600 to-green-400 hover:from-green-700 hover:to-green-500 text-white font-bold rounded-xl shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-300">
 				<span class="inline-flex items-center gap-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h.582M20 20v-5h-.581M5.455 19.045A9 9 0 1 1 19.045 5.455"/></svg>Replay</span>
 			</button>
-			<button  data-i18n="pong.back_button" id="backBtn" class="px-8 py-3 bg-gradient-to-r from-gray-700 to-gray-500 hover:from-gray-800 hover:to-gray-600 text-white font-bold rounded-xl shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400">
+			<button data-i18n="pong.back_button" id="backBtn" class="px-8 py-3 bg-gradient-to-r from-gray-700 to-gray-500 hover:from-gray-800 hover:to-gray-600 text-white font-bold rounded-xl shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400">
 				<span class="inline-flex items-center gap-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>Back</span>
 			</button>
+		
 			</div>
 		</div>
 		</div>
@@ -109,6 +116,15 @@ export function createGamePage(): void {
 				game3D.dispose();
 			}
 			history.back();
+		});
+	}
+
+	const homeBtn = document.getElementById('homeBtn') as HTMLButtonElement | null;
+	if (homeBtn) {
+		homeBtn.addEventListener('click', () => {
+			if (game3D) game3D.dispose();
+			window.history.pushState({}, '', '/');
+			window.dispatchEvent(new PopStateEvent('popstate'));
 		});
 	}
 

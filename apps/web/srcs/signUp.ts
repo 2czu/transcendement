@@ -4,6 +4,12 @@ export function createSignUpPage(): void {
 
 	app.innerHTML = `
 		<div class="min-h-screen bg-indigo-500 text-white flex flex-col items-center justify-center">
+		<button id="homeBtn" aria-label="Home" title="Home" class="absolute top-4 left-4 bg-white text-black border rounded p-2 shadow-sm hover:bg-gray-100">
+			<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M3 9.75L12 3l9 6.75V21a.75.75 0 01-.75.75H3.75A.75.75 0 013 21V9.75z" />
+				<path stroke-linecap="round" stroke-linejoin="round" d="M9 21V12h6v9" />
+			</svg>
+		</button>
 		<div class="text-center mb-8">
 			<h1 class="text-4xl font-bold mb-2">Créer un compte</h1>
 		</div>
@@ -69,12 +75,12 @@ export function createSignUpPage(): void {
 
 		try {
 			const res = await fetch("https://localhost:8443/signUp",
-			{
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(payload),
-				mode: 'cors'
-			});
+				{
+					method: "POST",
+					headers: { "Content-Type": "application/json" },
+					body: JSON.stringify(payload),
+					mode: 'cors'
+				});
 			const data = await res.json();
 			if (res.status === 201) {
 				message.textContent = "Compte créé ! Redirection vers la connexion...";
@@ -96,6 +102,14 @@ export function createSignUpPage(): void {
 		goSignIn.addEventListener('click', (e) => {
 			e.preventDefault();
 			window.history.pushState({}, '', '/signIn');
+			window.dispatchEvent(new PopStateEvent('popstate'));
+		});
+	}
+
+	const homeBtn = document.getElementById('homeBtn') as HTMLButtonElement | null;
+	if (homeBtn) {
+		homeBtn.addEventListener('click', () => {
+			window.history.pushState({}, '', '/');
 			window.dispatchEvent(new PopStateEvent('popstate'));
 		});
 	}

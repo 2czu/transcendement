@@ -72,72 +72,73 @@ export function createHomePage(): void {
 	const statsBtn = document.getElementById('statsBtn') as HTMLButtonElement;
 	if (statsBtn) {
 		statsBtn.addEventListener("click", () => {
-		window.history.pushState({}, '', '/game');
-		handleRoute();
+			window.history.pushState({}, '', '/game');
+			handleRoute();
 		});
 	}
 	const gameBtn = document.getElementById("gameBtn");
 	if (gameBtn) {
 		gameBtn.addEventListener("click", () => {
-		window.history.pushState({}, '', '/game');
-		handleRoute();
+			window.history.pushState({}, '', '/game');
+			handleRoute();
 		});
 	}
 
 	const tournamentBtn = document.getElementById("tournamentBtn");
 	if (tournamentBtn) {
 		tournamentBtn.addEventListener("click", () => {
-		window.history.pushState({}, '', '/tournament');
-		handleRoute();
+			window.history.pushState({}, '', '/tournament');
+			handleRoute();
 		});
 	}
 
 	const userIcon = document.getElementById("userIcon");
 	if (userIcon) {
 		userIcon.addEventListener("click", () => {
-		const token = localStorage.getItem('auth_token');
-		if (token) {
-			window.history.pushState({}, '', '/dashboard');
-			handleRoute();
-		} else {
-			window.history.pushState({}, '', '/signIn');
-			handleRoute();
+			const token = localStorage.getItem('auth_token');
+			if (token) {
+				window.history.pushState({}, '', '/dashboard');
+				handleRoute();
+			} else {
+				window.history.pushState({}, '', '/signIn');
+				handleRoute();
 
-		}
+			}
 		});
 	}
 
-const langSwitcher = document.getElementById("langSwitcher") as HTMLSelectElement;
-if (langSwitcher) {
-	// Charger la langue sauvegardée
-	const savedLang = getLanguage();
-	langSwitcher.value = savedLang;
+	const langSwitcher = document.getElementById("langSwitcher") as HTMLSelectElement;
+	if (langSwitcher) {
+		// Charger la langue sauvegardée
+		const savedLang = getLanguage();
+		langSwitcher.value = savedLang;
 
-	langSwitcher.addEventListener("change", () => {
-		setLanguage(langSwitcher.value as Lang);
+		langSwitcher.addEventListener("change", () => {
+			setLanguage(langSwitcher.value as Lang);
+		});
+	}
+
+	async function fetchUser(id) {
+		try {
+			const token = localStorage.getItem('auth_token');
+			const res = await fetch(`https://localhost:8443/users/${id}`, {
+				method: 'GET',
+				headers: { 'Authorization': `Bearer ${token}` }
+			});
+
+			if (res.ok) {
+				const data = await res.json();
+				console.log(`------------------Réponse /users/${id} :`, data);
+			} else {
+				console.log(`-------------------Erreur ${res.status} : ${res.statusText}`);
+			}
+		} catch (err) {
+			console.error('///////////////////////Erreur lors de la requête :', err);
+		}
+	}
+
+	// Exécution au chargement de la page
+	window.addEventListener('load', () => {
+		fetchUser(1); // remplace 1 par l'id que tu veux tester
 	});
-}
-async function fetchUser(id) {
-    try {
-        const token = localStorage.getItem('auth_token');
-        const res = await fetch(`https://localhost:8443/users/${id}`, {
-            method: 'GET',
-            headers: { 'Authorization': `Bearer ${token}` }
-        });
-
-        if (res.ok) {
-            const data = await res.json();
-            console.log(`------------------Réponse /users/${id} :`, data);
-        } else {
-            console.log(`-------------------Erreur ${res.status} : ${res.statusText}`);
-        }
-    } catch (err) {
-        console.error('///////////////////////Erreur lors de la requête :', err);
-    }
-}
-
-// Exécution au chargement de la page
-window.addEventListener('load', () => {
-    fetchUser(1); // remplace 1 par l'id que tu veux tester
-});
 } 

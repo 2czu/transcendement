@@ -4,6 +4,12 @@ export function createSignInPage(): void {
 
 	app.innerHTML = `
 		<div class="min-h-screen bg-indigo-500 text-white flex flex-col items-center justify-center">
+		<button id="homeBtn" aria-label="Home" title="Home" class="absolute top-4 left-4 bg-white text-black border rounded p-2 shadow-sm hover:bg-gray-100">
+			<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+				<path stroke-linecap="round" stroke-linejoin="round" d="M3 9.75L12 3l9 6.75V21a.75.75 0 01-.75.75H3.75A.75.75 0 013 21V9.75z" />
+				<path stroke-linecap="round" stroke-linejoin="round" d="M9 21V12h6v9" />
+			</svg>
+		</button>
 		<div class="text-center mb-8">
 			<h1 class="text-4xl font-bold mb-2">Connexion</h1>
 		</div>
@@ -160,6 +166,14 @@ export function createSignInPage(): void {
 			window.dispatchEvent(new PopStateEvent('popstate'));
 		});
 	}
+
+	const homeBtn = document.getElementById('homeBtn') as HTMLButtonElement | null;
+	if (homeBtn) {
+		homeBtn.addEventListener('click', () => {
+			window.history.pushState({}, '', '/');
+			window.dispatchEvent(new PopStateEvent('popstate'));
+		});
+	}
 	loadGoogleScript("1047189652036-miitijufimvv2qct8rrimpqmcbc5fu64.apps.googleusercontent.com", (response) => {
 		console.log("Google response:", response); // <- voir ce qui arrive réellement
 		if (!response.credential) {
@@ -168,27 +182,27 @@ export function createSignInPage(): void {
 		}
 		fetch("https://localhost:8443/auth/google/callback", {
 			method: "POST",
-			headers: { "Content-Type": "application/json",  },
+			headers: { "Content-Type": "application/json", },
 			body: JSON.stringify({ id_token: response.credential }),
 			mode: "cors"
 		})
-		.then(res => res.json())
-		.then(data => {
-			console.log(data.token);
-			if (data?.token) {
-				localStorage.setItem("auth_token", data.token);
-				try {
-					document.cookie = `jwt=${data.token}; Path=/; SameSite=None; Secure`;
-				} catch {}
-				message.textContent = "Connected with google !";
-				setTimeout(() => {
-					window.history.pushState({}, '', '/');
-					window.dispatchEvent(new PopStateEvent('popstate'));
-				}, 500);
-			} else
-				message.textContent = "Problem with Google";
-		})
-		.catch(err => console.error(err));
+			.then(res => res.json())
+			.then(data => {
+				console.log(data.token);
+				if (data?.token) {
+					localStorage.setItem("auth_token", data.token);
+					try {
+						document.cookie = `jwt=${data.token}; Path=/; SameSite=None; Secure`;
+					} catch { }
+					message.textContent = "Connected with google !";
+					setTimeout(() => {
+						window.history.pushState({}, '', '/');
+						window.dispatchEvent(new PopStateEvent('popstate'));
+					}, 500);
+				} else
+					message.textContent = "Problem with Google";
+			})
+			.catch(err => console.error(err));
 	});
 }
 
@@ -196,7 +210,7 @@ export function createSignInPage(): void {
 declare const google: any
 
 function loadGoogleScript(clientId: string, callback: (res: any) => void) {
-	if ((window as any).googleLoaded) return ;
+	if ((window as any).googleLoaded) return;
 	(window as any).googleLoaded = true;
 	const script = document.createElement('script');
 	script.src = "https://accounts.google.com/gsi/client";
@@ -208,12 +222,12 @@ function loadGoogleScript(clientId: string, callback: (res: any) => void) {
 			client_id: clientId,
 			callback: callback
 		});
-	
+
 		const btn = document.getElementById("google-button");
 		if (btn) {
 			google.accounts.id.renderButton(
 				btn,
-				{ theme: "outline", width: 320}
+				{ theme: "outline", width: 320 }
 			);
 		}
 	}
