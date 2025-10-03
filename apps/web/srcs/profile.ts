@@ -71,12 +71,28 @@ export function createProfilePage(): void {
               <p id="usernameMessage" class="text-sm mt-2"></p>
             </div>
 
-            <div class="mb-6">
-              <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
-              <input type="email" id="email" readonly 
-                     class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-500">
-              <p data-i18n="profile.email_cannot" class="text-sm text-gray-500 mt-1">Email cannot be changed</p>
-            </div>
+						<div class="mb-6">
+							<label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+							<div class="flex space-x-2">
+								<input type="email" id="email" 
+											 class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+								<button id="saveEmailBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">Save</button>
+							</div>
+							<p id="emailMessage" class="text-sm mt-2 text-gray-500"></p>
+						</div>
+
+						<div class="mb-6 border-t pt-6">
+							<h3 class="text-lg font-medium text-gray-900 mb-2">Change password</h3>
+							<div class="space-y-3">
+								<input id="currentPassword" type="password" placeholder="Current password" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+								<input id="newPassword" type="password" placeholder="New password" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+								<input id="confirmPassword" type="password" placeholder="Confirm new password" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+								<div class="flex items-center space-x-2">
+									<button id="changePasswordBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">Change password</button>
+									<p id="passwordMessage" class="text-sm text-gray-500"></p>
+								</div>
+							</div>
+						</div>
 
             <div class="mb-6">
               <label data-i18n="profile.connection_status" class="block text-sm font-medium text-gray-700 mb-2">Connection status</label>
@@ -125,6 +141,13 @@ export function createProfilePage(): void {
 	const saveUsernameBtn = document.getElementById('saveUsernameBtn') as HTMLButtonElement;
 	const usernameMessage = document.getElementById('usernameMessage') as HTMLParagraphElement | null;
 	const email = document.getElementById('email') as HTMLInputElement;
+	const saveEmailBtn = document.getElementById('saveEmailBtn') as HTMLButtonElement | null;
+	const emailMessage = document.getElementById('emailMessage') as HTMLParagraphElement | null;
+	const currentPassword = document.getElementById('currentPassword') as HTMLInputElement | null;
+	const newPassword = document.getElementById('newPassword') as HTMLInputElement | null;
+	const confirmPassword = document.getElementById('confirmPassword') as HTMLInputElement | null;
+	const changePasswordBtn = document.getElementById('changePasswordBtn') as HTMLButtonElement | null;
+	const passwordMessage = document.getElementById('passwordMessage') as HTMLParagraphElement | null;
 	const deleteAccountBtn = document.getElementById('deleteAccountBtn') as HTMLButtonElement;
 	const logoutBtn = document.getElementById('logoutBtn') as HTMLButtonElement;
 	const message = document.getElementById('message') as HTMLDivElement;
@@ -206,7 +229,6 @@ export function createProfilePage(): void {
 			let avatarUrl = await tryExt('png');
 			if (!avatarUrl) avatarUrl = await tryExt('jpg');
 			if (!avatarUrl) avatarUrl = await tryExt('jpeg');
-			if (!avatarUrl) avatarUrl = `https://localhost:8443/uploads/avatar_${userId}.png`;
 			if (currentAvatar) {
 				currentAvatar.innerHTML = `<img src="${avatarUrl}?t=${Date.now()}" alt="Avatar" class="w-full h-full object-cover">`;
 			}
@@ -252,6 +274,103 @@ export function createProfilePage(): void {
 			showMessage('Error updating username', 'error');
 		}
 	});
+
+	if (saveEmailBtn) {
+		saveEmailBtn.addEventListener('click', async () => {
+			const newEmail = email.value.trim();
+			if (!newEmail) {
+				if (emailMessage) emailMessage.textContent = 'Please enter an email';
+				return;
+			}
+			if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(newEmail)) {
+				if (emailMessage) emailMessage.textContent = 'Invalid email format';
+				return;
+			}
+
+			try {
+				const response = await fetch(`https://localhost:8443/users/${userId}`, {
+					method: 'PATCH',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': `Bearer ${token}`
+					},
+					body: JSON.stringify({ email: newEmail }),
+					credentials: 'include'
+				});
+
+				if (response.ok) {
+					if (emailMessage) emailMessage.textContent = 'Email updated successfully!';
+					showMessage('Email updated successfully!', 'success');
+				} else {
+					const err = await response.json().catch(() => ({}));
+					if (emailMessage) emailMessage.textContent = err.error || 'Error updating email';
+					showMessage(err.error || 'Error updating email', 'error');
+				}
+			} catch (err) {
+				if (emailMessage) emailMessage.textContent = 'Error updating email';
+				showMessage('Error updating email', 'error');
+			}
+		});
+	}
+
+	if (changePasswordBtn && currentPassword && newPassword && confirmPassword) {
+		changePasswordBtn.addEventListener('click', async () => {
+			const cur = currentPassword.value;
+			const nw = newPassword.value;
+			const conf = confirmPassword.value;
+			if (!cur || !nw || !conf) {
+				if (passwordMessage) passwordMessage.textContent = 'Please fill all password fields';
+				return;
+			}
+			if (nw !== conf) {
+				if (passwordMessage) passwordMessage.textContent = 'Passwords do not match';
+				return;
+			}
+
+			const emailToUse = email.value || email.placeholder || '';
+			try {
+				const verifyRes = await fetch('https://localhost:8443/signIn', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({ email: emailToUse, password: cur })
+				});
+				if (!verifyRes.ok) {
+					if (passwordMessage) passwordMessage.textContent = 'Current password incorrect';
+					return;
+				}
+				const verifyBody = await verifyRes.json().catch(() => ({}));
+				if (!verifyBody.token) {
+					if (passwordMessage) passwordMessage.textContent = 'Cannot verify current password (2FA?)';
+					return;
+				}
+
+				const response = await fetch(`https://localhost:8443/users/${userId}`, {
+					method: 'PATCH',
+					headers: {
+						'Content-Type': 'application/json',
+						'Authorization': `Bearer ${token}`
+					},
+					body: JSON.stringify({ password_hash: nw }),
+					credentials: 'include'
+				});
+
+				if (response.ok) {
+					if (passwordMessage) passwordMessage.textContent = 'Password changed successfully!';
+					showMessage('Password changed successfully!', 'success');
+					currentPassword.value = '';
+					newPassword.value = '';
+					confirmPassword.value = '';
+				} else {
+					const err = await response.json().catch(() => ({}));
+					if (passwordMessage) passwordMessage.textContent = err.error || 'Error changing password';
+					showMessage(err.error || 'Error changing password', 'error');
+				}
+			} catch (err) {
+				if (passwordMessage) passwordMessage.textContent = 'Error changing password';
+				showMessage('Error changing password', 'error');
+			}
+		});
+	}
 
 	deleteAccountBtn.addEventListener('click', async () => {
 		if (!confirm('Are you sure you want to delete your account? This action is irreversible.')) {
@@ -318,7 +437,7 @@ export function createProfilePage(): void {
 	function displayProfileData(data: any) {
 		if (data.user) {
 			username.value = data.user.username || '';
-			email.value = '';
+			email.value = data.user.email || '';
 			email.placeholder = data.user.email || '';
 
 			if (data.user.avatar_url && data.user.avatar_url !== 'placeholder.jpg') {

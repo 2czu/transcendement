@@ -27,8 +27,11 @@ export function createDashboardPage(): void {
                 <h1 data-i18n="dashboard.dashboard" class="text-3xl font-bold text-gray-900">Dashboard</h1>
                 <p data-i18n="dashboard.welcome" class="text-gray-600 mt-1">Welcome to your personal space</p>
               </div>
-              <div class="flex items-center space-x-4">
-                <span class="text-sm text-gray-500">Connected</span>
+								<div class="flex items-center space-x-4">
+								<div id="userBox" class="flex items-center space-x-2">
+									<div id="userAvatar" class="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-full overflow-hidden flex items-center justify-center text-sm">👤</div>
+									<span id="usernameDisplay" class="text-sm text-gray-500">Signed in as User</span>
+								</div>
                 <button data-i18n="dashboard.anonymise" id="anonymiseBtn" class="bg-slate-900 hover:bg-slate-700 text-white px-4 py-2 rounded-lg transition-colors">
                   Anonymise
                 </button>
@@ -181,6 +184,62 @@ export function createDashboardPage(): void {
 	const profileBtn = document.getElementById('profileBtn') as HTMLButtonElement;
 	const matchesBtn = document.getElementById('matchesBtn') as HTMLButtonElement;
 	const tournamentBtn = document.getElementById('tournamentBtn') as HTMLButtonElement;
+
+	(async () => {
+		try {
+			const displayEl = document.getElementById('usernameDisplay');
+			const avatarEl = document.getElementById('userAvatar');
+			if (!displayEl || !avatarEl) return;
+			const token = localStorage.getItem('auth_token');
+			if (!token) return;
+			let userId: number | null = null;
+			try {
+				const payload = JSON.parse(atob(token.split('.')[1]));
+				userId = payload.userId;
+			} catch { }
+			if (typeof userId !== 'number') return;
+
+			console.log(userId);
+
+			let name: string | null = null;
+
+			try {
+				const res = await fetch('https://localhost:8443/myprofile', { method: 'GET', headers: { 'Authorization': `Bearer ${token}` } });
+				if (res.ok) {
+					const data = await res.json().catch(() => null) as any;
+					name = data?.user?.username ?? data?.username ?? data?.name ?? null;
+				}
+			} catch { name = null; }
+
+			if (!name) {
+				try {
+					const maybe = await getUsernameById(userId).catch(() => 'User');
+					if (maybe && maybe !== 'User') name = maybe;
+				} catch { name = null; }
+			}
+			if (name) displayEl.textContent = `Signed in as ${name}`;
+
+			console.log(name);
+
+			const authHeader = { 'Authorization': `Bearer ${token}` };
+
+			const tryExt = async (ext: string) => {
+				const url = `https://localhost:8443/uploads/avatar_${userId}.${ext}`;
+				try {
+					const res = await fetch(url + `?t=${Date.now()}`, { method: 'GET', headers: authHeader });
+					if (res.ok) return url;
+				} catch { }
+				return null;
+			};
+
+			let avatarUrl = await tryExt('png');
+			if (!avatarUrl) avatarUrl = await tryExt('jpg');
+			if (!avatarUrl) avatarUrl = await tryExt('jpeg');
+			avatarEl.innerHTML = `<img src="${avatarUrl}?t=${Date.now()}" alt="Avatar" class="w-full h-full object-cover">`;
+		} catch (e) {
+			console.error('avatar load error', e);
+		}
+	})();
 
 	// cache pour limiter les requetes au back
 	const usernameCache = new Map<number, string>();
