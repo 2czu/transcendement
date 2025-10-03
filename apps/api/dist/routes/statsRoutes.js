@@ -5,15 +5,6 @@ const statsRoute = async (fastify, opts) => {
         method: 'PATCH',
         url: "/incrementGameplayed",
         schema: {
-            body: {
-                type: 'object',
-                required: ['player1_id', 'player2_id'],
-                properties: {
-                    player1_id: { type: 'number' },
-                    player2_id: { type: 'number' },
-                },
-                additionalProperties: false,
-            },
             response: {
                 200: {
                     type: 'object',
@@ -30,9 +21,9 @@ const statsRoute = async (fastify, opts) => {
             },
         },
         handler: async (request, reply) => {
-            const { player1_id, player2_id } = request.body;
+            const userId = request.user.userId;
             try {
-                const gameplayed = await incrementGameplayed(db, player1_id, player2_id);
+                const gameplayed = await incrementGameplayed(db, userId);
                 if ('error' in gameplayed) {
                     reply.code(404).send({ error: gameplayed.error });
                 }

@@ -8,13 +8,11 @@ const matchesRoutes = async (fastify, opts) => {
         schema: {
             body: {
                 type: 'object',
-                required: ['player1_id', 'player2_id', 'winner_id', 'score_player1', 'score_player2'],
+                required: ['winner_id', 'score_player1', 'score_player2'],
                 properties: {
-                    player1_id: { type: 'number' },
-                    player2_id: { type: 'number' },
                     winner_id: { type: 'number' },
                     score_player1: { type: 'number', minimum: 0 },
-                    score_player2: { type: 'number', minimum: 0 },
+                    score_player2: { type: 'number', minimum: 0 }
                 },
                 additionalProperties: false,
             },
@@ -23,9 +21,15 @@ const matchesRoutes = async (fastify, opts) => {
             },
         },
         handler: async (request, reply) => {
-            const { player1_id, player2_id, winner_id, score_player1, score_player2 } = request.body;
+            const { winner_id, score_player1, score_player2, } = request.body;
             try {
-                const match = await createMatch(db, player1_id, player2_id, winner_id, score_player1, score_player2);
+                const userId = request.user.userId;
+                let win;
+                if (winner_id === 1)
+                    win = userId;
+                else
+                    win = 1;
+                const match = await createMatch(db, userId, win, score_player1, score_player2);
                 if ('error' in match) {
                     reply.code(409).send({ error: match.error });
                     return;

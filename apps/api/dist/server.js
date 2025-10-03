@@ -87,13 +87,13 @@ async function start() {
             return;
         }
         const authHeader = request.headers['authorization'];
-        if (!authHeader) {
-            reply.status(401).send({ error: 'Missing Authorization header' });
-            return;
-        }
-        const token = authHeader.split(' ')[1];
+        let token;
+        if (authHeader && authHeader.startsWith('Bearer '))
+            token = authHeader.split(" ")[1];
+        else if (request.cookies?.jwt)
+            token = request.cookies.jwt;
         if (!token) {
-            reply.status(401).send({ error: 'Invalid Token' });
+            reply.status(401).send({ error: 'Missing Token' });
             return;
         }
         try {

@@ -105,10 +105,11 @@ app.addHook('preHandler', (request: any, reply: any, done: any) => {
     return;
   }
   const authHeader = request.headers['authorization'];
-  if (authHeader && authHeader.startsWith('Bearer ')
+  let token;
+  if (authHeader && authHeader.startsWith('Bearer '))
     token = authHeader.split(" ")[1];
   else if (request.cookies?.jwt)
-    token = request.cokkies.jwt;
+    token = request.cookies.jwt;
   if (!token) {
     reply.status(401).send({ error: 'Missing Token' });
     return;

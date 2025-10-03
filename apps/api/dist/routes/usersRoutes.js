@@ -191,6 +191,29 @@ const userRoutes = async (fastify, opts) => {
     });
     fastify.route({
         method: 'GET',
+        url: "/userId",
+        schema: {
+            response: {
+                200: profileResponseSchema,
+                404: {
+                    type: 'object',
+                    properties: {
+                        error: { type: 'string' }
+                    }
+                }
+            }
+        },
+        handler: async (request, reply) => {
+            try {
+                reply.code(201).send({ userId: request.user.userId });
+            }
+            catch (err) {
+                reply.code(500).send({ error: 'Failed to fetch user' });
+            }
+        }
+    });
+    fastify.route({
+        method: 'GET',
         url: "/checkUser/:username",
         schema: {
             params: {

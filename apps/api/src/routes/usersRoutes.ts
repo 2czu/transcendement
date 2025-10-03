@@ -215,6 +215,28 @@ const userRoutes: FastifyPluginAsync <{ db: Database }> = async (fastify: Fastif
 	});
 	fastify.route({
 		method: 'GET',
+		url: "/userId",
+		schema: {
+			response:  {
+				200: profileResponseSchema,
+				404: {
+					type: 'object',
+					properties: {
+						error: { type: 'string' }
+					}
+				}
+			}
+		},
+		handler: async(request: any, reply: any) => {
+			try {
+				reply.code(201).send({ userId: request.user.userId});
+			} catch (err) {
+				reply.code(500).send({ error: 'Failed to fetch user' }); 
+			}
+		}
+	});
+	fastify.route({
+		method: 'GET',
 		url: "/checkUser/:username",
 		schema: {
 			params: {
@@ -272,7 +294,7 @@ const userRoutes: FastifyPluginAsync <{ db: Database }> = async (fastify: Fastif
 		},
 		handler: async(request: any, reply: any) => {
 			try {
-				const userId = (request as any).user.userId;
+				const userId = request.user.userId;
 				const data = await getPersonnalData(db, userId);
 				if (!data.user)
 				{
