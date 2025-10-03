@@ -105,10 +105,6 @@ export function createHomePage(): void {
 				  </div>
 				</div>
 
-
-
-
-
 				<div class="flex flex-col md:flex-row items-center gap-4">
 					<button id="singleBtn" class="relative overflow-hidden px-10 py-4 rounded-full bg-gradient-to-r from-indigo-600 to-indigo-800 text-white font-bold text-lg shadow-[0_25px_50px_rgba(0,0,0,0.75)] transform transition-all duration-300 hover:-translate-y-1 hover:scale-105 active:translate-y-0 focus:outline-none focus:ring-4 focus:ring-indigo-400/20">
 						<span class="relative z-10">Singleplayer</span>
@@ -151,9 +147,8 @@ export function createHomePage(): void {
 	}
 	const singleBtn = document.getElementById("singleBtn");
 	if (singleBtn) {
-		// Singleplayer is a placeholder button for now; no navigation attached
 		singleBtn.addEventListener("click", () => {
-			// TODO: implement singleplayer flow
+			// todo
 		});
 	}
 	const multiBtn = document.getElementById("multiBtn");
