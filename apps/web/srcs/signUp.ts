@@ -3,7 +3,7 @@ export function createSignUpPage(): void {
 	if (!app) return;
 
 	app.innerHTML = `
-		<div class="min-h-screen bg-indigo-500 text-white flex flex-col items-center justify-center">
+		<div class="min-h-screen relative overflow-hidden bg-gradient-to-tr from-indigo-900 to-black text-white flex flex-col items-center justify-center">
 		<button id="homeBtn" aria-label="Home" title="Home" class="absolute top-4 left-4 bg-white text-black border rounded p-2 shadow-sm hover:bg-gray-100">
 			<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
 				<path stroke-linecap="round" stroke-linejoin="round" d="M3 9.75L12 3l9 6.75V21a.75.75 0 01-.75.75H3.75A.75.75 0 013 21V9.75z" />
@@ -14,29 +14,29 @@ export function createSignUpPage(): void {
 			<h1 class="text-4xl font-bold mb-2">Créer un compte</h1>
 		</div>
 
-		<form id="signupForm" class="bg-white text-black rounded-lg shadow-lg p-8 w-96 space-y-4">
+	<form id="signupForm" class="bg-white/10 text-white rounded-lg shadow-lg p-8 w-96 space-y-4 backdrop-blur-sm border border-white/10">
 			<div>
 			<label class="block font-medium mb-1" for="username">Nom d'utilisateur</label>
-			<input id="username" name="username" type="text" required minlength="3"
-					class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-indigo-300">
+	    <input id="username" name="username" type="text" required minlength="3"
+		    class="w-full px-3 py-2 border border-white/20 rounded focus:outline-none focus:ring focus:ring-indigo-400 bg-transparent text-white placeholder:text-white/70">
 			</div>
 
 			<div>
 			<label class="block font-medium mb-1" for="email">Email</label>
-			<input id="email" name="email" type="email" required
-					class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-indigo-300">
+	    <input id="email" name="email" type="email" required
+		    class="w-full px-3 py-2 border border-white/20 rounded focus:outline-none focus:ring focus:ring-indigo-400 bg-transparent text-white placeholder:text-white/70">
 			</div>
 
 			<div>
 			<label class="block font-medium mb-1" for="password">Mot de passe</label>
-			<input id="password" name="password" type="password" required
-					class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-indigo-300">
+	    <input id="password" name="password" type="password" required
+		    class="w-full px-3 py-2 border border-white/20 rounded focus:outline-none focus:ring focus:ring-indigo-400 bg-transparent text-white placeholder:text-white/70">
 			</div>
 
 			<div>
 			<label class="block font-medium mb-1" for="is_2fa">Activer 2FA</label>
-			<select id="is_2fa" name="is_2fa" required
-					class="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring focus:ring-indigo-300">
+	    <select id="is_2fa" name="is_2fa" required
+		    class="w-full px-3 py-2 border border-white/20 rounded focus:outline-none focus:ring focus:ring-indigo-400 bg-transparent text-white">
 				<option value="0">Non</option>
 				<option value="1">Oui</option>
 			</select>
@@ -47,7 +47,7 @@ export function createSignUpPage(): void {
 			S'inscrire
 			</button>
 
-			<p class="text-sm text-gray-600">Déjà un compte ? <a id="goSignIn" href="#" class="text-indigo-600 hover:underline">Se connecter</a></p>
+			<p class="text-sm text-white/80">Déjà un compte ? <a id="goSignIn" href="#" class="text-indigo-300 hover:underline">Se connecter</a></p>
 		</form>
 
 		<p id="message" class="mt-4 text-sm text-yellow-200"></p>
