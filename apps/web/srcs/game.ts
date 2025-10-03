@@ -221,22 +221,6 @@ export function createGamePage(): void {
 				}
 			} catch { }
 
-			try {
-				const res3 = await fetch('https://localhost:8443/showUsers', {
-					headers: { 'Authorization': `Bearer ${token}` }
-				});
-				if (res3.ok) {
-					const arr = await res3.json();
-					if (Array.isArray(arr)) {
-						const me = arr.find((u: any) => u.id === userId || u.id == userId);
-						if (me?.username) {
-							player1Name = me.username;
-							return;
-						}
-					}
-				}
-			} catch { }
-
 			if (payload.username) {
 				player1Name = payload.username;
 				return;

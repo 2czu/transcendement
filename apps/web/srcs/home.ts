@@ -38,9 +38,6 @@ export function createHomePage(): void {
 			letter-spacing: 2px;">TRANSCENDENCE</h1>
 			
 			<div class="space-y-4">
-			<button id="ping" class="px-4 py-2 border border-gray-600 rounded hover:bg-gray-800 transition-colors text-white">
-				Tester l'API HTTPS
-			</button>
 			
 			<button data-i18n="home.game" id="gameBtn" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition-colors">
 				Jeu
@@ -68,38 +65,9 @@ export function createHomePage(): void {
               </div>
         	</div>
 			
-			<pre id="out" class="mt-4 p-3 bg-gray-900 border border-gray-600 rounded text-green-400"></pre>
 		</main>
 		</div>
 	`;
-
-	const pingBtn = document.getElementById("ping");
-	const out = document.getElementById("out");
-
-	if (pingBtn && out) {
-		pingBtn.addEventListener("click", async () => {
-		out.textContent = "Appel en cours...";
-		try {
-			const token = localStorage.getItem('auth_token');
-			if (!token) {
-			out.textContent = "Erreur: Vous devez être connecté pour voir les utilisateurs";
-			return;
-			}
-
-			const res = await fetch("https://localhost:8443/showUsers", {
-			credentials: "include",
-			mode: 'cors',
-			headers: {
-				'Authorization': `Bearer ${token}`
-			}
-			});
-			const json = await res.json();
-			out.textContent = JSON.stringify(json, null, 2);
-		} catch (e: any) {
-			out.textContent = "Erreur: " + e.message;
-		}
-		});
-	}
 
 	const statsBtn = document.getElementById('statsBtn') as HTMLButtonElement;
 	if (statsBtn) {

@@ -193,16 +193,47 @@ export function createDashboardPage(): void {
 		try {
 			const token = localStorage.getItem('auth_token');
 			if (!token) return;
-			const res = await fetch('https://localhost:8443/showUsers', {
-				headers: { 'Authorization': `Bearer ${token}` }
-			});
-			if (!res.ok) return;
-			const users = await res.json();
-			for (const user of users) {
-				if (typeof user.id === 'number' && typeof user.username === 'string') {
-					usernameCache.set(user.id, user.username);
+
+			let userId: number;
+			try {
+				const payload = JSON.parse(atob(token.split('.')[1]));
+				userId = payload.userId;
+			} catch { return; }
+
+			const ids = new Set<number>();
+			try {
+				const resF = await fetch(`https://localhost:8443/friendlist/${userId}`, { headers: { 'Authorization': `Bearer ${token}` } });
+				if (resF.ok) {
+					const list = await resF.json();
+					if (Array.isArray(list)) {
+						for (const item of list) {
+							if (typeof item.user_id === 'number') ids.add(item.user_id);
+							if (typeof item.friend_id === 'number') ids.add(item.friend_id);
+						}
+					}
 				}
-			}
+			} catch { }
+
+			try {
+				const resR = await fetch(`https://localhost:8443/friendReq/${userId}`, { headers: { 'Authorization': `Bearer ${token}` } });
+				if (resR.ok) {
+					const list = await resR.json();
+					if (Array.isArray(list)) {
+						for (const item of list) {
+							if (typeof item.user_id === 'number') ids.add(item.user_id);
+							if (typeof item.friend_id === 'number') ids.add(item.friend_id);
+						}
+					}
+				}
+			} catch { }
+
+			ids.delete(userId); // osef de notre propre id
+			await Promise.all(Array.from(ids).map(async (id) => {
+				try {
+					const name = await getUsernameById(id);
+					usernameCache.set(id, name);
+				} catch { }
+			}));
 		} catch { }
 	}
 
@@ -282,7 +313,6 @@ export function createDashboardPage(): void {
 		window.dispatchEvent(new PopStateEvent('popstate'));
 	});
 
-	// recherche users
 	searchBtn.addEventListener('click', async () => {
 		const searchTerm = searchUser.value.trim();
 		if (!searchTerm) {
@@ -292,22 +322,32 @@ export function createDashboardPage(): void {
 
 		try {
 			const token = localStorage.getItem('auth_token');
-			if (!token) {
-				showMessage('You must be logged in', 'error');
+			const url = `https://localhost:8443/checkUser/${encodeURIComponent(searchTerm)}`;
+			const headers: Record<string, string> = {};
+			if (token) headers['Authorization'] = `Bearer ${token}`;
+
+			const response = await fetch(url, { method: 'GET', headers });
+
+			if (response.status === 200) {
+				const data = await response.json();
+				const id = data?.id ?? data?.user?.id ?? null;
+				if (!id) {
+					showMessage('No user found', 'info');
+					displaySearchResults([]);
+					return;
+				}
+				const username = await getUsernameById(id).catch(() => searchTerm);
+				const userObj = { id, username, isLogged: 'offline' };
+				displaySearchResults([userObj]);
 				return;
 			}
-			const response = await fetch('https://localhost:8443/showUsers', {
-				headers: {
-					'Authorization': `Bearer ${token}`
-				}
-			});
-			const users = await response.json();
 
-			const filteredUsers = users.filter((user: any) =>
-				user.username.toLowerCase().includes(searchTerm.toLowerCase())
-			);
-
-			displaySearchResults(filteredUsers);
+			if (response.status === 404) {
+				showMessage('No user found', 'info');
+				displaySearchResults([]);
+				return;
+			}
+			showMessage('Error during search', 'error');
 		} catch (error) {
 			showMessage('Error during search', 'error');
 		}
@@ -384,16 +424,15 @@ export function createDashboardPage(): void {
 
 			if (!userId) return;
 
-			const response = await fetch('https://localhost:8443/showFriends', {
+			const response = await fetch(`https://localhost:8443/friendReq/${userId}`, {
 				headers: { 'Authorization': `Bearer ${token}` }
 			});
 			if (!response.ok) {
 				await displayFriendRequests([], userId);
 				return;
 			}
-			const all = await response.json();
-			const requests = Array.isArray(all) ? all.filter((r: any) => r.friend_id === userId && r.status === 'pending') : [];
-			await displayFriendRequests(requests, userId);
+			const requests = await response.json();
+			await displayFriendRequests(Array.isArray(requests) ? requests : [], userId);
 		} catch (error) {
 			await displayFriendRequests([], 0 as any);
 		}
@@ -415,17 +454,15 @@ export function createDashboardPage(): void {
 
 			if (!userId) return;
 
-			// Use 200 endpoint to avoid 404 spam; filter client-side for accepted friends
-			const response = await fetch('https://localhost:8443/showFriends', {
+			const response = await fetch(`https://localhost:8443/friendlist/${userId}`, {
 				headers: { 'Authorization': `Bearer ${token}` }
 			});
 			if (!response.ok) {
 				await displayFriendsList([], userId);
 				return;
 			}
-			const all = await response.json();
-			const friends = Array.isArray(all) ? all.filter((f: any) => (f.user_id === userId || f.friend_id === userId) && f.status === 'accepted') : [];
-			await displayFriendsList(friends, userId);
+			const friends = await response.json();
+			await displayFriendsList(Array.isArray(friends) ? friends : [], userId);
 		} catch (error) {
 			await displayFriendsList([], 0 as any);
 		}
