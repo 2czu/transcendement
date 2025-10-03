@@ -42,19 +42,22 @@ export function createTournamentPage(): void {
 	tournamentOverlayShown = false;
 
 	app.innerHTML = `
-    <div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col items-center justify-center px-4 py-8">
-	<button id="homeBtn" aria-label="Home" title="Home" class="absolute top-4 left-4 bg-white text-black border rounded p-2 shadow-sm hover:bg-gray-100">
-		<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
-			<path stroke-linecap="round" stroke-linejoin="round" d="M3 9.75L12 3l9 6.75V21a.75.75 0 01-.75.75H3.75A.75.75 0 013 21V9.75z" />
-			<path stroke-linecap="round" stroke-linejoin="round" d="M9 21V12h6v9" />
-		</svg>
-	</button>
-      <div class="w-full max-w-6xl bg-gray-800/80 rounded-3xl shadow-2xl p-8 flex flex-col items-center border border-gray-700 backdrop-blur-md">
+    <div class="min-h-screen relative overflow-hidden bg-gradient-to-tr from-indigo-900 to-black text-white flex flex-col justify-center items-center">
+      <div class="absolute -left-32 -top-32 w-80 h-80 bg-indigo-800 rounded-full opacity-30 filter blur-3xl animate-pulse"></div>
+      <div class="absolute right-0 top-20 w-72 h-72 bg-indigo-700 rounded-full opacity-20 filter blur-2xl animate-pulse"></div>
+      <div class="absolute left-1/2 bottom-0 w-96 h-96 bg-indigo-900 rounded-full opacity-15 filter blur-3xl transform -translate-x-1/2 animate-pulse"></div>
+      <button id="homeBtn" aria-label="Home" title="Home" class="absolute top-4 left-4 bg-white/10 text-white border rounded p-2 shadow-sm hover:bg-white/20 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 9.75L12 3l9 6.75V21a.75.75 0 01-.75.75H3.75A.75.75 0 013 21V9.75z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 21V12h6v9" />
+        </svg>
+      </button>
+      <div class="w-full max-w-6xl bg-white/10 backdrop-blur-sm rounded-3xl shadow-2xl p-8 flex flex-col items-center border border-indigo-700">
         <div class="w-full text-center mb-8">
           <h1 data-i18n="tournament.tournament" class="text-5xl font-extrabold mb-2 text-white drop-shadow-lg animate-pulse">
             TOURNAMENT
           </h1>
-          <p class="text-lg text-gray-300 mb-1 tracking-wide">8-player tournament</p>
+          <p class="text-lg text-white/80 mb-1 tracking-wide">8-player tournament</p>
         </div>
         
         <div class="w-full flex flex-col gap-8 mb-8">

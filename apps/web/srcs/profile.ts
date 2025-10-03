@@ -21,9 +21,13 @@ export function createProfilePage(): void {
 	}
 
 	app.innerHTML = `
-		<div class="min-h-screen bg-gray-50">
-			<button id="homeBtn" aria-label="Home" title="Home" class="absolute top-4 left-4 bg-white border rounded p-2 shadow-sm hover:bg-gray-100">
-				<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+		<div class="min-h-screen relative overflow-hidden bg-gradient-to-tr from-indigo-900 to-black text-white">
+			<div class="absolute -left-32 -top-32 w-80 h-80 bg-indigo-800 rounded-full opacity-30 filter blur-3xl animate-pulse"></div>
+			<div class="absolute right-0 top-20 w-72 h-72 bg-indigo-700 rounded-full opacity-20 filter blur-2xl animate-pulse"></div>
+			<div class="absolute left-1/2 bottom-0 w-96 h-96 bg-indigo-900 rounded-full opacity-15 filter blur-3xl transform -translate-x-1/2 animate-pulse"></div>
+
+			<button id="homeBtn" aria-label="Home" title="Home" class="absolute top-4 left-4 bg-white/10 border rounded p-2 shadow-sm hover:bg-white/20 transition-colors">
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
 					<path stroke-linecap="round" stroke-linejoin="round" d="M3 9.75L12 3l9 6.75V21a.75.75 0 01-.75.75H3.75A.75.75 0 013 21V9.75z" />
 					<path stroke-linecap="round" stroke-linejoin="round" d="M9 21V12h6v9" />
 				</svg>
@@ -32,19 +36,18 @@ export function createProfilePage(): void {
         <div class="max-w-2xl mx-auto">
           <!-- Header with back button -->
           <div class="flex items-center mb-6">
-            <button id="backBtn" class="mr-4 p-2 text-gray-600 hover:text-gray-900 transition-colors">
+            <button id="backBtn" class="mr-4 p-2 text-white/80 hover:text-white transition-colors bg-white/10 rounded-full">
               <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
               </svg>
             </button>
-            <h1 data-i18n="profile.my_profile" class="text-3xl font-bold text-gray-900">My Profile</h1>
+            <h1 data-i18n="profile.my_profile" class="text-3xl font-bold text-white drop-shadow">My Profile</h1>
           </div>
 
-          <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
-            <h2 data-i18n="profile.personal_info" class="text-xl font-semibold text-gray-900 mb-4">Personal Information</h2>
-            
+          <div class="bg-white/10 backdrop-blur-sm rounded-xl shadow-sm p-6 mb-6">
+            <h2 data-i18n="profile.personal_info" class="text-xl font-semibold text-white mb-4">Personal Information</h2>
             <div class="mb-6">
-              <label data-i18n="profile.profile_pic" class="block text-sm font-medium text-gray-700 mb-2">Profile picture</label>
+              <label data-i18n="profile.profile_pic" class="block text-sm font-medium text-white mb-2">Profile picture</label>
               <div class="flex items-center space-x-4">
                 <div id="currentAvatar" class="w-20 h-20 bg-indigo-100 rounded-full flex items-center justify-center overflow-hidden">
                   <span class="text-3xl text-indigo-600">👤</span>
@@ -54,71 +57,64 @@ export function createProfilePage(): void {
                   <button data-i18n="profile.upload_pic" id="changeAvatarBtn" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg transition-colors">
                     Change photo
                   </button>
-                  <p data-i18n="profile.formats" class="text-sm text-gray-500 mt-1">Accepted formats: JPG, PNG (max 1MB)</p>
+                  <p data-i18n="profile.formats" class="text-sm text-white/80 mt-1">Accepted formats: JPG, PNG (max 1MB)</p>
                 </div>
               </div>
             </div>
-
             <div class="mb-6">
-              <label data-i18n="profile.username" for="username" class="block text-sm font-medium text-gray-700 mb-2">Username</label>
+              <label data-i18n="profile.username" for="username" class="block text-sm font-medium text-white mb-2">Username</label>
               <div class="flex space-x-2">
                 <input data-i18n="profile.username_form"  type="text" id="username" placeholder="Your username" 
-                       class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                       class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white/10 text-white placeholder-white/70">
                 <button data-i18n="profile.save_button"  id="saveUsernameBtn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors">
                   Save
                 </button>
               </div>
-              <p id="usernameMessage" class="text-sm mt-2"></p>
+              <p id="usernameMessage" class="text-sm mt-2 text-white/80"></p>
             </div>
-
 						<div class="mb-6">
-							<label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+							<label class="block text-sm font-medium text-white mb-2">Email</label>
 							<div class="flex space-x-2">
 								<input type="email" id="email" 
-											 class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500">
+											 class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white/10 text-white placeholder-white/70">
 								<button id="saveEmailBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">Save</button>
 							</div>
-							<p id="emailMessage" class="text-sm mt-2 text-gray-500"></p>
+							<p id="emailMessage" class="text-sm mt-2 text-white/80"></p>
 						</div>
-
 						<div class="mb-6 border-t pt-6">
-							<h3 class="text-lg font-medium text-gray-900 mb-2">Change password</h3>
+							<h3 class="text-lg font-medium text-white mb-2">Change password</h3>
 							<div class="space-y-3">
-								<input id="currentPassword" type="password" placeholder="Current password" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
-								<input id="newPassword" type="password" placeholder="New password" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
-								<input id="confirmPassword" type="password" placeholder="Confirm new password" class="w-full px-3 py-2 border border-gray-300 rounded-lg">
+								<input id="currentPassword" type="password" placeholder="Current password" class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white/10 text-white placeholder-white/70">
+								<input id="newPassword" type="password" placeholder="New password" class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white/10 text-white placeholder-white/70">
+								<input id="confirmPassword" type="password" placeholder="Confirm new password" class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white/10 text-white placeholder-white/70">
 								<div class="flex items-center space-x-2">
 									<button id="changePasswordBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">Change password</button>
-									<p id="passwordMessage" class="text-sm text-gray-500"></p>
+									<p id="passwordMessage" class="text-sm text-white/80"></p>
 								</div>
 							</div>
 						</div>
-
             <div class="mb-6">
-              <label data-i18n="profile.connection_status" class="block text-sm font-medium text-gray-700 mb-2">Connection status</label>
+              <label data-i18n="profile.connection_status" class="block text-sm font-medium text-white mb-2">Connection status</label>
               <div class="flex items-center space-x-2">
                 <span id="statusIndicator" class="w-3 h-3 bg-green-500 rounded-full"></span>
-                <span id="statusText" class="text-sm text-gray-600">Online</span>
+                <span id="statusText" class="text-sm text-white/80">Online</span>
               </div>
             </div>
           </div>
-
-          <div class="bg-white rounded-lg shadow-sm p-6 border border-red-200">
-            <h2 data-i18n="profile.danger_zone" class="text-xl font-semibold text-red-700 mb-4">Danger zone</h2>
-            
+          <div class="bg-white/10 backdrop-blur-sm rounded-xl shadow-sm p-6 border border-red-200">
+            <h2 data-i18n="profile.danger_zone" class="text-xl font-semibold text-red-400 mb-4">Danger zone</h2>
             <div class="mb-4">
-              <h3 data-i18n="profile.delete_my_acc" class="text-lg font-medium text-red-700 mb-2">Delete my account</h3>
-              <p data-i18n="profile.irreversible" class="text-sm text-gray-600 mb-4">
+              <h3 data-i18n="profile.delete_my_acc" class="text-lg font-medium text-red-400 mb-2">Delete my account</h3>
+              <p data-i18n="profile.irreversible" class="text-sm text-white/80 mb-4">
                 This action is irreversible. All your data, friends, and statistics will be permanently deleted.
               </p>
               <button data-i18n="profile.delete_button" id="deleteAccountBtn" class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg transition-colors">
                 Delete my account
               </button>
             </div>
-
             <div>
-              <h3 data-i18n="profile.log_out" class="text-lg font-medium text-gray-700 mb-2">Log out</h3>
-              <p data-i18n="profile.desc_log_out" class="text-sm text-gray-600 mb-4">
+              <h3 data-i18n="profile.log_out" class="text-lg font-medium text-white mb-2">Log out</h3>
+              <p data-i18n="profile.desc_log_out" class="text-sm text-white/80 mb-4">
                 Close your current session and return to the home page.
               </p>
               <button data-i18n="profile.log_out_button" id="logoutBtn" class="bg-gray-600 hover:bg-gray-700 text-white px-6 py-2 rounded-lg transition-colors">

@@ -151,9 +151,8 @@ export function createHomePage(): void {
 	}
 	const singleBtn = document.getElementById("singleBtn");
 	if (singleBtn) {
-		// Singleplayer is a placeholder button for now; no navigation attached
 		singleBtn.addEventListener("click", () => {
-			// TODO: implement singleplayer flow
+			// todo bg
 		});
 	}
 	const multiBtn = document.getElementById("multiBtn");
