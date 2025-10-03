@@ -199,21 +199,29 @@ export function createHomePage(): void {
 	}
 
 	async function fetchUser(id) {
+		let userId;
 		try {
-			const token = localStorage.getItem('auth_token');
-			const res = await fetch(`https://localhost:8443/users/${id}`, {
+			const res = await fetch('https://localhost:8443/userId', {
 				method: 'GET',
-				headers: { 'Authorization': `Bearer ${token}` }
+				credentials: "include"
 			});
-
 			if (res.ok) {
 				const data = await res.json();
-				console.log(`------------------Réponse /users/${id} :`, data);
-			} else {
-				console.log(`-------------------Erreur ${res.status} : ${res.statusText}`);
+				userId = data?.userId
 			}
 		} catch (err) {
-			console.error('///////////////////////Erreur lors de la requête :', err);
+			console.error('Erreur lors de la requête :', err);
+		}
+		try {
+			const res = await fetch(`https://localhost:8443/users/${id}`, {
+				method: 'GET',
+				credentials: "include"
+			});
+			if (res.ok) {
+				const data = await res.json();
+			}
+		} catch (err) {
+			console.error('Erreur lors de la requête :', err);
 		}
 	}
 

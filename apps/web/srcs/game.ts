@@ -188,7 +188,6 @@ export function createGamePage(): void {
 				});
 				if (res.ok) {
 					const data = await res.json();
-					console.log(data);
 					userId = data?.userId
 				}
 			} catch { }
