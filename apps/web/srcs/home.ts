@@ -26,13 +26,88 @@ export function createHomePage(): void {
 			</header>
 
 			<main class="relative z-10 flex flex-col items-center justify-center text-center min-h-[70vh] px-6">
+
 				<style>
-				@keyframes glossMove { 0% { transform: translateX(-140%) skewX(-20deg); opacity: 0 } 40% { opacity: .35 } 100% { transform: translateX(140%) skewX(-20deg); opacity: 0 } }
-				.btn-gloss { position: absolute; top:0; left:0; width:40%; height:100%; background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.45), rgba(255,255,255,0)); transform: skewX(-20deg); animation: glossMove 1.8s linear infinite; mix-blend-mode: screen; pointer-events: none; }
+				@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;500;600;800;900&family=Lobster+Two:ital,wght@0,400;0,700;1,400&display=swap');
+				:root {
+				  --primary-color: #5c5fc4;
+				  --second-color: #c4c15c;
+				  --first-shadow: rgba(0,0,0,0.3);
+				}
+				.container {
+				  display: flex;
+				  justify-content: center;
+				  align-items: center;
+				  position: relative;
+				  height: 180px;
+				  margin-bottom: 2.5rem;
+				}
+				.box {
+				  position: relative;
+				  width: 100%;
+				  height: 120px;
+				  transform-style: preserve-3d;
+				  animation: animate 7s ease-in-out infinite alternate;
+				}
+				.box span {
+				  background: linear-gradient(90deg, rgba(0,0,0,0.1), rgba(0,0,0,0.5) 90%, transparent);
+				  text-transform: uppercase;
+				  line-height: 0.76em;
+				  position: absolute;
+				  left: 50%;
+				  top: 50%;
+				  color: #fff;
+				  font-size: 3.5em;
+				  white-space: nowrap;
+				  font-weight: bold;
+				  padding: 0 10px;
+				  transform-style: preserve-3d;
+				  text-shadow: 0 10px 15px var(--first-shadow);
+				  font-family: 'Poppins', sans-serif;
+				  transform: translate(-50%, -50%) rotateX(calc(var(--i) * 22.5deg)) translateZ(109px);
+				}
+				.box span i {
+				  font-style: initial;
+				}
+				.box span i:first-child {
+				  /* color: var(--primary-color); */
+				}
+				.box span i:last-child {
+				  color: var(--second-color);
+				}
+				@keyframes animate {
+				  0% {
+				    transform: perspective(500px) rotateX(90deg) rotate(5deg);
+				  }
+				  100% {
+				    transform: perspective(50px) rotateX(450deg) rotate(5deg);
+				  }
+				}
 				</style>
-				<h1 class="text-5xl md:text-7xl lg:text-8xl font-extrabold tracking-tight mb-8 leading-none bg-clip-text text-transparent bg-gradient-to-r from-white/90 via-white/70 to-white/40 drop-shadow-[0_10px_30px_rgba(0,0,0,0.4)]">
-					<span class="block transform-gpu animate-pulse">TRANSCENDENCE</span>
-				</h1>
+				<div class="container">
+				  <div class="box">
+				    <span style="--i:1">TRANSCENDENCE</span>
+				    <span style="--i:2">TRANSCENDENCE</span>
+				    <span style="--i:3">TRANSCENDENCE</span>
+				    <span style="--i:4">TRANSCENDENCE</span>
+				    <span style="--i:5">TRANSCENDENCE</span>
+				    <span style="--i:6">TRANSCENDENCE</span>
+				    <span style="--i:7">TRANSCENDENCE</span>
+				    <span style="--i:8">TRANSCENDENCE</span>
+				    <span style="--i:9">TRANSCENDENCE</span>
+				    <span style="--i:10">TRANSCENDENCE</span>
+				    <span style="--i:11">TRANSCENDENCE</span>
+				    <span style="--i:12">TRANSCENDENCE</span>
+				    <span style="--i:13">TRANSCENDENCE</span>
+				    <span style="--i:14">TRANSCENDENCE</span>
+				    <span style="--i:15">TRANSCENDENCE</span>
+				    <span style="--i:16">TRANSCENDENCE</span>
+				  </div>
+				</div>
+
+
+
+
 
 				<div class="flex flex-col md:flex-row items-center gap-4">
 					<button id="singleBtn" class="relative overflow-hidden px-10 py-4 rounded-full bg-gradient-to-r from-indigo-600 to-indigo-800 text-white font-bold text-lg shadow-[0_25px_50px_rgba(0,0,0,0.75)] transform transition-all duration-300 hover:-translate-y-1 hover:scale-105 active:translate-y-0 focus:outline-none focus:ring-4 focus:ring-indigo-400/20">
@@ -146,4 +221,4 @@ export function createHomePage(): void {
 	window.addEventListener('load', () => {
 		fetchUser(1); // remplace 1 par l'id que tu veux tester
 	});
-} 
+}
