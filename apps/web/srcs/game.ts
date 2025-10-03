@@ -1,4 +1,6 @@
 import { Pong3D } from './game3d';
+import { getUserId } from './main';
+
 
 let game3D: Pong3D;
 let player1Name: string = "Player 1";
@@ -180,18 +182,7 @@ export function createGamePage(): void {
 
 	async function loadPlayerNames(): Promise<void> {
 		try {
-			let userId;
-			try {
-				const res = await fetch('https://localhost:8443/userId', {
-					method: 'GET',
-					credentials: "include"
-				});
-				if (res.ok) {
-					const data = await res.json();
-					userId = data?.userId
-				}
-			} catch { }
-
+			let userId = await getUserId();
 			try {
 				const res2 = await fetch(`https://localhost:8443/users/${userId}`, {
 					method: 'GET',

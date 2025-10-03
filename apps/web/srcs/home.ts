@@ -1,6 +1,7 @@
 import { showGamePage, showDashboardPage, showTournamentPage, showStatsPage, handleRoute } from './router';
 import { showSignInPage } from './router';
 import { getLanguage, setLanguage, updateTranslations } from './lang';
+import { getUserId } from './main';
 
 export function createHomePage(): void {
 	const app = document.getElementById('app');
@@ -175,15 +176,16 @@ export function createHomePage(): void {
 	const userIcon = document.getElementById("userIcon");
 	if (userIcon) {
 		userIcon.addEventListener("click", () => {
-			const token = localStorage.getItem('auth_token');
-			if (token) {
-				window.history.pushState({}, '', '/dashboard');
-				handleRoute();
-			} else {
+			getUserId().then(userId => {
+			if (!userId) {
 				window.history.pushState({}, '', '/signIn');
 				handleRoute();
-
 			}
+			else {
+				window.history.pushState({}, '', '/dashboard');
+				handleRoute();
+			}
+			});
 		});
 	}
 
@@ -198,22 +200,10 @@ export function createHomePage(): void {
 		});
 	}
 
-	async function fetchUser(id) {
-		let userId;
+	async function fetchUser() {
+		let userId = await getUserId ();
 		try {
-			const res = await fetch('https://localhost:8443/userId', {
-				method: 'GET',
-				credentials: "include"
-			});
-			if (res.ok) {
-				const data = await res.json();
-				userId = data?.userId
-			}
-		} catch (err) {
-			console.error('Erreur lors de la requête :', err);
-		}
-		try {
-			const res = await fetch(`https://localhost:8443/users/${id}`, {
+			const res = await fetch(`https://localhost:8443/users/${userId}`, {
 				method: 'GET',
 				credentials: "include"
 			});
@@ -227,6 +217,6 @@ export function createHomePage(): void {
 
 	// Exécution au chargement de la page
 	window.addEventListener('load', () => {
-		fetchUser(1); // remplace 1 par l'id que tu veux tester
+		fetchUser(); // remplace 1 par l'id que tu veux tester
 	});
 }

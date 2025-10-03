@@ -63,15 +63,8 @@ const friendsRoutes: FastifyPluginAsync <{ db: Database }> = async (fastify: any
 	});
 	fastify.route({
 		method: 'GET',
-		url: "/friendlist/:id",
+		url: "/friendlist",
 		schema: {
-			params: {
-				type : 'object',
-				required: ['id'],
-				properties: {
-					id: { type: 'integer' }
-				}
-			},
 			response:  {
 				200: friendProperties,
 				404: {
@@ -83,9 +76,9 @@ const friendsRoutes: FastifyPluginAsync <{ db: Database }> = async (fastify: any
 			}
 		},
 		handler: async(request: any, reply: any) => {
-		 const { id } = request.params as { id: number };
+		const userId = request.user.userId
 			try {
-				const matches = await getFriendList(db, id);
+				const matches = await getFriendList(db, userId);
 				if (matches.length == 0)
 				{
 					reply.code(404).send({ error: "Empty friendlist"});
@@ -99,15 +92,8 @@ const friendsRoutes: FastifyPluginAsync <{ db: Database }> = async (fastify: any
 	});
 	fastify.route({
 		method: 'GET',
-		url: "/friendReq/:id",
+		url: "/friendReq",
 		schema: {
-			params: {
-				type : 'object',
-				required: ['id'],
-				properties: {
-					id: { type: 'integer' }
-				}
-			},
 			response:  {
 				200: friendProperties,
 				404: {
@@ -119,10 +105,9 @@ const friendsRoutes: FastifyPluginAsync <{ db: Database }> = async (fastify: any
 			}
 		},
 		handler: async(request: any, reply: any) => {
-		 const { id } = request.params as { id: number };
+		const userId = request.user.userId;
 			try {
-				console.log('Matches for player', id);
-				const matches = await getFriendsRequest(db, id);
+				const matches = await getFriendsRequest(db, userId);
 				if (matches.length == 0)
 				{
 					reply.code(404).send({ error: "No friends requests found"});

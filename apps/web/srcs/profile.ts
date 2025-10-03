@@ -1,24 +1,17 @@
+import { getUserId } from "./main";
+
 export function createProfilePage(): void {
 	const app = document.getElementById('app');
 	if (!app) return;
 
-	const token = localStorage.getItem('auth_token');
-	if (!token) {
-		window.history.pushState({}, '', '/signIn');
-		window.dispatchEvent(new PopStateEvent('popstate'));
-		return;
-	}
-
 	let userId: number;
-	try {
-		const payload = JSON.parse(atob(token.split('.')[1]));
-		userId = payload.userId;
-	} catch (error) {
-		console.error('Error decoding token:', error);
-		window.history.pushState({}, '', '/signIn');
-		window.dispatchEvent(new PopStateEvent('popstate'));
-		return;
-	}
+	getUserId().then(userId => {
+		if (!userId) {
+			window.history.pushState({}, '', '/signIn');
+			window.dispatchEvent(new PopStateEvent('popstate'));
+			return;
+		}
+	});
 
 	app.innerHTML = `
 		<div class="min-h-screen bg-gray-50">
@@ -196,17 +189,14 @@ export function createProfilePage(): void {
 			const formData = new FormData();
 			formData.append('avatar', file);
 
-			const token = localStorage.getItem('auth_token');
-			if (!token) {
+			const userId = await getUserId();
+			if (!userId) {
 				showMessage('You must be logged in', 'error');
 				return;
 			}
 
 			const res = await fetch('https://localhost:8443/avatar', {
 				method: 'POST',
-				headers: {
-					'Authorization': `Bearer ${token}`
-				},
 				body: formData,
 				credentials: 'include'
 			});
@@ -252,11 +242,10 @@ export function createProfilePage(): void {
 		}
 
 		try {
-			const response = await fetch(`https://localhost:8443/users/${userId}`, {
+			const response = await fetch('https://localhost:8443/user/patch', {
 				method: 'PATCH',
 				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${token}`
+					'Content-Type': 'application/json'
 				},
 				body: JSON.stringify({
 					username: newUsername
@@ -288,11 +277,10 @@ export function createProfilePage(): void {
 			}
 
 			try {
-				const response = await fetch(`https://localhost:8443/users/${userId}`, {
+				const response = await fetch('https://localhost:8443/user/patch', {
 					method: 'PATCH',
 					headers: {
 						'Content-Type': 'application/json',
-						'Authorization': `Bearer ${token}`
 					},
 					body: JSON.stringify({ email: newEmail }),
 					credentials: 'include'
@@ -331,8 +319,8 @@ export function createProfilePage(): void {
 			try {
 				const verifyRes = await fetch('https://localhost:8443/signIn', {
 					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
-					body: JSON.stringify({ email: emailToUse, password: cur })
+					body: JSON.stringify({ email: emailToUse, password: cur }),
+					credentials: "include"
 				});
 				if (!verifyRes.ok) {
 					if (passwordMessage) passwordMessage.textContent = 'Current password incorrect';
@@ -347,8 +335,7 @@ export function createProfilePage(): void {
 				const response = await fetch(`https://localhost:8443/users/${userId}`, {
 					method: 'PATCH',
 					headers: {
-						'Content-Type': 'application/json',
-						'Authorization': `Bearer ${token}`
+						'Content-Type': 'application/json'
 					},
 					body: JSON.stringify({ password_hash: nw }),
 					credentials: 'include'
@@ -380,15 +367,16 @@ export function createProfilePage(): void {
 		try {
 			const response = await fetch(`https://localhost:8443/users/${userId}`, {
 				method: 'DELETE',
-				headers: {
-					'Authorization': `Bearer ${token}`
-				},
 				credentials: 'include'
 			});
 
 			if (response.ok) {
+				fetch('https://localhost:8443/signOut', {
+				method: 'POST',
+				credentials: 'include'
+				});
 				showMessage('Account deleted successfully. Redirecting...', 'success');
-				localStorage.removeItem('auth_token');
+
 				setTimeout(() => {
 					window.history.pushState({}, '', '/');
 					window.dispatchEvent(new PopStateEvent('popstate'));
@@ -404,7 +392,10 @@ export function createProfilePage(): void {
 
 
 	logoutBtn.addEventListener('click', () => {
-		localStorage.removeItem('auth_token');
+		fetch('https://localhost:8443/signOut', {
+			method: 'POST',
+			credentials: 'include'
+		});
 		showMessage('Logged out successfully! Redirecting...', 'success');
 		setTimeout(() => {
 			window.history.pushState({}, '', '/');
@@ -415,14 +406,9 @@ export function createProfilePage(): void {
 	async function loadProfileData() {
 		try {
 			const response = await fetch(`https://localhost:8443/myprofile`, {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${token}`
-				},
-				body: JSON.stringify({ id: userId })
+				method: 'GET',
+				credentials: "include"
 			});
-
 			if (response.ok) {
 				const data = await response.json();
 				displayProfileData(data);

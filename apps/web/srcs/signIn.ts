@@ -75,7 +75,8 @@ export function createSignInPage(): void {
 					body: JSON.stringify(payload),
 
 					// self signed
-					mode: 'cors'
+					mode: 'cors',
+					credentials: "include"
 				});
 
 			const data = await res.json();
@@ -90,21 +91,11 @@ export function createSignInPage(): void {
 				message.textContent = "2FA requis: entrez le code";
 				return;
 			}
-
-			if (data?.token) {
-				localStorage.setItem('auth_token', data.token as string);
-				try {
-					document.cookie = `jwt=${data.token}; Path=/; SameSite=None; Secure`;
-				} catch { }
-				message.textContent = "Connecté ! Redirection...";
-				setTimeout(() => {
-					window.history.pushState({}, '', '/');
-					window.dispatchEvent(new PopStateEvent('popstate'));
-				}, 500);
-			}
-			else
-				message.textContent = "Réponse inattendue du serveur";
-
+			message.textContent = "Connecté ! Redirection...";
+			setTimeout(() => {
+				window.history.pushState({}, '', '/');
+				window.dispatchEvent(new PopStateEvent('popstate'));
+			}, 500);
 		}
 		catch (err) {
 			console.error(err);
@@ -138,19 +129,11 @@ export function createSignInPage(): void {
 					message.textContent = data?.error || "Code 2FA incorrect";
 					return;
 				}
-				if (data?.token) {
-					localStorage.setItem('auth_token', data.token as string);
-					try {
-						document.cookie = `jwt=${data.token}; Path=/; SameSite=None; Secure`;
-					} catch { }
 					message.textContent = "Connecté ! Redirection...";
 					setTimeout(() => {
 						window.history.pushState({}, '', '/');
 						window.dispatchEvent(new PopStateEvent('popstate'));
 					}, 500);
-				}
-				else
-					message.textContent = "Réponse inattendue du serveur";
 			}
 			catch (err) {
 				console.error(err);
@@ -175,7 +158,6 @@ export function createSignInPage(): void {
 		});
 	}
 	loadGoogleScript("1047189652036-miitijufimvv2qct8rrimpqmcbc5fu64.apps.googleusercontent.com", (response) => {
-		console.log("Google response:", response); // <- voir ce qui arrive réellement
 		if (!response.credential) {
 			message.textContent = "Erreur Google : token manquant";
 			return;
@@ -184,23 +166,15 @@ export function createSignInPage(): void {
 			method: "POST",
 			headers: { "Content-Type": "application/json", },
 			body: JSON.stringify({ id_token: response.credential }),
-			mode: "cors"
+			credentials: "include"
 		})
 			.then(res => res.json())
 			.then(data => {
-				console.log(data.token);
-				if (data?.token) {
-					localStorage.setItem("auth_token", data.token);
-					try {
-						document.cookie = `jwt=${data.token}; Path=/; SameSite=None; Secure`;
-					} catch { }
-					message.textContent = "Connected with google !";
-					setTimeout(() => {
-						window.history.pushState({}, '', '/');
-						window.dispatchEvent(new PopStateEvent('popstate'));
-					}, 500);
-				} else
-					message.textContent = "Problem with Google";
+				message.textContent = data.message;
+				setTimeout(() => {
+					window.history.pushState({}, '', '/');
+					window.dispatchEvent(new PopStateEvent('popstate'));
+				}, 500);
 			})
 			.catch(err => console.error(err));
 	});

@@ -1,4 +1,5 @@
 import { Pong3D } from './game3d';
+import { getUserId } from './main';
 
 interface Player {
 	id: number;
@@ -26,6 +27,15 @@ interface Tournament {
 	isFinished: boolean;
 	winner?: Player;
 }
+
+function escapeHtml(str: string): string {
+	return str
+		.replace(/&/g, "&amp;")
+		.replace(/</g, "&lt;")
+		.replace(/>/g, "&gt;")
+		.replace(/"/g, "&quot;")
+		.replace(/'/g, "&#039;");
+	}
 
 let tournament: Tournament;
 let game3D: Pong3D;
@@ -205,24 +215,17 @@ export function createTournamentPage(): void {
 
 async function loadPlayerNames(): Promise<void> {
 	try {
-		const token = localStorage.getItem('auth_token');
-		console.log("paco1");
-		if (!token) {
+		const userId = await getUserId();
+		if (!userId) {
 			player1Name = "Player 1";
 			updatePlayerNames();
 			return;
 		}
-		console.log("paco2");
-		const payload = JSON.parse(atob(token.split('.')[1]));
-		const userId = payload.userId;
-
 		try {
 			const res = await fetch('https://localhost:8443/myprofile', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-				body: JSON.stringify({ id: userId })
+				method: 'GET',
+				credentials: "include"
 			});
-			console.log("cool");
 			if (res.ok) {
 				const data = await res.json();
 				const name = data?.user?.username || data?.user?.name || null;
@@ -242,7 +245,7 @@ async function loadPlayerNames(): Promise<void> {
 		}
 		try {
 			const res2 = await fetch(`https://localhost:8443/users/${userId}`, {
-				headers: { 'Authorization': `Bearer ${token}` }
+				credentials: "include"
 			});
 			if (res2.ok) {
 				const data2 = await res2.json();
@@ -259,17 +262,6 @@ async function loadPlayerNames(): Promise<void> {
 				}
 			}
 		} catch { }
-
-		if (payload.username) {
-			player1Name = payload.username;
-			updatePlayerNames();
-			if (tournament?.players) {
-				const me = tournament.players.find(p => p.id === 1);
-				if (me) me.name = player1Name;
-				updateTournamentDisplay();
-			}
-			return;
-		}
 
 		player1Name = "Player 1";
 		updatePlayerNames();
@@ -350,13 +342,13 @@ function updateTournamentDisplay(): void {
       <div class="bg-gray-800 rounded-lg p-4">
         <h3 class="text-lg font-bold text-white mb-2">Match #${currentMatch.id}</h3>
         <div class="flex justify-between items-center">
-          <div class="text-blue-400 font-semibold">${currentMatch.player1.name}</div>
+          <div class="text-blue-400 font-semibold">${escapeHtml(currentMatch.player1.name)}</div>
           <div class="text-gray-400">vs</div>
-          <div class="text-red-400 font-semibold">${currentMatch.player2.name}</div>
+          <div class="text-red-400 font-semibold">${escapeHtml(currentMatch.player2.name)}</div>
         </div>
         ${currentMatch.isFinished ? `
           <div class="mt-2 text-center">
-            <span class="text-green-400 font-bold">🏆 ${currentMatch.winner?.name} wins!</span>
+            <span class="text-green-400 font-bold">🏆 ${escapeHtml(currentMatch.winner ? currentMatch.winner.name: '')} wins!</span>
           </div>
         ` : ''}
       </div>
@@ -407,8 +399,8 @@ function generateMatchHTML(match: Match, index: number): string {
     <div class="${bgColor} border rounded-lg p-3 mb-2">
       <div class="flex justify-between items-center text-sm">
         <div class="flex-1">
-          <div class="text-blue-400 font-medium">${match.player1.name}</div>
-          <div class="text-red-400 font-medium">${match.player2.name}</div>
+          <div class="text-blue-400 font-medium">${escapeHtml(match.player1.name)}</div>
+          <div class="text-red-400 font-medium">${escapeHtml(match.player2.name)}</div>
         </div>
         <div class="text-center mx-2">
           <div class="text-lg font-bold text-white">${match.score1}</div>
@@ -609,7 +601,7 @@ function showTournamentWinnerOverlay(name: string): void {
 		<div class="mb-6">
 			<h2 data-i18n="tournament.finished" class="text-3xl font-bold text-white mb-2">🏆 Tournament finished</h2>
 			<div class="text-6xl mb-4">🥇</div>
-			<h3 class="text-2xl font-bold text-yellow-400 mb-2">${name} won the tournament!</h3>
+			<h3 class="text-2xl font-bold text-yellow-400 mb-2">${escapeHtml(name)} won the tournament!</h3>
 			<p data-i18n="tournament.restart" class="text-sm text-gray-400">Tournament will automatically restart in 2.5s…</p>
 		</div>
 		<div class="flex flex-col gap-3">

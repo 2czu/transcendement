@@ -15,7 +15,7 @@ export const googleOAuth = async (db: Database, code: string) => {
 	var user = await db.get("SELECT id, email, isOAuth FROM users WHERE email = ?", [decoded.email]);
 	if (!user)
 	{
-		user = await createUser(db, decoded.name, decoded.email, null, 0, null, 'placeholder.jpg', 'offline', 1);
+		user = await createUser(db, decoded.name, decoded.email, null, 0, 'placeholder.jpg', 'offline', 1);
 		if (!user || (user as any).error) {
 			throw new Error('Error creating google user')
 		}

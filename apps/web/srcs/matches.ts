@@ -1,25 +1,10 @@
+import { getUserId } from "./main";
+
 export async function createMatchesPage(): Promise<void> {
 	const app = document.getElementById('app');
 	if (!app) return;
 
-	const token = localStorage.getItem('auth_token');
-	if (!token) {
-		window.history.pushState({}, '', '/signIn');
-		window.dispatchEvent(new PopStateEvent('popstate'));
-		return;
-	}
-
-	let userId: number | null = null;
-	try {
-		const res = await fetch('https://localhost:8443/userId', {
-				method: 'GET',
-				credentials: "include"
-		});
-		if (res.ok) {
-			const data = await res.json();
-			userId = data?.userId
-		}
-	} catch { }
+	const userId = await getUserId();
 	if (!userId) {
 		window.history.pushState({}, '', '/signIn');
 		window.dispatchEvent(new PopStateEvent('popstate'));

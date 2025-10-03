@@ -17,15 +17,20 @@ const authRoutes: FastifyPluginAsync <{ db: Database }> = async (fastify: any, o
 				}
 			},
 			response: {
-				201: { token: 'string' },
+				201: { message: 'string' },
 				},
 			},
 		handler: async(request: any, reply: any) => {
 			const { id_token } = request.body as { id_token: string };
 			try {
 				const google = await googleOAuth(db, id_token);
-				console.log(google);
-				reply.code(201).send({ token: google });
+				reply.setCookie('jwt', google, {
+					httpOnly: true,
+					secure: true,
+					sameSite: 'none',
+					path: '/',
+				})
+				.code(201).send({ message: 'Connected with google'})
 			} catch (err: any) {
 				if (err.code === 'SQLITE_CONSTRAINT') {
 						reply.code(409).send({ error: 'Constraint problems' });
