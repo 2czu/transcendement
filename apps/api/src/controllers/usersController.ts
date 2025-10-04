@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt';
 import { sendEmail } from '../controllers/mailsController.js';
 
 export const createUser = async (db: Database, username: string,email: string, password: string | null, 
-	is_2fa: number, secret_2fa: string | null, avatar_url: string = "placeholder.jpg", isLogged: string = "offline", isOAuth: number) => {
+	is_2fa: number,  avatar_url: string = "placeholder.jpg", isLogged: string = "offline", isOAuth: number) => {
 
 	const userExist = await db.get("SELECT 1 FROM users WHERE username = ?", [username]);
 	if (userExist)
@@ -18,7 +18,7 @@ export const createUser = async (db: Database, username: string,email: string, p
 	const saltRounds = 15;
 	hash = await bcrypt.hash(password, saltRounds);
 	}
-	const result = await db.run(`INSERT INTO users (username, email, password_hash, is_2fa, secret_2fa, avatar_url, isLogged, isOAuth) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, [username, email, hash, is_2fa, secret_2fa, avatar_url, isLogged, isOAuth]);
+	const result = await db.run(`INSERT INTO users (username, email, password_hash, is_2fa, secret_2fa, avatar_url, isLogged, isOAuth) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, [username, email, hash, is_2fa, null, avatar_url, isLogged, isOAuth]);
 	const user = await db.get('SELECT * FROM users WHERE id = ?', [result.lastID]);
 	await db.run(`INSERT INTO stats (user_id) VALUES (?)`, [result.lastID]);
 	return user;
@@ -70,17 +70,30 @@ type UserUpdateFields = {
 
 export const updateUser = async (db: Database, id: number, updates: UserUpdateFields) => {
 	const obj = Object.keys(updates) as (keyof UserUpdateFields)[];
+	console.log("1\n");
+
 	if (obj.length == 0)
 		return getUser(db, id);
+	console.log("2\n");
+
 	if ('password_hash' in updates && updates.password_hash) {
 		const saltRounds = 10;
 		const hash = await bcrypt.hash(updates.password_hash, saltRounds);
 		updates.password_hash = hash;
 	}
+	console.log("3\n");
+
 	const Datas = obj.map(obj => `${obj} = ?`).join(', ');
+	console.log("4\n");
+
 	const values = obj.map(obj => updates[obj]);
+	console.log("5\n");
+
 	values.push(id);
+	console.log("6\n");
+
 	await db.run(`UPDATE users SET ${Datas} WHERE id = ?`, values);
+	console.log("7\n");
 	return getUser(db, id);
 };
 

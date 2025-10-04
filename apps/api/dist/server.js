@@ -52,14 +52,14 @@ async function start() {
         console.error(error);
         return reply.status(500).send({ error: 'Internal Server Error' });
     });
-    // Autorise http://localhost:5173 à appeler l'API en dev
+    // Autorise https://localhost:5173 à appeler l'API en dev
     await app.register(cors, {
-        origin: ["http://localhost:5173"],
+        origin: ["https://localhost:5173"],
         credentials: true
     });
     await app.register(fastifyWebsocket);
     await app.register(fastifyStatic, {
-        root: path.join(__dirname, 'routes/uploads'),
+        root: path.join(__dirname, '../uploads'),
         prefix: '/uploads/',
     });
     await app.register(multipart, {
@@ -87,13 +87,13 @@ async function start() {
             return;
         }
         const authHeader = request.headers['authorization'];
-        if (!authHeader) {
-            reply.status(401).send({ error: 'Missing Authorization header' });
-            return;
-        }
-        const token = authHeader.split(' ')[1];
+        let token;
+        if (authHeader && authHeader.startsWith('Bearer '))
+            token = authHeader.split(" ")[1];
+        else if (request.cookies?.jwt)
+            token = request.cookies.jwt;
         if (!token) {
-            reply.status(401).send({ error: 'Invalid Token' });
+            reply.status(401).send({ error: 'Missing Token' });
             return;
         }
         try {

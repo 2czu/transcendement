@@ -1,7 +1,16 @@
 export default {
 	home : {
-		game: "Jouer",
+		singleplayer: "Jeu Solo",
+		multiplayer: "Multijoueur",
 		tournament: "Tournois (8 joueurs)"
+	},
+	signIn : {
+		connexion: "Connection",
+		email: "Email",
+		password: "Mot de passe",
+		signIn: "Se connecter",
+		no_account: "Pas de compte ? ",
+		link: "Créer un compte"
 	},
 	dashboard : {
 		dashboard : "Tableau de bord",
@@ -17,7 +26,7 @@ export default {
 		desc_pong: "Lance une partie de Pong",
 		button_pong: "Jouer",
 		tournament: "Tournois",
-		desc_tournament: "rejoins le tournois",
+		desc_tournament: "Rejoins le tournois",
 		button_tournament: "Tournois",
 		friends: "Gestion d'amis",
 		send_request: "Fait une demande d'amis",

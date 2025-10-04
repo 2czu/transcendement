@@ -1,7 +1,7 @@
 import { signToken } from '../jwt.js';
 import bcrypt from 'bcrypt';
 import { sendEmail } from '../controllers/mailsController.js';
-export const createUser = async (db, username, email, password, is_2fa, secret_2fa, avatar_url = "placeholder.jpg", isLogged = "offline", isOAuth) => {
+export const createUser = async (db, username, email, password, is_2fa, avatar_url = "placeholder.jpg", isLogged = "offline", isOAuth) => {
     const userExist = await db.get("SELECT 1 FROM users WHERE username = ?", [username]);
     if (userExist)
         return { error: 'username' };
@@ -13,7 +13,7 @@ export const createUser = async (db, username, email, password, is_2fa, secret_2
         const saltRounds = 15;
         hash = await bcrypt.hash(password, saltRounds);
     }
-    const result = await db.run(`INSERT INTO users (username, email, password_hash, is_2fa, secret_2fa, avatar_url, isLogged, isOAuth) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, [username, email, hash, is_2fa, secret_2fa, avatar_url, isLogged, isOAuth]);
+    const result = await db.run(`INSERT INTO users (username, email, password_hash, is_2fa, secret_2fa, avatar_url, isLogged, isOAuth) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, [username, email, hash, is_2fa, null, avatar_url, isLogged, isOAuth]);
     const user = await db.get('SELECT * FROM users WHERE id = ?', [result.lastID]);
     await db.run(`INSERT INTO stats (user_id) VALUES (?)`, [result.lastID]);
     return user;
@@ -50,17 +50,24 @@ export const anonymiseUser = async (db, id) => {
 };
 export const updateUser = async (db, id, updates) => {
     const obj = Object.keys(updates);
+    console.log("1\n");
     if (obj.length == 0)
         return getUser(db, id);
+    console.log("2\n");
     if ('password_hash' in updates && updates.password_hash) {
         const saltRounds = 10;
         const hash = await bcrypt.hash(updates.password_hash, saltRounds);
         updates.password_hash = hash;
     }
+    console.log("3\n");
     const Datas = obj.map(obj => `${obj} = ?`).join(', ');
+    console.log("4\n");
     const values = obj.map(obj => updates[obj]);
+    console.log("5\n");
     values.push(id);
+    console.log("6\n");
     await db.run(`UPDATE users SET ${Datas} WHERE id = ?`, values);
+    console.log("7\n");
     return getUser(db, id);
 };
 export const deleteUser = async (db, id) => {

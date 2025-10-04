@@ -1,4 +1,6 @@
 import { Pong3D } from './game3d';
+import { getUserId } from './main';
+
 
 let game3D: Pong3D;
 let player1Name: string = "Player 1";
@@ -154,42 +156,24 @@ export function createGamePage(): void {
 		posted = true;
 
 		try {
-			const token = localStorage.getItem('auth_token');
-			if (!token) return;
-
-			const payload = JSON.parse(atob(token.split('.')[1]));
-			const userId = payload.userId;
-
 			const { winner, score1, score2 } = game3D.getFinal();
-			const player1_id = userId;
-			const player2_id = 1;
-			const winner_id = winner === 1 ? player1_id : player2_id;
-
+			let winner_id;
+			if (winner === 1)
+				winner_id = 1;
+			else
+				winner_id = -1;
+			console.log("------------------------");
 			await fetch('https://localhost:8443/newMatch', {
 				method: 'POST',
 				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${token}`
+					'Content-Type': 'application/json'
 				},
 				body: JSON.stringify({
-					player1_id,
-					player2_id,
 					winner_id,
 					score_player1: score1,
-					score_player2: score2
-				})
-			});
-
-			await fetch('https://localhost:8443/incrementGameplayed', {
-				method: 'PATCH',
-				headers: {
-					'Content-Type': 'application/json',
-					'Authorization': `Bearer ${token}`
-				},
-				body: JSON.stringify({
-					player1_id,
-					player2_id
-				})
+					score_player2: score2,
+				}),
+				credentials: "include"
 			});
 		} catch (e) {
 			console.error(e);
@@ -198,51 +182,21 @@ export function createGamePage(): void {
 
 	async function loadPlayerNames(): Promise<void> {
 		try {
-			const token = localStorage.getItem('auth_token');
-			if (!token) {
-				player1Name = "Player 1";
-				return;
-			}
-
-			const payload = JSON.parse(atob(token.split('.')[1]));
-			const userId = payload.userId;
-
+			let userId = await getUserId();
 			try {
-				const res = await fetch('https://localhost:8443/myprofile', {
-					method: 'POST',
-					headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
-					body: JSON.stringify({ id: userId })
+				const res2 = await fetch(`https://localhost:8443/users/${userId}`, {
+					method: 'GET',
+					credentials: "include"
 				});
-				if (res.ok) {
-					const data = await res.json();
-					const name = data?.user?.username || data?.user?.name || null;
+				if (res2.ok) {
+					const data2 = await res2.json();
+					const name = data2?.user?.username || data2?.user?.name || null;
 					if (name) {
 						player1Name = name;
 						return;
 					}
 				}
-			} catch { }
-
-			try {
-				const res2 = await fetch(`https://localhost:8443/users/${userId}`, {
-					headers: { 'Authorization': `Bearer ${token}` }
-				});
-				if (res2.ok) {
-					const data2 = await res2.json();
-					const name2 = data2?.user?.username || data2?.user?.name || null;
-					if (name2) {
-						player1Name = name2;
-						return;
-					}
-				}
-			} catch { }
-
-			if (payload.username) {
-				player1Name = payload.username;
-				return;
-			}
-
-			player1Name = "Player 1";
+			} catch {}
 		} catch {
 			player1Name = "Player 1";
 		}

@@ -28,7 +28,6 @@ const userRoutes: FastifyPluginAsync <{ db: Database }> = async (fastify: Fastif
 					is_2fa: { type: 'integer', enum: [0,1] },
 					avatar_url: {type: 'string'},
 					isLogged: {type: 'string'},
-					secret_2fa: { type: ['string', 'null'] },
 				},
 				additionalProperties: false,
 			},
@@ -44,18 +43,16 @@ const userRoutes: FastifyPluginAsync <{ db: Database }> = async (fastify: Fastif
 				is_2fa,
 				avatar_url = "placeholder.jpg",
 				isLogged = "offline",
-				secret_2fa = null,
 			} = request.body as {
 				username: string;
 				email: string;
 				password: string;
 				is_2fa: number;
-				secret_2fa: string | null;
 				avatar_url?: string;
 				isLogged: string,
 			};
 			try {
-				const user = await createUser(db, username, email, password, is_2fa, secret_2fa, avatar_url, isLogged, 0);
+				const user = await createUser(db, username, email, password, is_2fa, avatar_url, isLogged, 0);
 				if (user?.error == 'username') {
 					reply.code(409).send({ error: 'Username unavalaible' });
 					return ;
@@ -215,6 +212,28 @@ const userRoutes: FastifyPluginAsync <{ db: Database }> = async (fastify: Fastif
 	});
 	fastify.route({
 		method: 'GET',
+		url: "/userId",
+		schema: {
+			response:  {
+				200: profileResponseSchema,
+				404: {
+					type: 'object',
+					properties: {
+						error: { type: 'string' }
+					}
+				}
+			}
+		},
+		handler: async(request: any, reply: any) => {
+			try {
+				reply.code(201).send({ userId: request.user.userId});
+			} catch (err) {
+				reply.code(500).send({ error: 'Failed to fetch user' }); 
+			}
+		}
+	});
+	fastify.route({
+		method: 'GET',
 		url: "/checkUser/:username",
 		schema: {
 			params: {
@@ -257,7 +276,7 @@ const userRoutes: FastifyPluginAsync <{ db: Database }> = async (fastify: Fastif
 		}
 	});
 	fastify.route({
-		method: 'POST',
+		method: 'GET',
 		url: "/myprofile",
 		schema: {
 			response:  {
@@ -272,14 +291,13 @@ const userRoutes: FastifyPluginAsync <{ db: Database }> = async (fastify: Fastif
 		},
 		handler: async(request: any, reply: any) => {
 			try {
-				const userId = (request as any).user.userId;
+				const userId = request.user.userId;
 				const data = await getPersonnalData(db, userId);
 				if (!data.user)
 				{
 					reply.code(404).send({ error: "User not found"});
 					return ;
 				}
-				console.log(data);
 				reply.send(data);
 			} catch (err) {
 				reply.code(500).send({ error: 'Failed to fetch user' }); 
@@ -288,15 +306,8 @@ const userRoutes: FastifyPluginAsync <{ db: Database }> = async (fastify: Fastif
 	});
 	fastify.route({
 		method: 'PATCH',
-		url: "/users/:id",
+		url: "/user/patch",
 		schema: {
-			params: {
-				type : 'object',
-				required: ['id'],
-				properties: {
-					id: {type: 'integer' }
-				}
-			},
 			body: {
 				type: 'object',
 				properties: {
@@ -321,7 +332,6 @@ const userRoutes: FastifyPluginAsync <{ db: Database }> = async (fastify: Fastif
 			},
 		},
 		handler: async(request: any, reply: any) => {
-			const { id } = request.params as { id: number };
 			const updates = request.body as Partial<{
 				username: string;
 				email: string;
@@ -332,17 +342,7 @@ const userRoutes: FastifyPluginAsync <{ db: Database }> = async (fastify: Fastif
 				isLogged: string,
 			}>;
 			try {
-				const token = request.cookies.jwt;
-				const payload = verifyToken(token);
-				if (!payload) 
-					return reply.code(401).send({ error: "Unauthorized" });
-				const userId = (payload as any).userId;
-				const user = await getUser(db, userId);
-				if (!user)
-				{
-					reply.code(404).send({ error: "User not found"});
-					return ;
-				}
+				const userId = request.user.userId;
 				const updatedUser = await updateUser(db, userId, updates);
 				reply.send(updatedUser);
 			} catch (err) {
@@ -354,14 +354,6 @@ const userRoutes: FastifyPluginAsync <{ db: Database }> = async (fastify: Fastif
 		method: 'PATCH',
 		url: "/anonymise",
 		schema: {
-			body: {
-				type: 'object',
-				properties: {
-					id: { type: 'number'},
-				},
-				required: ['id'],
-				additionalProperties: false,
-			},
 			response: {
 				200: {
 				type: 'object',
@@ -492,6 +484,19 @@ const userRoutes: FastifyPluginAsync <{ db: Database }> = async (fastify: Fastif
 				}
 			};
 		},
+	});
+	fastify.route({
+		method: 'POST',
+		url: "/signOut",
+		handler: async(request: any, reply: any) => {
+			reply.cookie('jwt' , '', {
+				httpOnly: true,
+				sameSite: 'none',
+				secure: true,
+				expires: new Date(0)
+			});
+			reply.code(204).send();
+		}
 	});
 }
 export default userRoutes;

@@ -12,7 +12,7 @@ export const googleOAuth = async (db, code) => {
         throw new Error('error: Invalid google token bruh');
     var user = await db.get("SELECT id, email, isOAuth FROM users WHERE email = ?", [decoded.email]);
     if (!user) {
-        user = await createUser(db, decoded.name, decoded.email, null, 0, null, 'placeholder.jpg', 'offline', 1);
+        user = await createUser(db, decoded.name, decoded.email, null, 0, 'placeholder.jpg', 'offline', 1);
         if (!user || user.error) {
             throw new Error('Error creating google user');
         }

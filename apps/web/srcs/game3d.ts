@@ -16,6 +16,7 @@ import {
 	GlowLayer,
 	Color4
 } from '@babylonjs/core';
+import { getUserId } from './main';
 
 export class Pong3D {
 	private canvas: HTMLCanvasElement;
@@ -273,18 +274,15 @@ export class Pong3D {
 
 	private async loadPlayerNames(): Promise<void> {
 		try {
-			const token = localStorage.getItem('auth_token');
-			if (token) {
-				const payload = JSON.parse(atob(token.split('.')[1]));
-				const userId = payload.userId;
-
-				const res = await fetch(`https://localhost:8443/users/${userId}`, {
-					headers: { 'Authorization': `Bearer ${token}` }
-				});
-				if (res.ok) {
-					const data = await res.json();
-					this.player1Name = data?.user?.username || "Joueur 1";
-				}
+			const userId = await getUserId();
+			if (!userId)
+				return ;
+			const res = await fetch(`https://localhost:8443/users/${userId}`, {
+				credentials: "include"
+			});
+			if (res.ok) {
+				const data = await res.json();
+				this.player1Name = data?.user?.username || "Joueur 1";
 			}
 		} catch (error) {
 			console.error('Erreur lors du chargement du nom du joueur:', error);

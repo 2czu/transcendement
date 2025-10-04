@@ -11,29 +11,29 @@ export function createSignInPage(): void {
 			</svg>
 		</button>
 		<div class="text-center mb-8">
-			<h1 class="text-4xl font-bold mb-2">Connexion</h1>
+			<h1 data-i18n="signIn.connexion" class="text-4xl font-bold mb-2">Connexion</h1>
 		</div>
 
 	<form id="signinForm" class="bg-white/10 text-white rounded-lg shadow-lg p-8 w-96 space-y-4 backdrop-blur-sm border border-white/10">
 			<div>
-			<label class="block font-medium mb-1" for="email">Email</label>
+			<label data-i18n="signIn.email" class="block font-medium mb-1" for="email">Email</label>
 	    <input id="email" name="email" type="email" required
 		    class="w-full px-3 py-2 border border-white/20 rounded focus:outline-none focus:ring focus:ring-indigo-400 bg-transparent text-white placeholder:text-white/70">
 			</div>
 
 			<div>
-			<label class="block font-medium mb-1" for="password">Mot de passe</label>
+			<label data-i18n="signIn.password" class="block font-medium mb-1" for="password">Mot de passe</label>
 	    <input id="password" name="password" type="password" required
 		    class="w-full px-3 py-2 border border-white/20 rounded focus:outline-none focus:ring focus:ring-indigo-400 bg-transparent text-white placeholder:text-white/70">
 			</div>
 
-			<button type="submit"
+			<button type="submit" data-i18n="signIn.signIn"
 					class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition">
 			Se connecter
 			</button>
 			<div id="google-button" class="mt-4 flex justify-center"></div>
 
-			<p class="text-sm text-white/80">Pas de compte ? <a id="goSignUp" href="#" class="text-indigo-300 hover:underline">Créer un compte</a></p>
+			<p data-i18n="signIn.no_account" class="text-sm text-white/80 text-center">Pas de compte ? <a data-i18n="signIn.link" id="goSignUp" href="#" class="text-indigo-300 hover:underline">Créer un compte</a></p>
 		</form>
 
 	<div id="twofa" class="hidden bg-white/10 text-white rounded-lg shadow-lg p-8 w-96 space-y-4 mt-6 backdrop-blur-sm border border-white/10">
@@ -75,7 +75,8 @@ export function createSignInPage(): void {
 					body: JSON.stringify(payload),
 
 					// self signed
-					mode: 'cors'
+					mode: 'cors',
+					credentials: "include"
 				});
 
 			const data = await res.json();
@@ -90,21 +91,11 @@ export function createSignInPage(): void {
 				message.textContent = "2FA requis: entrez le code";
 				return;
 			}
-
-			if (data?.token) {
-				localStorage.setItem('auth_token', data.token as string);
-				try {
-					document.cookie = `jwt=${data.token}; Path=/; SameSite=None; Secure`;
-				} catch { }
-				message.textContent = "Connecté ! Redirection...";
-				setTimeout(() => {
-					window.history.pushState({}, '', '/');
-					window.dispatchEvent(new PopStateEvent('popstate'));
-				}, 500);
-			}
-			else
-				message.textContent = "Réponse inattendue du serveur";
-
+			message.textContent = "Connecté ! Redirection...";
+			setTimeout(() => {
+				window.history.pushState({}, '', '/');
+				window.dispatchEvent(new PopStateEvent('popstate'));
+			}, 500);
 		}
 		catch (err) {
 			console.error(err);
@@ -138,19 +129,11 @@ export function createSignInPage(): void {
 					message.textContent = data?.error || "Code 2FA incorrect";
 					return;
 				}
-				if (data?.token) {
-					localStorage.setItem('auth_token', data.token as string);
-					try {
-						document.cookie = `jwt=${data.token}; Path=/; SameSite=None; Secure`;
-					} catch { }
 					message.textContent = "Connecté ! Redirection...";
 					setTimeout(() => {
 						window.history.pushState({}, '', '/');
 						window.dispatchEvent(new PopStateEvent('popstate'));
 					}, 500);
-				}
-				else
-					message.textContent = "Réponse inattendue du serveur";
 			}
 			catch (err) {
 				console.error(err);
@@ -175,7 +158,6 @@ export function createSignInPage(): void {
 		});
 	}
 	loadGoogleScript("1047189652036-miitijufimvv2qct8rrimpqmcbc5fu64.apps.googleusercontent.com", (response) => {
-		console.log("Google response:", response); // <- voir ce qui arrive réellement
 		if (!response.credential) {
 			message.textContent = "Erreur Google : token manquant";
 			return;
@@ -184,26 +166,27 @@ export function createSignInPage(): void {
 			method: "POST",
 			headers: { "Content-Type": "application/json", },
 			body: JSON.stringify({ id_token: response.credential }),
-			mode: "cors"
+			credentials: "include"
 		})
 			.then(res => res.json())
 			.then(data => {
-				console.log(data.token);
-				if (data?.token) {
-					localStorage.setItem("auth_token", data.token);
-					try {
-						document.cookie = `jwt=${data.token}; Path=/; SameSite=None; Secure`;
-					} catch { }
-					message.textContent = "Connected with google !";
-					setTimeout(() => {
-						window.history.pushState({}, '', '/');
-						window.dispatchEvent(new PopStateEvent('popstate'));
-					}, 500);
-				} else
-					message.textContent = "Problem with Google";
+				message.textContent = data.message;
+				setTimeout(() => {
+					window.history.pushState({}, '', '/');
+					window.dispatchEvent(new PopStateEvent('popstate'));
+				}, 500);
 			})
 			.catch(err => console.error(err));
 	});
+	if ((window as any).googleLoaded && (window as any).google?.accounts) {
+		const btn = document.getElementById("google-button");
+		if (btn) {
+			google.accounts.id.renderButton(
+				btn,
+				{ theme: "outline", width: 320 }
+			);
+		}
+	}
 }
 
 

@@ -1,19 +1,10 @@
+import { getUserId } from "./main";
+
 export async function createMatchesPage(): Promise<void> {
 	const app = document.getElementById('app');
 	if (!app) return;
 
-	const token = localStorage.getItem('auth_token');
-	if (!token) {
-		window.history.pushState({}, '', '/signIn');
-		window.dispatchEvent(new PopStateEvent('popstate'));
-		return;
-	}
-
-	let userId: number | null = null;
-	try {
-		const payload = JSON.parse(atob(token.split('.')[1]));
-		userId = payload.userId;
-	} catch { }
+	const userId = await getUserId();
 	if (!userId) {
 		window.history.pushState({}, '', '/signIn');
 		window.dispatchEvent(new PopStateEvent('popstate'));
@@ -56,8 +47,8 @@ export async function createMatchesPage(): Promise<void> {
 
 	const list = document.getElementById('list');
 	try {
-		const res = await fetch(`https://localhost:8443/matches/${userId}`, {
-			headers: { 'Authorization': `Bearer ${token}` }
+		const res = await fetch(`https://localhost:8443/matches`, {
+			credentials: "include"
 		});
 		if (!res.ok) {
 			list!.innerHTML = `<div class="text-sm text-gray-500">Aucun match trouvé</div>`;
@@ -72,23 +63,22 @@ export async function createMatchesPage(): Promise<void> {
 		const userIds = new Set<number>();
 		matches.forEach((m: any) => {
 			userIds.add(m.player1_id);
-			userIds.add(m.player2_id);
 		});
 
 		const usernameCache = new Map<number, string>();
 		await Promise.all(Array.from(userIds).map(async (id) => {
 			try {
 				const userRes = await fetch(`https://localhost:8443/users/${id}`, {
-					headers: { 'Authorization': `Bearer ${token}` }
+					credentials: "include"
 				});
 				if (userRes.ok) {
 					const userData = await userRes.json();
 					usernameCache.set(id, userData?.user?.username || `Utilisateur ${id}`);
 				} else {
-					usernameCache.set(id, `Utilisateur ${id}`);
+					usernameCache.set(id, "Not found player");
 				}
 			} catch {
-				usernameCache.set(id, `Utilisateur ${id}`);
+				usernameCache.set(id, "Not found player");
 			}
 		}));
 
@@ -99,7 +89,7 @@ export async function createMatchesPage(): Promise<void> {
 			const result = m.winner_id === userId ? 'Victoire' : 'Défaite';
 
 			const player1Name = usernameCache.get(m.player1_id) || `Utilisateur ${m.player1_id}`;
-			const player2Name = usernameCache.get(m.player2_id) || `Utilisateur ${m.player2_id}`;
+			const player2Name = "Random player";
 
 			return `
 		<div class="p-4 bg-white rounded shadow flex items-center justify-between">

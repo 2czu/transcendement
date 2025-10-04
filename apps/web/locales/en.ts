@@ -1,7 +1,16 @@
 export default {
 	home : {
-		game: "Play",
+		singleplayer: "Single-Player",
+		multiplayer: "Multi-Player",
 		tournament: "Tournament (8 players)"
+	},
+	signIn : {
+		connexion: "Connexion",
+		email: "Email",
+		password: "Password",
+		signIn: "Sign-In",
+		no_account: "No account yet ? ",
+		link: "Sign-up right now !"
 	},
 	dashboard : {
 		dashboard : "Dashboard",
