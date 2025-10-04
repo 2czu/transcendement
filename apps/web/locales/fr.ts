@@ -88,7 +88,12 @@ export default {
 		back_button: "Retour",
 		wins: "gagne!",
 		final_scores: "score final:",
-		back_menu_button: "Retour au menu"
+		back_menu_button: "Retour au menu",
+		change_button: "changer de mode",
+		easy: "Facile",
+		medium: "Normal",
+		hard: "Difficile",
+		ai_diff: "Difficulté"
 	},
 	tournament: {
 		tournament : "Tournoi",

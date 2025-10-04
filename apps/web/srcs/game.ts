@@ -1,6 +1,7 @@
 import { getUserId } from './main';
 import { Pong3D, GameMode } from './game3d';
 import { AIDifficulty } from './game/ai';
+import { getLanguage, getTranslation } from './lang';
 
 let game3D: Pong3D;
 let player1Name: string = "Player 1";
@@ -36,7 +37,7 @@ export function createGamePage(gameMode?: GameMode, difficulty?: AIDifficulty): 
 				TRANSCENDENCE
 			</h1>
 			<p class="text-lg text-gray-300 mt-2">
-				${selectedGameMode === 'pve' ? `🤖 Player vs AI (${selectedDifficulty})` : '👥 Player vs Player'}
+				${selectedGameMode === 'pve' ? `🤖 Player vs AI (${getTranslation(`pong.${selectedDifficulty}`, getLanguage())})` : '👥 Player vs Player'}
 			</p>
 			</div>
 			
@@ -63,16 +64,16 @@ export function createGamePage(gameMode?: GameMode, difficulty?: AIDifficulty): 
 			<!-- AI Difficulty Selector (only shown in PvE mode) -->
 			${selectedGameMode === 'pve' ? `
 			<div class="mt-6 w-full flex justify-center items-center gap-4">
-				<span class="text-white font-semibold">AI Difficulty:</span>
+				<span data-i18n=pong.ai_diff class="text-white font-semibold">AI Difficulty:</span>
 				<div class="flex gap-2">
 				<button id="difficultyEasy" class="px-4 py-2 ${selectedDifficulty === 'easy' ? 'bg-green-600' : 'bg-gray-600'} hover:bg-green-700 text-white font-bold rounded-lg transition-colors">
-					Easy
+					${getTranslation("pong.easy", getLanguage())}
 				</button>
 				<button id="difficultyMedium" class="px-4 py-2 ${selectedDifficulty === 'medium' ? 'bg-yellow-600' : 'bg-gray-600'} hover:bg-yellow-700 text-white font-bold rounded-lg transition-colors">
-					Medium
+					${getTranslation("pong.medium", getLanguage())}
 				</button>
 				<button id="difficultyHard" class="px-4 py-2 ${selectedDifficulty === 'hard' ? 'bg-red-600' : 'bg-gray-600'} hover:bg-red-700 text-white font-bold rounded-lg transition-colors">
-					Hard
+					${getTranslation("pong.hard", getLanguage())}
 				</button>
 				</div>
 			</div>
@@ -80,17 +81,17 @@ export function createGamePage(gameMode?: GameMode, difficulty?: AIDifficulty): 
 			
 			<!-- buttons -->
 			<div class="mt-10 flex flex-wrap gap-6 justify-center w-full">
-			<button data-i18n="pong.play_button" id="playBtn" class="px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 text-white font-bold rounded-xl shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-300">
-				<span class="inline-flex items-center gap-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 3v18l15-9L5 3z"/></svg>Play</span>
+			<button id="playBtn" class="px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 text-white font-bold rounded-xl shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-300">
+				<span data-i18n="pong.play_button" class="inline-flex items-center gap-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 3v18l15-9L5 3z"/></svg>Play</span>
 			</button>
-			<button data-i18n="pong.replay_button" id="replayBtn" class="px-8 py-3 bg-gradient-to-r from-green-600 to-green-400 hover:from-green-700 hover:to-green-500 text-white font-bold rounded-xl shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-300">
-				<span class="inline-flex items-center gap-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h.582M20 20v-5h-.581M5.455 19.045A9 9 0 1 1 19.045 5.455"/></svg>Replay</span>
+			<button id="replayBtn" class="px-8 py-3 bg-gradient-to-r from-green-600 to-green-400 hover:from-green-700 hover:to-green-500 text-white font-bold rounded-xl shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-300">
+				<span data-i18n="pong.replay_button" class="inline-flex items-center gap-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h.582M20 20v-5h-.581M5.455 19.045A9 9 0 1 1 19.045 5.455"/></svg>Replay</span>
 			</button>
 			<button id="changeModeBtn" class="px-8 py-3 bg-gradient-to-r from-purple-600 to-purple-400 hover:from-purple-700 hover:to-purple-500 text-white font-bold rounded-xl shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-300">
-				<span class="inline-flex items-center gap-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 7h12M8 12h12M8 17h12M3 7h.01M3 12h.01M3 17h.01"/></svg>Change Mode</span>
+				<span class="inline-flex items-center gap-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path data-i18n="pong.change_button" d="M8 7h12M8 12h12M8 17h12M3 7h.01M3 12h.01M3 17h.01"/></svg>Change Mode</span>
 			</button>
-			<button  data-i18n="pong.back_button" id="backBtn" class="px-8 py-3 bg-gradient-to-r from-gray-700 to-gray-500 hover:from-gray-800 hover:to-gray-600 text-white font-bold rounded-xl shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400">
-				<span class="inline-flex items-center gap-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>Back</span>
+			<button  id="backBtn" class="px-8 py-3 bg-gradient-to-r from-gray-700 to-gray-500 hover:from-gray-800 hover:to-gray-600 text-white font-bold rounded-xl shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400">
+				<span data-i18n="pong.back_button" class="inline-flex items-center gap-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>Back</span>
 			</button>
 			
 				</div>
@@ -292,7 +293,7 @@ export function createGamePage(gameMode?: GameMode, difficulty?: AIDifficulty): 
 				player1NameElement.textContent = player1Name;
 			}
 			if (player2NameElement) {
-				player2NameElement.textContent = `AI (${selectedDifficulty})`;
+				player2NameElement.textContent = `AI (${getTranslation(`pong.${selectedDifficulty}`, getLanguage())})`;
 			}
 		} else {
 			// In PvP mode: Player 1 on left (red), Player 2 on right (blue)
