@@ -127,16 +127,9 @@ export function createDashboardPage(): void {
             </div>
           </div>
 
-<<<<<<< HEAD
-          <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
-            <h2 data-i18n="dashboard.friends" class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-              <span  class="text-2xl mr-3">👥</span>
-=======
-		  
           <div class="bg-white/10 backdrop-blur-sm rounded-xl shadow-sm p-6">
             <h2 data-i18n="dashboard.friends" class="text-2xl font-bold text-white mb-6 flex items-center">
               <span class="text-2xl mr-3">👥</span>
->>>>>>> origin/pacosave
               Friends Management
             </h2>
             <!-- friend request -->

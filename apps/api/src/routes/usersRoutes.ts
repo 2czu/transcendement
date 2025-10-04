@@ -261,9 +261,7 @@ const userRoutes: FastifyPluginAsync <{ db: Database }> = async (fastify: Fastif
 		handler: async(request: any, reply: any) => {
 		 const { username } = request.params as { username: string };
 			try {
-				console.log("------------" + username);
 				const user = await checkUser(db, username);
-				console.log(user);
 				if (!user)
 				{
 					reply.code(404).send({ error: "User not found"});
