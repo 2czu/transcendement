@@ -13,6 +13,6 @@ export const createMatch = async (db: Database, player1_id: number , winner_id: 
 };
 
 export const getMatches = async (db: Database, player_id: number) => {
-	const result = await db.all('SELECT * FROM matches WHERE player1_id = ? OR player2_id = ?', [player_id, player_id]);
+	const result = await db.all('SELECT * FROM matches WHERE player1_id = ?', [player_id]);
 	return result;
 };

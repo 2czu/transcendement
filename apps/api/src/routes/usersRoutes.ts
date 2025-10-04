@@ -298,7 +298,6 @@ const userRoutes: FastifyPluginAsync <{ db: Database }> = async (fastify: Fastif
 					reply.code(404).send({ error: "User not found"});
 					return ;
 				}
-				console.log(data);
 				reply.send(data);
 			} catch (err) {
 				reply.code(500).send({ error: 'Failed to fetch user' }); 

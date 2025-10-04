@@ -63,16 +63,16 @@ app.setErrorHandler((error: any, request: any, reply: any) => {
   return reply.status(500).send({ error : 'Internal Server Error'});
 });
 
-// Autorise http://localhost:5173 à appeler l'API en dev
+// Autorise https://localhost:5173 à appeler l'API en dev
 await app.register(cors, {
-	origin: ["http://localhost:5173"],
+	origin: ["https://localhost:5173"],
 	credentials: true
 });
 
 await app.register(fastifyWebsocket);
 
 await app.register(fastifyStatic, {
-  root: path.join(__dirname, 'routes/uploads'),
+  root: path.join(__dirname, '../uploads'),
   prefix: '/uploads/',
 });
 

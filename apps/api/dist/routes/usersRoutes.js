@@ -276,7 +276,6 @@ const userRoutes = async (fastify, opts) => {
                     reply.code(404).send({ error: "User not found" });
                     return;
                 }
-                console.log(data);
                 reply.send(data);
             }
             catch (err) {

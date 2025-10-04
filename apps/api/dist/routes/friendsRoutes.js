@@ -1,4 +1,4 @@
-import { createFriend, getFriendList, getFriendsRequest, acceptFriend, refuseFriend, deleteFriend, BlockFriend, UnblockFriend } from '../controllers/friendsController.js';
+import { createFriend, getFriendList, getFriendsRequest, acceptFriend, deleteFriend, BlockFriend } from '../controllers/friendsController.js';
 import { friendProperties } from '../schemas/schema.js';
 const friendsRoutes = async (fastify, opts) => {
     const { db } = opts;
@@ -8,9 +8,8 @@ const friendsRoutes = async (fastify, opts) => {
         schema: {
             body: {
                 type: 'object',
-                required: ['user_id', 'friend_id'],
+                required: ['friend_id'],
                 properties: {
-                    user_id: { type: 'number' },
                     friend_id: { type: 'number' },
                 },
                 additionalProperties: false,
@@ -20,9 +19,10 @@ const friendsRoutes = async (fastify, opts) => {
             },
         },
         handler: async (request, reply) => {
-            const { user_id, friend_id, status = 'pending', } = request.body;
+            const { friend_id, status = 'pending', } = request.body;
             try {
-                const friend = await createFriend(db, user_id, friend_id, status);
+                let userId = request.user.userId;
+                const friend = await createFriend(db, userId, friend_id, status);
                 if (friend?.error == 'same id') {
                     reply.code(409).send({ error: "feeling lonely ? You can't be friend with yourself sorry" });
                     return;
@@ -70,11 +70,7 @@ const friendsRoutes = async (fastify, opts) => {
             const userId = request.user.userId;
             try {
                 const matches = await getFriendList(db, userId);
-                if (matches.length == 0) {
-                    reply.code(404).send({ error: "Empty friendlist" });
-                    return;
-                }
-                reply.send(matches);
+                reply.code(200).send(matches);
             }
             catch (err) {
                 reply.code(500).send({ error: 'Failed to fetch user' });
@@ -99,11 +95,7 @@ const friendsRoutes = async (fastify, opts) => {
             const userId = request.user.userId;
             try {
                 const matches = await getFriendsRequest(db, userId);
-                if (matches.length == 0) {
-                    reply.code(404).send({ error: "No friends requests found" });
-                    return;
-                }
-                reply.send(matches);
+                reply.code(200).send(matches);
             }
             catch (err) {
                 reply.code(500).send({ error: 'Failed to fetch user' });
@@ -140,13 +132,17 @@ const friendsRoutes = async (fastify, opts) => {
         },
         handler: async (request, reply) => {
             const { user_id, friend_id } = request.body;
+            let userId = request.user.userId;
+            let Idfriend;
+            if (user_id != userId)
+                Idfriend = user_id;
+            else
+                Idfriend = friend_id;
             try {
-                const friend = await acceptFriend(db, user_id, friend_id);
-                if (friend.changes === 0) {
-                    reply.code(404).send({ error: "Friend request not found" });
-                    return;
-                }
-                reply.send({ message: "Friend request accepted" });
+                const friend = await acceptFriend(db, userId, Idfriend);
+                if (friend.changes === 0)
+                    reply.code(404).send({ message: "Friend request not found" });
+                reply.code(200).send({ message: "Friend request accepted" });
             }
             catch (err) {
                 reply.code(500).send({ error: 'Failed to accept friend request' });
@@ -183,8 +179,14 @@ const friendsRoutes = async (fastify, opts) => {
         },
         handler: async (request, reply) => {
             const { user_id, friend_id } = request.body;
+            let userId = request.user.userId;
+            let Idfriend;
+            if (user_id != userId)
+                Idfriend = user_id;
+            else
+                Idfriend = friend_id;
             try {
-                const friend = await refuseFriend(db, user_id, friend_id);
+                const friend = await deleteFriend(db, userId, Idfriend);
                 if (friend.changes === 0) {
                     reply.code(404).send({ error: "Friend request not found" });
                     return;
@@ -220,8 +222,14 @@ const friendsRoutes = async (fastify, opts) => {
         },
         handler: async (request, reply) => {
             const { user_id, friend_id } = request.body;
+            let userId = request.user.userId;
+            let Idfriend;
+            if (user_id != userId)
+                Idfriend = user_id;
+            else
+                Idfriend = friend_id;
             try {
-                const friend = await BlockFriend(db, user_id, friend_id);
+                const friend = await BlockFriend(db, userId, Idfriend);
                 if (friend.changes === 0) {
                     reply.code(404).send({ error: "User not found" });
                     return;
@@ -263,8 +271,14 @@ const friendsRoutes = async (fastify, opts) => {
         },
         handler: async (request, reply) => {
             const { user_id, friend_id } = request.body;
+            let userId = request.user.userId;
+            let Idfriend;
+            if (user_id != userId)
+                Idfriend = user_id;
+            else
+                Idfriend = friend_id;
             try {
-                const Unblock = await UnblockFriend(db, user_id, friend_id);
+                const Unblock = await deleteFriend(db, userId, Idfriend);
                 if (Unblock.changes === 0) {
                     reply.code(404).send({ error: "User not found" });
                     return;
@@ -276,47 +290,26 @@ const friendsRoutes = async (fastify, opts) => {
             }
         }
     });
-    fastify.route({
-        method: 'DELETE',
-        url: "/deleteFriend",
-        schema: {
-            body: {
-                type: 'object',
-                required: ['user_id', 'friend_id'],
-                properties: {
-                    user_id: { type: 'number' },
-                    friend_id: { type: 'number' },
-                },
-                additionalProperties: false,
-            },
-            response: {
-                200: {
-                    type: 'object',
-                    properties: {
-                        message: { type: 'string' }
-                    }
-                },
-                404: {
-                    type: 'object',
-                    properties: {
-                        error: { type: 'string' }
-                    }
-                }
-            },
-        },
-        handler: async (request, reply) => {
-            const { user_id, friend_id } = request.body;
-            try {
-                const deletedFriend = await deleteFriend(db, user_id, friend_id);
-                if (deletedFriend.changes === 0) {
-                    reply.code(404).send({ error: "User not found" });
-                    return;
-                }
-                reply.send({ message: "Friend deleted" });
+    fastify.delete('/deleteFriend/:id1/:id2', async (request, reply) => {
+        const { id1, id2 } = request.params;
+        const user = parseInt(id1);
+        const friendId = parseInt(id2);
+        let userId = request.user.userId;
+        let Idfriend;
+        if (user != userId)
+            Idfriend = user;
+        else
+            Idfriend = friendId;
+        try {
+            const del = await deleteFriend(db, userId, Idfriend);
+            if (del.changes === 0) {
+                reply.code(404).send({ message: "Not found" });
+                return;
             }
-            catch (err) {
-                reply.code(500).send({ error: 'Failed to delete user' });
-            }
+            reply.code(200).send({ message: "Friend deleted" });
+        }
+        catch (err) {
+            reply.code(500).send({ error: 'Failed to delete user' });
         }
     });
 };

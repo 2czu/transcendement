@@ -11,29 +11,29 @@ export function createSignInPage(): void {
 			</svg>
 		</button>
 		<div class="text-center mb-8">
-			<h1 class="text-4xl font-bold mb-2">Connexion</h1>
+			<h1 data-i18n="signIn.connexion" class="text-4xl font-bold mb-2">Connexion</h1>
 		</div>
 
 	<form id="signinForm" class="bg-white/10 text-white rounded-lg shadow-lg p-8 w-96 space-y-4 backdrop-blur-sm border border-white/10">
 			<div>
-			<label class="block font-medium mb-1" for="email">Email</label>
+			<label data-i18n="signIn.email" class="block font-medium mb-1" for="email">Email</label>
 	    <input id="email" name="email" type="email" required
 		    class="w-full px-3 py-2 border border-white/20 rounded focus:outline-none focus:ring focus:ring-indigo-400 bg-transparent text-white placeholder:text-white/70">
 			</div>
 
 			<div>
-			<label class="block font-medium mb-1" for="password">Mot de passe</label>
+			<label data-i18n="signIn.password" class="block font-medium mb-1" for="password">Mot de passe</label>
 	    <input id="password" name="password" type="password" required
 		    class="w-full px-3 py-2 border border-white/20 rounded focus:outline-none focus:ring focus:ring-indigo-400 bg-transparent text-white placeholder:text-white/70">
 			</div>
 
-			<button type="submit"
+			<button type="submit" data-i18n="signIn.signIn"
 					class="w-full bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-700 transition">
 			Se connecter
 			</button>
 			<div id="google-button" class="mt-4 flex justify-center"></div>
 
-			<p class="text-sm text-white/80">Pas de compte ? <a id="goSignUp" href="#" class="text-indigo-300 hover:underline">Créer un compte</a></p>
+			<p data-i18n="signIn.no_account" class="text-sm text-white/80 text-center">Pas de compte ? <a data-i18n="signIn.link" id="goSignUp" href="#" class="text-indigo-300 hover:underline">Créer un compte</a></p>
 		</form>
 
 	<div id="twofa" class="hidden bg-white/10 text-white rounded-lg shadow-lg p-8 w-96 space-y-4 mt-6 backdrop-blur-sm border border-white/10">
@@ -178,6 +178,15 @@ export function createSignInPage(): void {
 			})
 			.catch(err => console.error(err));
 	});
+	if ((window as any).googleLoaded && (window as any).google?.accounts) {
+		const btn = document.getElementById("google-button");
+		if (btn) {
+			google.accounts.id.renderButton(
+				btn,
+				{ theme: "outline", width: 320 }
+			);
+		}
+	}
 }
 
 

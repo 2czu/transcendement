@@ -49,15 +49,8 @@ const matchesRoutes = async (fastify, opts) => {
     });
     fastify.route({
         method: 'GET',
-        url: "/matches/:id",
+        url: "/matches",
         schema: {
-            params: {
-                type: 'object',
-                required: ['id'],
-                properties: {
-                    id: { type: 'integer' }
-                }
-            },
             response: {
                 200: matchProperties,
                 404: {
@@ -69,14 +62,9 @@ const matchesRoutes = async (fastify, opts) => {
             }
         },
         handler: async (request, reply) => {
-            const { id } = request.params;
+            let userId = request.user.userId;
             try {
-                console.log('Matches for player', id);
-                const matches = await getMatches(db, id);
-                if (matches.length == 0) {
-                    reply.code(404).send({ error: "No matches found" });
-                    return;
-                }
+                const matches = await getMatches(db, userId);
                 reply.send(matches);
             }
             catch (err) {

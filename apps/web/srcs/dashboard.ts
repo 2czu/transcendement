@@ -213,15 +213,12 @@ export function createDashboardPage(): void {
 				} catch { name = null; }
 			}
 			if (name) displayEl.textContent = `Signed in as ${name}`;
-
-			console.log(name);
-
-			const authHeader = { 'Authorization': `Bearer ${token}` };
+;
 
 			const tryExt = async (ext: string) => {
 				const url = `https://localhost:8443/uploads/avatar_${userId}.${ext}`;
 				try {
-					const res = await fetch(url + `?t=${Date.now()}`, { method: 'GET', headers: authHeader });
+					const res = await fetch(url + `?t=${Date.now()}`, { method: 'GET', credentials: "include" });
 					if (res.ok) return url;
 				} catch { }
 				return null;
@@ -264,7 +261,7 @@ export function createDashboardPage(): void {
 
 			const ids = new Set<number>();
 			try {
-				const resF = await fetch(`https://localhost:8443/friendlist/${userId}`, { credentials: "include" });
+				const resF = await fetch(`https://localhost:8443/friendlist`, { credentials: "include" });
 				if (resF.ok) {
 					const list = await resF.json();
 					if (Array.isArray(list)) {
@@ -277,13 +274,17 @@ export function createDashboardPage(): void {
 			} catch { }
 
 			try {
-				const resR = await fetch(`https://localhost:8443/friendReq/${userId}`, { credentials: "include" });
+				const resR = await fetch(`https://localhost:8443/friendReq`, { credentials: "include" });
 				if (resR.ok) {
 					const list = await resR.json();
+					console.log(list);
 					if (Array.isArray(list)) {
 						for (const item of list) {
 							if (typeof item.user_id === 'number') ids.add(item.user_id);
 							if (typeof item.friend_id === 'number') ids.add(item.friend_id);
+							console.log(item.friend_id);
+							console.log(item.user_id);
+
 						}
 					}
 				}
@@ -518,6 +519,7 @@ export function createDashboardPage(): void {
 		const uniqueIds = Array.from(new Set(requests.map(r => r.user_id)));
 		const names = await Promise.all(uniqueIds.map(id => getUsernameById(id)));
 		const idToName = new Map(uniqueIds.map((id, idx) => [id, names[idx]]));
+
 		friendRequests.innerHTML = requests.map(request => `
 				<div class="flex items-center justify-between p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
 					<div class="flex items-center space-x-3">
@@ -590,7 +592,6 @@ export function createDashboardPage(): void {
 					'Content-Type': 'application/json',
 				},
 				body: JSON.stringify({
-					user_id: userId,
 					friend_id: friendId
 				}),
 				credentials: "include"
@@ -613,18 +614,15 @@ export function createDashboardPage(): void {
 		}
 	};
 
-	(window as any).acceptFriendRequest = async (userId: number, friendId: number) => {
+	(window as any).acceptFriendRequest = async (user: number, friendId: number) => {
 		try {
-			const userId = await getUserId();
-			if (!userId) return;
-
 			const response = await fetch('https://localhost:8443/friendAccept', {
 				method: 'PATCH',
 				headers: {
 					'Content-Type': 'application/json',
 				},
 				body: JSON.stringify({
-					user_id: userId,
+					user_id: user,
 					friend_id: friendId
 				}),
 				credentials: "include"
@@ -644,8 +642,6 @@ export function createDashboardPage(): void {
 
 	(window as any).refuseFriendRequest = async (userId: number, friendId: number) => {
 		try {
-			const userId = getUserId();
-			if (!userId) return;
 
 			const response = await fetch('https://localhost:8443/friendRefuse', {
 				method: 'PATCH',
@@ -672,21 +668,10 @@ export function createDashboardPage(): void {
 
 	(window as any).removeFriend = async (userId: number, friendId: number) => {
 		try {
-			const userId = getUserId();
-			if (!userId) return;
-
-			const response = await fetch('https://localhost:8443/deleteFriend', {
+			const response = await fetch(`https://localhost:8443/deleteFriend/${userId}/${friendId}`, {
 				method: 'DELETE',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({
-					user_id: userId,
-					friend_id: friendId
-				}),
 				credentials: "include"
 			});
-
 			if (response.ok) {
 				showMessage('Friend removed from your list', 'success');
 				loadFriendsList();

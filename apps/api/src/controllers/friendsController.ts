@@ -28,12 +28,7 @@ export const getFriendsRequest = async (db: Database, id: number) => {
 };
 
 export const acceptFriend = async (db: Database, user_id: number, friend_id: number) => {
-	const result = await db.run(`UPDATE friends SET status = 'accepted' WHERE user_id = ? AND friend_id = ? AND status = 'pending'`, [user_id, friend_id]);
-	return result
-};
-
-export const refuseFriend = async (db: Database, user_id: number, friend_id: number) => {
-	const result = await db.run(`DELETE FROM friends WHERE user_id = ? AND friend_id = ? AND status = 'pending'`, [user_id, friend_id]);
+	const result = await db.run(`UPDATE friends SET status = 'accepted' WHERE ((user_id = ? AND friend_id = ?) OR (friend_id = ? AND  user_id = ?)) AND status = 'pending'`, [user_id, friend_id, user_id, friend_id]);
 	return result
 };
 
@@ -43,11 +38,7 @@ export const deleteFriend = async (db: Database, user_id: number, friend_id: num
 };
 
 export const BlockFriend = async (db: Database, user_id: number, friend_id: number) => {
-	const result = await db.run(`UPDATE friends SET status = 'blocked' WHERE user_id = ? AND friend_id = ?`, [user_id, friend_id]);
+	const result = await db.run(`UPDATE friends SET status = 'blocked' WHERE user_id = ? AND friend_id = ? OR WHERE user_id = ? AND friend_id = ?`, [user_id, friend_id, friend_id, user_id]);
 	return result
 };
 
-export const UnblockFriend = async (db: Database, user_id: number, friend_id: number) => {
-	const result = await db.run(`DELETE FROM friends WHERE user_id = ? AND friend_id = ? AND status = 'blocked'`, [user_id, friend_id]);
-	return result
-};

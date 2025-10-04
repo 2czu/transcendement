@@ -47,7 +47,7 @@ export async function createMatchesPage(): Promise<void> {
 
 	const list = document.getElementById('list');
 	try {
-		const res = await fetch(`https://localhost:8443/matches/${userId}`, {
+		const res = await fetch(`https://localhost:8443/matches`, {
 			credentials: "include"
 		});
 		if (!res.ok) {

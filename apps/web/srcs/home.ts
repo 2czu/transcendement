@@ -112,15 +112,15 @@ export function createHomePage(): void {
 
 				<div class="flex flex-col md:flex-row items-center gap-4">
 					<button id="singleBtn" class="relative overflow-hidden px-10 py-4 rounded-full bg-gradient-to-r from-indigo-600 to-indigo-800 text-white font-bold text-lg shadow-[0_25px_50px_rgba(0,0,0,0.75)] transform transition-all duration-300 hover:-translate-y-1 hover:scale-105 active:translate-y-0 focus:outline-none focus:ring-4 focus:ring-indigo-400/20">
-						<span class="relative z-10">Singleplayer</span>
+						<span data-i18n="home.singleplayer" class="relative z-10">Singleplayer</span>
 						<span class="btn-gloss"></span>
 					</button>
 					<button id="multiBtn" class="relative overflow-hidden px-10 py-4 rounded-full bg-gradient-to-r from-indigo-600 to-indigo-800 text-white font-bold text-lg shadow-[0_25px_50px_rgba(0,0,0,0.75)] transform transition-all duration-300 hover:-translate-y-1 hover:scale-105 active:translate-y-0 focus:outline-none focus:ring-4 focus:ring-indigo-400/20">
-						<span class="relative z-10">Multiplayer</span>
+						<span data-i18n="home.multiplayer" class="relative z-10">Multiplayer</span>
 						<span class="btn-gloss"></span>
 					</button>
 					<button id="tournamentBtn" class="relative overflow-hidden px-6 py-3 rounded-full bg-gradient-to-r from-indigo-700 to-indigo-900 text-white font-semibold transform transition-all duration-300 hover:-translate-y-0.5 hover:scale-102 focus:outline-none focus:ring-4 focus:ring-indigo-500/15 shadow-[0_12px_30px_rgba(0,0,0,0.6)]">
-						<span class="relative z-10">Tournoi (8 joueurs)</span>
+						<span data-i18n="home.tournament" class="relative z-10">Tournoi (8 joueurs)</span>
 						<span class="btn-gloss" style="animation-duration: 2.4s"></span>
 					</button>
 				</div>

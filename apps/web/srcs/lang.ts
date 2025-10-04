@@ -21,9 +21,17 @@ function getTranslation(key: string, lang: Lang): string {
 }
 
 export function updateTranslations() {
-	document.querySelectorAll<HTMLElement>("[data-i18n").forEach(el => {
+	document.querySelectorAll<HTMLElement>("[data-i18n]").forEach(el => {
 		const key = el.dataset.i18n!;
-		el.textContent = getTranslation(key, currentLang);
+		const translation = getTranslation(key, currentLang);
+
+		el.childNodes.forEach(node => {
+			if (node.nodeType === Node.TEXT_NODE) {
+				node.textContent = translation;
+			}
+		});
+		if (!el.hasChildNodes())
+			el.textContent = translation;
 	})
 }
 
