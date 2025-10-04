@@ -18,6 +18,9 @@ import {
 } from '@babylonjs/core';
 import { getUserId } from './main';
 import { getTranslation, getLanguage } from "./lang";
+import { PongAI, AIDifficulty } from './game/ai';
+
+export type GameMode = 'pvp' | 'pve';
 
 export class Pong3D {
 	private canvas: HTMLCanvasElement;
@@ -52,15 +55,28 @@ export class Pong3D {
 
 	private showOverlayOnGameOver: boolean = true;
 
+	// AI Integration
+	private gameMode: GameMode = 'pvp';
+	private ai: PongAI | null = null;
+	private aiDifficulty: AIDifficulty = 'medium';
+
 	public setShowOverlayOnGameOver(show: boolean): void {
 		this.showOverlayOnGameOver = show;
 	}
 
-	constructor(canvas: HTMLCanvasElement) {
+	constructor(canvas: HTMLCanvasElement, gameMode: GameMode = 'pvp', aiDifficulty: AIDifficulty = 'medium') {
+		this.gameMode = gameMode;
+		this.aiDifficulty = aiDifficulty;
 		this.canvas = canvas;
 		this.engine = new Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true, disableWebGL2Support: false });
 		this.scene = new Scene(this.engine);
 		this.walls = [];
+
+		// Initialize AI if in PvE mode
+		if (this.gameMode === 'pve') {
+			this.ai = new PongAI(this.aiDifficulty);
+			this.player2Name = `AI (${this.aiDifficulty})`;
+		}
 
 		this.setupScene();
 		this.setupGameObjects();
@@ -323,9 +339,11 @@ export class Pong3D {
 		}
 
 		if (this.ball.position.x > 8) {
+			// Ball went past right paddle - left player (paddle1) scores
 			this.score2++;
 			this.resetBall();
 		} else if (this.ball.position.x < -8) {
+			// Ball went past left paddle - right player (paddle2) scores
 			this.score1++;
 			this.resetBall();
 		}
@@ -338,6 +356,11 @@ export class Pong3D {
 			if (this.showOverlayOnGameOver) {
 				this.showGameOverScreen();
 			}
+		}
+
+		// Update AI if in PvE mode
+		if (this.gameMode === 'pve' && this.ai) {
+			this.updateAI();
 		}
 
 		this.updatePaddles();
@@ -384,26 +407,81 @@ export class Pong3D {
 		return 0;
 	}
 
-	private updatePaddles(): void {
-		if (this.keys['ArrowUp'] && this.paddle1.position.y < 2.5) {
+	private updateAI(): void {
+		if (!this.ai) return;
+
+		// AI controls left paddle (red) in PvE mode
+		// Update AI decision-making (once per second as per requirements)
+		const currentTime = performance.now();
+		this.ai.update(
+			currentTime,
+			{
+				x: this.ball.position.x,
+				y: this.ball.position.y,
+				vx: this.ballVelocity.x * this.ballSpeedMultiplier,
+				vy: this.ballVelocity.y * this.ballSpeedMultiplier
+			},
+			{
+				y: this.paddle1.position.y,
+				height: 2.5
+			},
+			{
+				minY: -2.5,
+				maxY: 2.5,
+				paddleX: -6
+			}
+		);
+
+		// Get AI movement direction (simulates keyboard input)
+		const aiInput = this.ai.getKeyboardInput(this.paddle1.position.y);
+
+		// Apply AI movement to left paddle (simulating human keyboard input)
+		if (aiInput.up && this.paddle1.position.y < 2.5) {
 			this.paddle1.position.y += this.paddleSpeed;
 			this.paddle1Velocity = this.paddleSpeed;
-		} else if (this.keys['ArrowDown'] && this.paddle1.position.y > -2.5) {
+		} else if (aiInput.down && this.paddle1.position.y > -2.5) {
 			this.paddle1.position.y -= this.paddleSpeed;
 			this.paddle1Velocity = -this.paddleSpeed;
 		} else {
 			this.paddle1Velocity = 0;
 		}
+	}
 
-		if (this.keys['KeyW'] && this.paddle2.position.y < 2.5) {
-			this.paddle2.position.y += this.paddleSpeed;
-			this.paddle2Velocity = this.paddleSpeed;
-		} else if (this.keys['KeyS'] && this.paddle2.position.y > -2.5) {
-			this.paddle2.position.y -= this.paddleSpeed;
-			this.paddle2Velocity = -this.paddleSpeed;
+	private updatePaddles(): void {
+		if (this.gameMode === 'pvp') {
+			// PvP Mode: Player 1 (left paddle, red) uses Arrow keys, Player 2 (right paddle, blue) uses W/S
+			if (this.keys['ArrowUp'] && this.paddle1.position.y < 2.5) {
+				this.paddle1.position.y += this.paddleSpeed;
+				this.paddle1Velocity = this.paddleSpeed;
+			} else if (this.keys['ArrowDown'] && this.paddle1.position.y > -2.5) {
+				this.paddle1.position.y -= this.paddleSpeed;
+				this.paddle1Velocity = -this.paddleSpeed;
+			} else {
+				this.paddle1Velocity = 0;
+			}
+
+			if (this.keys['KeyW'] && this.paddle2.position.y < 2.5) {
+				this.paddle2.position.y += this.paddleSpeed;
+				this.paddle2Velocity = this.paddleSpeed;
+			} else if (this.keys['KeyS'] && this.paddle2.position.y > -2.5) {
+				this.paddle2.position.y -= this.paddleSpeed;
+				this.paddle2Velocity = -this.paddleSpeed;
+			} else {
+				this.paddle2Velocity = 0;
+			}
 		} else {
-			this.paddle2Velocity = 0;
+			// PvE Mode: Player controls right paddle (blue) with Arrow keys, AI controls left paddle (red)
+			if (this.keys['ArrowUp'] && this.paddle2.position.y < 2.5) {
+				this.paddle2.position.y += this.paddleSpeed;
+				this.paddle2Velocity = this.paddleSpeed;
+			} else if (this.keys['ArrowDown'] && this.paddle2.position.y > -2.5) {
+				this.paddle2.position.y -= this.paddleSpeed;
+				this.paddle2Velocity = -this.paddleSpeed;
+			} else {
+				this.paddle2Velocity = 0;
+			}
 		}
+		// AI controls are handled in updateAI() method
 	}
 
 	private resetBall(): void {
@@ -416,6 +494,11 @@ export class Pong3D {
 		this.waiting = true;
 		this.gameRunning = false;
 		this.ballSpeedMultiplier = 1.0;
+
+		// Reset AI state
+		if (this.ai) {
+			this.ai.reset();
+		}
 	}
 
 	public startGame(): void {
@@ -502,6 +585,11 @@ export class Pong3D {
 		this.paddle2.position.y = 0;
 		this.hideGameOverScreen();
 		this.ballSpeedMultiplier = 1.0;
+
+		// Reset AI
+		if (this.ai) {
+			this.ai.reset();
+		}
 	}
 
 	public forceReset(): void {
@@ -519,6 +607,11 @@ export class Pong3D {
 		this.paddle2.position.y = 0;
 		this.hideGameOverScreen();
 		this.keys = {};
+
+		// Reset AI
+		if (this.ai) {
+			this.ai.reset();
+		}
 	}
 
 	public getScore(): { p1: number; p2: number } {
@@ -573,6 +666,22 @@ export class Pong3D {
 			});
 			this.resizeObserver.observe(container);
 		} catch { }
+	}
+
+	public getGameMode(): GameMode {
+		return this.gameMode;
+	}
+
+	public getAIDifficulty(): AIDifficulty | null {
+		return this.gameMode === 'pve' ? this.aiDifficulty : null;
+	}
+
+	public setAIDifficulty(difficulty: AIDifficulty): void {
+		if (this.ai) {
+			this.ai.setDifficulty(difficulty);
+			this.aiDifficulty = difficulty;
+			this.player2Name = `AI (${difficulty})`;
+		}
 	}
 
 	public dispose(): void {

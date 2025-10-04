@@ -2,6 +2,7 @@ import { showGamePage, showDashboardPage, showTournamentPage, showStatsPage, han
 import { showSignInPage } from './router';
 import { getLanguage, setLanguage, updateTranslations } from './lang';
 import { getUserId } from './main';
+import { createGamePage } from './game';
 
 export function createHomePage(): void {
 	const app = document.getElementById('app');
@@ -25,6 +26,7 @@ export function createHomePage(): void {
 					</svg>
 				</button>
 			</header>
+		<main class="max-w-xl mx-auto py-16 px-6">		
 
 			<main class="relative z-10 flex flex-col items-center justify-center text-center min-h-[70vh] px-6">
 
@@ -107,7 +109,7 @@ export function createHomePage(): void {
 				</div>
 
 				<div class="flex flex-col md:flex-row items-center gap-4">
-					<button id="singleBtn" class="relative overflow-hidden px-10 py-4 rounded-full bg-gradient-to-r from-indigo-600 to-indigo-800 text-white font-bold text-lg shadow-[0_25px_50px_rgba(0,0,0,0.75)] transform transition-all duration-300 hover:-translate-y-1 hover:scale-105 active:translate-y-0 focus:outline-none focus:ring-4 focus:ring-indigo-400/20">
+					<button id="aiGameBtn" class="relative overflow-hidden px-10 py-4 rounded-full bg-gradient-to-r from-indigo-600 to-indigo-800 text-white font-bold text-lg shadow-[0_25px_50px_rgba(0,0,0,0.75)] transform transition-all duration-300 hover:-translate-y-1 hover:scale-105 active:translate-y-0 focus:outline-none focus:ring-4 focus:ring-indigo-400/20">
 						<span data-i18n="home.singleplayer" class="relative z-10">Singleplayer</span>
 						<span class="btn-gloss"></span>
 					</button>
@@ -154,7 +156,15 @@ export function createHomePage(): void {
 	if (multiBtn) {
 		multiBtn.addEventListener("click", () => {
 			window.history.pushState({}, '', '/game');
-			handleRoute();
+			createGamePage('pvp');
+		});
+	}
+
+	const aiGameBtn = document.getElementById("aiGameBtn");
+	if (aiGameBtn) {
+		aiGameBtn.addEventListener("click", () => {
+			window.history.pushState({}, '', '/game');
+			createGamePage('pve', 'medium');
 		});
 	}
 
@@ -162,7 +172,8 @@ export function createHomePage(): void {
 	if (tournamentBtn) {
 		tournamentBtn.addEventListener("click", () => {
 			window.history.pushState({}, '', '/tournament');
-			handleRoute();
+			// handleRoute(); BIZARE
+			showTournamentPage();
 		});
 	}
 

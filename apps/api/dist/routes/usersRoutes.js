@@ -240,9 +240,7 @@ const userRoutes = async (fastify, opts) => {
         handler: async (request, reply) => {
             const { username } = request.params;
             try {
-                console.log("------------" + username);
                 const user = await checkUser(db, username);
-                console.log(user);
                 if (!user) {
                     reply.code(404).send({ error: "User not found" });
                     return;

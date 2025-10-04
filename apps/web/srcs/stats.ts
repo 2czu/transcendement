@@ -1,25 +1,16 @@
 import Chart from 'chart.js/auto';
+import { getUserId } from './main';
 
 export async function createStatsPage(): Promise<void> {
     const app = document.getElementById('app');
     if (!app) return;
 
-    const token = localStorage.getItem('auth_token');
-    if (!token) {
-        window.history.pushState({}, '', '/signIn');
-        window.dispatchEvent(new PopStateEvent('popstate'));
-        return;
-    }
-
-    let userId: number | null = null;
-    try {
-        const payload = JSON.parse(atob(token.split('.')[1]));
-        userId = payload.userId;
-    } catch { }
+    const userId = await getUserId();
     if (!userId) {
+        console.log("--------------");
         window.history.pushState({}, '', '/signIn');
         window.dispatchEvent(new PopStateEvent('popstate'));
-        return;
+    return;
     }
 
     app.innerHTML = `
@@ -45,7 +36,7 @@ export async function createStatsPage(): Promise<void> {
         window.dispatchEvent(new PopStateEvent('popstate'));
     });
     const res = await fetch(`https://localhost:8443/stats`, {
-            headers: { 'Authorization': `Bearer ${token}` }
+            credentials: "include"
         });
         if (!res.ok) {
             app.innerHTML += `<div class="text-sm text-gray-500">Aucune statistique trouvée</div>`;
