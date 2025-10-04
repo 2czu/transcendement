@@ -1,8 +1,8 @@
 export default {
 	home : {
-		singleplayer: "Single-Player",
-		multiplayer: "Multi-Player",
-		tournament: "Tournament (8 players)"
+		singleplayer: "Solo",
+		multiplayer: "Multiplayer",
+		tournament: "Tournament"
 	},
 	signIn : {
 		connexion: "Connexion",
