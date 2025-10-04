@@ -47,7 +47,8 @@ fastify.route({
 						properties: {
 							game_played: { type: 'number' },
 							games_won: { type: 'number' },
-							total_score: { type: 'number' }
+							total_score: { type: 'number' },
+							goal_taken: { type: 'number' }
 						}
 					},
 					404: {

@@ -132,6 +132,29 @@ export function createDashboardPage(): void {
               <span class="text-2xl mr-3">👥</span>
               Friends Management
             </h2>
+
+
+
+			
+			<!-- User Stat -->
+            <div class="bg-white rounded-lg shadow-sm p-6">
+              <div class="flex items-center space-x-4">
+                <div class="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center">
+                  <span class="text-2xl text-green-600">📈</span>
+                </div>
+                <div>
+                  <h3 class="text-lg font-semibold text-gray-900">User Stats</h3>
+                  <p class="text-gray-600">View your stats</p>
+                </div>
+              </div>
+              <div class="mt-4">
+                <button id="userStatBtn" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg transition-colors">
+                  View Stats
+                </button>
+              </div>
+            </div>
+          </div>
+            
             <!-- friend request -->
             <div class="mb-8">
               <h3 data-i18n="dashboard.send_request" class="text-lg font-semibold text-white mb-4">Send a friend request</h3>
@@ -188,6 +211,7 @@ export function createDashboardPage(): void {
 	const profileBtn = document.getElementById('profileBtn') as HTMLButtonElement;
 	const matchesBtn = document.getElementById('matchesBtn') as HTMLButtonElement;
 	const tournamentBtn = document.getElementById('tournamentBtn') as HTMLButtonElement;
+	const userStatBtn = document.getElementById('userStatBtn') as HTMLButtonElement;
 
 	(async () => {
 		try {
@@ -368,6 +392,10 @@ export function createDashboardPage(): void {
 		window.history.pushState({}, '', '/tournament');
 		window.dispatchEvent(new PopStateEvent('popstate'));
 	});
+	userStatBtn.addEventListener('click', () => {
+        window.history.pushState({}, '', '/stats');
+        window.dispatchEvent(new PopStateEvent('popstate'));
+    });
 
 	searchBtn.addEventListener('click', async () => {
 		const searchTerm = searchUser.value.trim();

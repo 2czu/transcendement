@@ -40,6 +40,7 @@ CREATE TABLE IF NOT EXISTS stats (
 	game_played INTEGER DEFAULT 0,
 	games_won INTEGER DEFAULT 0,
 	total_score INTEGER DEFAULT 0,
+	goal_taken INTEGER DEFAULT 0,
 	FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
@@ -59,7 +60,7 @@ INSERT OR IGNORE INTO friends (user_id, friend_id, status) VALUES
   (2, 3, 'pending'),
   (3, 1, 'blocked');
 
-INSERT OR IGNORE INTO stats (user_id, game_played, games_won, total_score) VALUES
-  (1, 20, 12, 1500),
-  (2, 15, 7, 900),
-  (3, 10, 5, 700);
+INSERT OR IGNORE INTO stats (user_id, game_played, games_won, total_score, goal_taken) VALUES
+  (1, 20, 12, 1500, 5),
+  (2, 15, 7, 900, 457),
+  (3, 10, 5, 700, 0);

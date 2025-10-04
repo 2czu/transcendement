@@ -8,7 +8,16 @@ export const createMatch = async (db: Database, player1_id: number , winner_id: 
 	if (player1_id != winner_id)
 		return { error : 'Invalid winner id'};
 	const result = await db.run(`INSERT INTO matches (player1_id, player2_id, winner_id, score_player1, score_player2) VALUES (?,?,?,?,?)`, [player1_id, 0, winner_id, score_player1, score_player2]);
-	await db.run("UPDATE stats SET games_won = games_won + 1, total_score = total_score + ?, game_played = game_played + 1 WHERE user_id = ?", [score_player1, player1_id]);
+	await db.run("UPDATE stats SET games_won = games_won + 1, total_score = total_score + ?, game_played = game_played + 1, goal_taken = goal_taken + ? WHERE user_id = ?", [score_player1, score_player2, player1_id]);
+
+	// const result = await db.run(`INSERT INTO matches (player1_id, player2_id, winner_id, score_player1, score_player2) VALUES (?,?,?,?,?)`, [player1_id, player2_id, winner_id, score_player1, score_player2]);
+	// await db.run("UPDATE stats SET game_played = game_played + 1 WHERE user_id = ?", [player1_id]);
+	// await db.run("UPDATE stats SET game_played = game_played + 1 WHERE user_id = ?", [player2_id]);
+	// await db.run("UPDATE stats SET games_won = games_won + 1 WHERE user_id = ?", [winner_id]);
+	// await db.run("UPDATE stats SET total_score = total_score + ? WHERE user_id = ?", [score_player1, player1_id]);
+	// await db.run("UPDATE stats SET total_score = total_score + ? WHERE user_id = ?", [score_player2, player2_id]);
+	// await db.run("UPDATE stats SET goal_taken = goal_taken + ? WHERE user_id = ?", [score_player2, player1_id]);
+	// await db.run("UPDATE stats SET goal_taken = goal_taken + ? WHERE user_id = ?", [score_player1, player2_id]);
 	return result
 };
 

@@ -142,8 +142,7 @@ export function createHomePage(): void {
 	const statsBtn = document.getElementById('statsBtn') as HTMLButtonElement;
 	if (statsBtn) {
 		statsBtn.addEventListener("click", () => {
-			window.history.pushState({}, '', '/game');
-			handleRoute();
+			window.open("http://localhost:3000", "_blank");
 		});
 	}
 	const singleBtn = document.getElementById("singleBtn");
