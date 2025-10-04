@@ -149,7 +149,6 @@ export function createHomePage(): void {
 	const singleBtn = document.getElementById("singleBtn");
 	if (singleBtn) {
 		singleBtn.addEventListener("click", () => {
-			// todo
 		});
 	}
 	const multiBtn = document.getElementById("multiBtn");

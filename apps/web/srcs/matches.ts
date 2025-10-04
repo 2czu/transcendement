@@ -13,20 +13,23 @@ export async function createMatchesPage(): Promise<void> {
 	}
 
 	app.innerHTML = `
-	<div class="min-h-screen bg-gray-50">
-	<button id="homeBtn" aria-label="Home" title="Home" class="absolute top-4 left-4 bg-white border rounded p-2 shadow-sm hover:bg-gray-100">
-		<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+	<div class="min-h-screen relative overflow-hidden bg-gradient-to-tr from-indigo-900 to-black text-white">
+	<div class="absolute -left-32 -top-32 w-80 h-80 bg-indigo-800 rounded-full opacity-30 filter blur-3xl animate-pulse"></div>
+	<div class="absolute right-0 top-20 w-72 h-72 bg-indigo-700 rounded-full opacity-20 filter blur-2xl animate-pulse"></div>
+	<div class="absolute left-1/2 bottom-0 w-96 h-96 bg-indigo-900 rounded-full opacity-15 filter blur-3xl transform -translate-x-1/2 animate-pulse"></div>
+	<button id="homeBtn" aria-label="Home" title="Home" class="absolute top-4 left-4 bg-white/10 border rounded p-2 shadow-sm hover:bg-white/20 transition-colors">
+		<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
 			<path stroke-linecap="round" stroke-linejoin="round" d="M3 9.75L12 3l9 6.75V21a.75.75 0 01-.75.75H3.75A.75.75 0 013 21V9.75z" />
 			<path stroke-linecap="round" stroke-linejoin="round" d="M9 21V12h6v9" />
 		</svg>
 	</button>
 	<div class="max-w-3xl mx-auto px-4 py-8">
 		<div class="flex items-center justify-between mb-6">
-		<h1 data-i18n="matches.history" class="text-2xl font-bold text-gray-900">Historique des matchs</h1>
-		<button data-i18n="matches.previous_button" id="backBtn" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Retour</button>
+		<h1 data-i18n="matches.history" class="text-2xl font-bold text-white drop-shadow">Historique des matchs</h1>
+		<button data-i18n="matches.previous_button" id="backBtn" class="px-4 py-2 bg-white/10 text-white rounded hover:bg-white/20">Retour</button>
 		</div>
 		<div id="list" class="space-y-3">
-		<div data-i18n="matches.load" class="text-gray-500 text-sm">Chargement...</div>
+		<div data-i18n="matches.load" class="text-white/80 text-sm">Chargement...</div>
 		</div>
 	</div>
 	</div>

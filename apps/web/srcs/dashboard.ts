@@ -15,9 +15,13 @@ export function createDashboardPage(): void {
 	});
 
 	app.innerHTML = `
-		<div class="min-h-screen bg-gray-50">
-			<button id="homeBtn" aria-label="Home" title="Home" class="absolute top-4 left-4 bg-white border rounded p-2 shadow-sm hover:bg-gray-100">
-				<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-gray-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+		<div class="min-h-screen relative overflow-hidden bg-gradient-to-tr from-indigo-900 to-black text-white">
+			<div class="absolute -left-32 -top-32 w-80 h-80 bg-indigo-800 rounded-full opacity-30 filter blur-3xl animate-pulse"></div>
+			<div class="absolute right-0 top-20 w-72 h-72 bg-indigo-700 rounded-full opacity-20 filter blur-2xl animate-pulse"></div>
+			<div class="absolute left-1/2 bottom-0 w-96 h-96 bg-indigo-900 rounded-full opacity-15 filter blur-3xl transform -translate-x-1/2 animate-pulse"></div>
+
+			<button id="homeBtn" aria-label="Home" title="Home" class="absolute top-4 left-4 bg-white/10 border rounded p-2 shadow-sm hover:bg-white/20 transition-colors">
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
 					<path stroke-linecap="round" stroke-linejoin="round" d="M3 9.75L12 3l9 6.75V21a.75.75 0 01-.75.75H3.75A.75.75 0 013 21V9.75z" />
 					<path stroke-linecap="round" stroke-linejoin="round" d="M9 21V12h6v9" />
 				</svg>
@@ -25,16 +29,16 @@ export function createDashboardPage(): void {
       <div class="container mx-auto px-4 py-8">
         <div class="max-w-4xl mx-auto">
 
-          <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
+          <div class="bg-white/10 backdrop-blur-sm rounded-xl shadow-sm p-6 mb-6">
             <div class="flex justify-between items-center">
               <div>
-                <h1 data-i18n="dashboard.dashboard" class="text-3xl font-bold text-gray-900">Dashboard</h1>
-                <p data-i18n="dashboard.welcome" class="text-gray-600 mt-1">Welcome to your personal space</p>
+                <h1 data-i18n="dashboard.dashboard" class="text-3xl font-bold text-white drop-shadow">Dashboard</h1>
+                <p data-i18n="dashboard.welcome" class="text-white/80 mt-1">Welcome to your personal space</p>
               </div>
 								<div class="flex items-center space-x-4">
 								<div id="userBox" class="flex items-center space-x-2">
 									<div id="userAvatar" class="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-full overflow-hidden flex items-center justify-center text-sm">👤</div>
-									<span data-i18n="dashboard.signed_in" id="usernameDisplay" class="text-sm text-gray-500">Signed in as User</span>
+									<span data-i18n="dashboard.signed_in" id="usernameDisplay" class="text-sm text-white">Signed in as User</span>
 								</div>
                 <button data-i18n="dashboard.anonymise" id="anonymiseBtn" class="bg-slate-900 hover:bg-slate-700 text-white px-4 py-2 rounded-lg transition-colors">
                   Anonymise
@@ -49,14 +53,14 @@ export function createDashboardPage(): void {
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 mb-8">
 
             <!-- profile -->
-            <div class="bg-white rounded-lg shadow-sm p-6">
+            <div class="bg-white/10 backdrop-blur-sm rounded-xl shadow-sm p-6">
               <div class="flex items-center space-x-4">
-                <div class="w-16 h-16 bg-indigo-100 rounded-full flex items-center justify-center">
+                <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
                   <span class="text-2xl text-indigo-600">👤</span>
                 </div>
                 <div>
-                  <h3 data-i18n="dashboard.profile" class="text-lg font-semibold text-gray-900">Profile</h3>
-                  <p data-i18n="dashboard.desc_profile" class="text-gray-600">Manage your information</p>
+                  <h3 data-i18n="dashboard.profile" class="text-lg font-semibold text-white">Profile</h3>
+                  <p data-i18n="dashboard.desc_profile" class="text-white/80">Manage your information</p>
                 </div>
               </div>
               <div class="mt-4">
@@ -68,14 +72,14 @@ export function createDashboardPage(): void {
 
 
             <!--  matches   -->
-            <div class="bg-white rounded-lg shadow-sm p-6">
+            <div class="bg-white/10 backdrop-blur-sm rounded-xl shadow-sm p-6">
               <div class="flex items-center space-x-4">
-                <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center">
+                <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
                   <span class="text-2xl text-blue-600">🎮</span>
                 </div>
                 <div>
-                  <h3 data-i18n="dashboard.matches" class="text-lg font-semibold text-gray-900">Matches</h3>
-                  <p data-i18n="dashboard.desc_matches" class="text-gray-600">Match history</p>
+                  <h3 data-i18n="dashboard.matches" class="text-lg font-semibold text-white">Matches</h3>
+                  <p data-i18n="dashboard.desc_matches" class="text-white/80">Match history</p>
                 </div>
               </div>
               <div class="mt-4">
@@ -87,14 +91,14 @@ export function createDashboardPage(): void {
 
 
             <!-- Game -->
-            <div class="bg-white rounded-lg shadow-sm p-6">
+            <div class="bg-white/10 backdrop-blur-sm rounded-xl shadow-sm p-6">
               <div class="flex items-center space-x-4">
-                <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center">
+                <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
                   <span class="text-2xl text-red-600">🎮</span>
                 </div>
                 <div>
-                  <h3 class="text-lg font-semibold text-gray-900">Pong</h3>
-                  <p data-i18n="dashboard.desc_pong" class="text-gray-600">Start a Pong game</p>
+                  <h3 class="text-lg font-semibold text-white">Pong</h3>
+                  <p data-i18n="dashboard.desc_pong" class="text-white/80">Start a Pong game</p>
                 </div>
               </div>
               <div class="mt-4">
@@ -105,14 +109,14 @@ export function createDashboardPage(): void {
             </div>
 
             <!-- tournament -->
-            <div class="bg-white rounded-lg shadow-sm p-6">
+            <div class="bg-white/10 backdrop-blur-sm rounded-xl shadow-sm p-6">
               <div class="flex items-center space-x-4">
-                <div class="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center">
+                <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
                   <span class="text-2xl text-purple-600">🏆</span>
                 </div>
                 <div>
-                  <h3 data-i18n="dashboard.tournament" class="text-lg font-semibold text-gray-900">Tournament</h3>
-                  <p data-i18n="dashboard.desc_tournament" class="text-gray-600">Join the tournament</p>
+                  <h3 data-i18n="dashboard.tournament" class="text-lg font-semibold text-white">Tournament</h3>
+                  <p data-i18n="dashboard.desc_tournament" class="text-white/80">Join the tournament</p>
                 </div>
               </div>
               <div class="mt-4">
@@ -123,43 +127,46 @@ export function createDashboardPage(): void {
             </div>
           </div>
 
+<<<<<<< HEAD
           <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
             <h2 data-i18n="dashboard.friends" class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
               <span  class="text-2xl mr-3">👥</span>
+=======
+		  
+          <div class="bg-white/10 backdrop-blur-sm rounded-xl shadow-sm p-6">
+            <h2 data-i18n="dashboard.friends" class="text-2xl font-bold text-white mb-6 flex items-center">
+              <span class="text-2xl mr-3">👥</span>
+>>>>>>> origin/pacosave
               Friends Management
             </h2>
-            
             <!-- friend request -->
             <div class="mb-8">
-              <h3 data-i18n="dashboard.send_request" class="text-lg font-semibold text-gray-800 mb-4">Send a friend request</h3>
+              <h3 data-i18n="dashboard.send_request" class="text-lg font-semibold text-white mb-4">Send a friend request</h3>
               <div class="flex gap-4 items-end">
                 <div class="flex-1">
-                  <label data-i18n="dashboard.search" class="block text-sm font-medium text-gray-700 mb-2">Search for a user</label>
+                  <label data-i18n="dashboard.search" class="block text-sm font-medium text-white mb-2">Search for a user</label>
                   <input data-i18n="dashboard.username_form" type="text" id="searchUser" placeholder="Username..." 
-                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500">
+                         class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white/10 text-white placeholder-white/70">
                 </div>
                 <button data-i18n="dashboard.search_button" id="searchBtn" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-lg transition-colors">
                   Search
                 </button>
               </div>
-              
               <div id="searchResults" class="mt-4 hidden">
-                <h4 data-i18n="dashboard.result" class="text-md font-medium text-gray-700 mb-2">Results:</h4>
+                <h4 data-i18n="dashboard.result" class="text-md font-medium text-white mb-2">Results:</h4>
                 <div id="usersList" class="space-y-2"></div>
               </div>
             </div>
-
             <div class="mb-8">
-              <h3 data-i18n="dashboard.received_req" class="text-lg font-semibold text-gray-800 mb-4">Received friend requests</h3>
+              <h3 data-i18n="dashboard.received_req" class="text-lg font-semibold text-white mb-4">Received friend requests</h3>
               <div id="friendRequests" class="space-y-3">
-                <p data-i18n="dashboard.load" class="text-gray-500 text-sm">Loading requests...</p>
+                <p data-i18n="dashboard.load" class="text-white/80 text-sm">Loading requests...</p>
               </div>
             </div>
-
             <div>
-              <h3 data-i18n="dashboard.my_friends" class="text-lg font-semibold text-gray-800 mb-4">My friends</h3>
+              <h3 data-i18n="dashboard.my_friends" class="text-lg font-semibold text-white mb-4">My friends</h3>
               <div id="friendsList" class="space-y-3">
-                <p class="text-gray-500 text-sm">Loading friends list...</p>
+                <p class="text-white/80 text-sm">Loading friends list...</p>
               </div>
             </div>
           </div>
