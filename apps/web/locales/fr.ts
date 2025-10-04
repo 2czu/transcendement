@@ -12,7 +12,23 @@ export default {
 		no_account: "Pas de compte ? ",
 		link: "Créer un compte"
 	},
+	signUp : {
+		create: "Créer un compte",
+		username: "Nom d'utilisateur",
+		email: "Email",
+		password: "Mot de passe",
+		activate: "Activer la 2FA",
+		yes: "Oui",
+		no: "Non",
+		signUp: "S'inscrire",
+		account: "Vous avez déjà un compte !",
+		link: " Se connecter"
+	},
 	dashboard : {
+		popup_logout: "Déconnexion réussie ! Redirection...",
+		popup_login: "Vous devez être connecté",
+		popup_anonymise: "Anonymisé. Nouveau nom d'utilisateur : ",
+		popup_username: "Veuillez entrer un nom d'utilisateur",
 		dashboard : "Tableau de bord",
 		welcome: "Bienvenue dans ton espace personnel",
 		anonymise: "Anonymisation",
@@ -38,15 +54,33 @@ export default {
 		add_button: "Ajouter",
 		received_req: "Requete d'amis recues",
 		loading_req: "Chargement des requetes...",
-		no_req: "Aucune demande d'amis en attente", //marche a moitie
+		no_req: "Aucune demande d'amis en attente",
+		req_from: "Demande de",
+		waiting: "En attente de réponse",
+		accept: "Accepter",
+		decline: "Refuser",
+		friendship: "Amitié établie",
 		my_friends: "Mes amis",
-		no_friends: "Vous n'avez pas encore d'amis" //marche a moitie
+		remove: "Retirer",
+		send_friend: "Demande d'ami envoyée avec succès",
+		friend_accept : "Demande d'ami acceptée !",
+		friend_refuse : "Demande d'ami refusée",
+		friend_remove : "Ami supprimé de votre liste",
+		no_friends: "Vous n'avez pas encore d'amis",
+		no_user: "Aucun utilisateur trouve",
+		signed_in: "Connecte en tant que "
 	},
 	matches : {
 		history: "Historique de matches",
 		previous_button: "Retour",
 		no_matches: "Aucun matche joue",
 		load: "Chargement...",
+		victory: "Victoire",
+		defeat: "Défaite",
+		random: "Joueur aléatoire",
+		youareP1: "Vous étiez P1",
+		youareP2: "Vous étiez P2",
+		loading: "Erreur de chargement"
 	},
 	pong : {
 		play_button: "Jouer",
@@ -74,17 +108,15 @@ export default {
 		back_menu_button: "Retour au menu",
 		finished: "Tournois finis",
 		restart: "Le tournoi va se relancer automatiquement dans 2,5 secondes…",
-
-
 	},
-	profile: { //les plaeholder vont surement peter
+	profile: {
 		my_profile: "Mon profil",
 		personal_info: "Informations personnelles",
 		profile_pic: "Image de profile",
 		upload_pic: "Change la photo",
 		formats: "Format accepte: JPG, PNG (max 1MB)",
 		username: "Nom d'utilisateur",
-		username_form: "Your username", //marche po
+		username_form: "Ton nom d'utilisateur",
 		no_username: "Nom d'utilisateur vide",
 		token: "token expire",
 		save_button: "Envoyer",
@@ -97,6 +129,20 @@ export default {
 		are_u_sure: "Etes vous sur de vouloir supprimer for compte ? Cette action est irreversible.",
 		log_out: "Deconnection",
 		desc_log_out: "Ferme la session actuelle et retourne a la page d'acceuil",
-		log_out_button: "Deconnexion"
+		log_out_button: "Deconnexion",
+		pp_update: "Image de profil mise à jour !",
+		pp_update_fail: "Erreur lors du téléversement de l'image !",
+		username_char: "Votre nom d'utilisateur doit contenir au moins 3 caractères",
+		username_update: "Nom d'utilisateur mis à jour avec succès",
+		email_error : "Veuillez entrer un email",
+		email_format : "Format d'email invalide",
+		email_update : "Email mis à jour avec succès",
+		password_fields : "Veuillez remplir tous les champs de mot de passe",
+		password_match: "Les mots de passe ne correspondent pas",
+		password_incorrect: "Mot de passe actuel incorrect",
+		password_incorrect2fa: "Impossible de vérifier le mot de passe actuel (2FA ?)",
+		password_change: "Mot de passe changé avec succès !",
+		account_deleted: "Compte supprimé avec succès. Redirection...",
+		log_out_popup: "Déconnecté avec succès ! Redirection..."
 	}
 }

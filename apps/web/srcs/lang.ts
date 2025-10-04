@@ -7,7 +7,7 @@ const languages: Record<Lang, any> = {en, fr, es};
 
 let currentLang: Lang = (localStorage.getItem("lang") as Lang) || "en";
 
-function getTranslation(key: string, lang: Lang): string {
+export function getTranslation(key: string, lang: Lang): string {
 	const parts = key.split(".");
 	let value: any = languages[lang];
 

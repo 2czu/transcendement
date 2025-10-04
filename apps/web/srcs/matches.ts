@@ -1,4 +1,5 @@
 import { getUserId } from "./main";
+import { getTranslation, getLanguage } from "./lang";
 
 export async function createMatchesPage(): Promise<void> {
 	const app = document.getElementById('app');
@@ -51,12 +52,12 @@ export async function createMatchesPage(): Promise<void> {
 			credentials: "include"
 		});
 		if (!res.ok) {
-			list!.innerHTML = `<div class="text-sm text-gray-500">Aucun match trouvé</div>`;
+			list!.innerHTML = `<div class="text-sm text-gray-500">${getTranslation("matches.no_matches", getLanguage())}</div>`;
 			return;
 		}
 		const matches = await res.json();
 		if (!Array.isArray(matches) || matches.length === 0) {
-			list!.innerHTML = `<div class="text-sm text-gray-500">Aucun match trouvé</div>`;
+			list!.innerHTML = `<div class="text-sm text-gray-500">${getTranslation("matches.no_matches", getLanguage())}</div>`;
 			return;
 		}
 
@@ -86,10 +87,10 @@ export async function createMatchesPage(): Promise<void> {
 			const youAreP1 = m.player1_id === userId;
 			const meScore = youAreP1 ? m.score_player1 : m.score_player2;
 			const oppScore = youAreP1 ? m.score_player2 : m.score_player1;
-			const result = m.winner_id === userId ? 'Victoire' : 'Défaite';
+			const result = m.winner_id === userId ? getTranslation("matches.victory", getLanguage()) : getTranslation("matches.defeat", getLanguage());
 
 			const player1Name = usernameCache.get(m.player1_id) || `Utilisateur ${m.player1_id}`;
-			const player2Name = "Random player";
+			const player2Name = getTranslation("matches.random", getLanguage());
 
 			return `
 		<div class="p-4 bg-white rounded shadow flex items-center justify-between">
@@ -98,12 +99,12 @@ export async function createMatchesPage(): Promise<void> {
 			<div class="text-lg font-semibold">${result} ${meScore} - ${oppScore}</div>
 			<div class="text-sm text-gray-500">${player1Name} vs ${player2Name}</div>
 		</div>
-		<div class="text-xs text-gray-500">${youAreP1 ? 'Vous étiez P1' : 'Vous étiez P2'}</div>
+		<div class="text-xs text-gray-500">${youAreP1 ? getTranslation("matches.youareP1", getLanguage()) : getTranslation("matches.youareP2", getLanguage())}</div>
 		</div>
 	`;
 		}).join('');
 	} catch (e) {
-		list!.innerHTML = `<div class="text-sm text-red-600">Erreur de chargement</div>`;
+		list!.innerHTML = `<div class="text-sm text-red-600">${getTranslation("matches.loading", getLanguage())}</div>`;
 	}
 }
 

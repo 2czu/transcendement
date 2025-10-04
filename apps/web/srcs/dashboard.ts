@@ -1,3 +1,4 @@
+import { getTranslation, getLanguage } from "./lang";
 import { getUserId } from "./main";
 
 export function createDashboardPage(): void {
@@ -33,7 +34,7 @@ export function createDashboardPage(): void {
 								<div class="flex items-center space-x-4">
 								<div id="userBox" class="flex items-center space-x-2">
 									<div id="userAvatar" class="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-full overflow-hidden flex items-center justify-center text-sm">👤</div>
-									<span id="usernameDisplay" class="text-sm text-gray-500">Signed in as User</span>
+									<span data-i18n="dashboard.signed_in" id="usernameDisplay" class="text-sm text-gray-500">Signed in as User</span>
 								</div>
                 <button data-i18n="dashboard.anonymise" id="anonymiseBtn" class="bg-slate-900 hover:bg-slate-700 text-white px-4 py-2 rounded-lg transition-colors">
                   Anonymise
@@ -124,7 +125,7 @@ export function createDashboardPage(): void {
 
           <div class="bg-white rounded-lg shadow-sm p-6 mb-6">
             <h2 data-i18n="dashboard.friends" class="text-2xl font-bold text-gray-900 mb-6 flex items-center">
-              <span class="text-2xl mr-3">👥</span>
+              <span  class="text-2xl mr-3">👥</span>
               Friends Management
             </h2>
             
@@ -212,7 +213,7 @@ export function createDashboardPage(): void {
 					if (maybe && maybe !== 'User') name = maybe;
 				} catch { name = null; }
 			}
-			if (name) displayEl.textContent = `Signed in as ${name}`;
+			if (name) displayEl.textContent = `${getTranslation("dashboard.signed_in", getLanguage())} ${name}`;
 ;
 
 			const tryExt = async (ext: string) => {
@@ -307,7 +308,7 @@ export function createDashboardPage(): void {
 	credentials: 'include'
 	});
 
-		message.textContent = 'Successfully logged out! Redirecting...';
+		message.textContent = getTranslation("dashboard.popup_logout", getLanguage());
 		message.className = 'mt-6 text-center text-sm text-green-600';
 
 		setTimeout(() => {
@@ -324,7 +325,7 @@ export function createDashboardPage(): void {
 		try {
 			let userId = await getUserId();
 			if (!userId) {
-				showMessage('You must be logged in', 'error');
+				showMessage(getTranslation("dashboard.popup_login", getLanguage()), 'error');
 				return;
 			}
 			const res = await fetch('https://localhost:8443/anonymise', {
@@ -335,7 +336,7 @@ export function createDashboardPage(): void {
 				const data = await res.json().catch(() => ({} as any));
 				const uname = (data as any)?.username ?? 'unknown';
 				const mail = (data as any)?.email ?? 'unknown';
-				showMessage(`Anonymised. New username: ${uname}, email: ${mail}`, 'success');
+				showMessage(getTranslation("dashboard.popup_anonymise", getLanguage()) + `${uname}, email: ${mail}`, 'success');
 			} else {
 				const err = await res.json().catch(() => ({}));
 				showMessage(err.error || 'Failed to anonymise account', 'error');
@@ -371,7 +372,7 @@ export function createDashboardPage(): void {
 	searchBtn.addEventListener('click', async () => {
 		const searchTerm = searchUser.value.trim();
 		if (!searchTerm) {
-			showMessage('Please enter a username', 'error');
+			showMessage(getTranslation("dashboard.popup_usename", getLanguage()), 'error');
 			return;
 		}
 
@@ -384,7 +385,7 @@ export function createDashboardPage(): void {
 				const data = await response.json();
 				const id = data?.id ?? data?.user?.id ?? null;
 				if (!id) {
-					showMessage('No user found', 'info');
+					showMessage(getTranslation("dashboard.no_user", getLanguage()), 'info');
 					displaySearchResults([]);
 					return;
 				}
@@ -395,7 +396,7 @@ export function createDashboardPage(): void {
 			}
 
 			if (response.status === 404) {
-				showMessage('No user found', 'info');
+				showMessage(getTranslation("dashboard.no_user", getLanguage()), 'info');
 				displaySearchResults([]);
 				return;
 			}
@@ -445,7 +446,7 @@ export function createDashboardPage(): void {
 		if (!searchResults || !usersList) return;
 
 		if (users.length === 0) {
-			usersList.innerHTML = '<p class="text-gray-500 text-sm">No user found</p>';
+			usersList.innerHTML = `<p class="text-gray-500 text-sm">${getTranslation("dashboard.no_user", getLanguage())}</p>`;
 		} else {
 			usersList.innerHTML = users.map(user => `
 					<div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
@@ -513,7 +514,7 @@ export function createDashboardPage(): void {
 		if (!friendRequests) return;
 
 		if (requests.length === 0) {
-			friendRequests.innerHTML = '<p data-i18n="dashboard.no_req" class="text-gray-500 text-sm">No pending friend requests</p>';
+			friendRequests.innerHTML = `<p data-i18n="dashboard.no_req" class="text-gray-500 text-sm">${getTranslation("dashboard.no_req", getLanguage())}</p>`;
 			return;
 		}
 		const uniqueIds = Array.from(new Set(requests.map(r => r.user_id)));
@@ -528,19 +529,19 @@ export function createDashboardPage(): void {
 						</div>
 						<div>
 							<p class="font-medium text-gray-900">
-							Request from ${request.user_id === userId ? 'you' : escapeHtml(idToName.get(request.user_id) ?? 'User')}
+							${getTranslation("dashboard.req_from", getLanguage())} ${request.user_id === userId ? 'you' : escapeHtml(idToName.get(request.user_id) ?? 'User')}
 							</p>
-							<p class="text-sm text-gray-500">Awaiting response</p>
+							<p class="text-sm text-gray-500">${getTranslation("dashboard.waiting", getLanguage())}</p>
 						</div>
 					</div>
 					<div class="flex space-x-2">
 						<button onclick="acceptFriendRequest(${request.user_id}, ${request.friend_id})" 
 								class="bg-green-600 hover:bg-green-700 text-white px-3 py-1 rounded text-sm transition-colors">
-							Accept
+							${getTranslation("dashboard.accept", getLanguage())}
 						</button>
 						<button onclick="refuseFriendRequest(${request.user_id}, ${request.friend_id})" 
 								class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm transition-colors">
-							Decline
+							${getTranslation("dashboard.decline", getLanguage())}
 						</button>
 					</div>
 				</div>
@@ -552,7 +553,7 @@ export function createDashboardPage(): void {
 		if (!friendsList) return;
 
 		if (friends.length === 0) {
-			friendsList.innerHTML = '<p data-i18n="dashboard.no_friends" class="text-gray-500 text-sm">You have no friends yet</p>';
+			friendsList.innerHTML = `<p class="text-gray-500 text-sm"> ${getTranslation("dashboard.no_friends", getLanguage())}</p>`;
 			return;
 		}
 
@@ -568,12 +569,12 @@ export function createDashboardPage(): void {
 						</div>
 						<div>
 							<p class="font-medium text-gray-900">${escapeHtml(idToFriendName.get(friend.friend_id === userId ? friend.user_id : friend.friend_id) ?? 'User')}</p>
-							<p class="text-sm text-gray-500">Friendship established</p>
+							<p class="text-sm text-gray-500">${getTranslation("dashboard.friendship", getLanguage())}</p>
 						</div>
 					</div>
 					<button onclick="removeFriend(${userId}, ${friend.friend_id === userId ? friend.user_id : friend.friend_id})" 
 							class="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded text-sm transition-colors">
-						Remove
+						${getTranslation("dashboard.remove", getLanguage())}
 					</button>
 				</div>
 			`).join('');
@@ -600,7 +601,7 @@ export function createDashboardPage(): void {
 			console.log('API response:', response.status, response.statusText);
 
 			if (response.ok) {
-				showMessage('Friend request sent successfully!', 'success');
+				showMessage(getTranslation("dashboard.send_friend", getLanguage()), 'success');
 				searchUser.value = '';
 				document.getElementById('searchResults')?.classList.add('hidden');
 			} else {
@@ -629,7 +630,7 @@ export function createDashboardPage(): void {
 			});
 
 			if (response.ok) {
-				showMessage('Friend request accepted!', 'success');
+				showMessage(getTranslation("dashboard.friend_accept", getLanguage()), 'success');
 				loadFriendRequests();
 				loadFriendsList();
 			} else {
@@ -656,7 +657,7 @@ export function createDashboardPage(): void {
 			});
 
 			if (response.ok) {
-				showMessage('Friend request declined', 'success');
+				showMessage(getTranslation("dashboard.friend_refuse", getLanguage()), 'success');
 				loadFriendRequests();
 			} else {
 				showMessage('Error declining friend request', 'error');
@@ -673,7 +674,7 @@ export function createDashboardPage(): void {
 				credentials: "include"
 			});
 			if (response.ok) {
-				showMessage('Friend removed from your list', 'success');
+				showMessage(getTranslation("dashboard.friend_remove", getLanguage()), 'success');
 				loadFriendsList();
 			} else {
 				showMessage('Error removing friend', 'error');

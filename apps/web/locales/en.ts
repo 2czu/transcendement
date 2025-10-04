@@ -12,7 +12,23 @@ export default {
 		no_account: "No account yet ? ",
 		link: "Sign-up right now !"
 	},
+	signUp : {
+		create: "Create your account",
+		username: "Username",
+		email: "Email",
+		password: "Password",
+		activate: "Activate 2fa",
+		yes: "Yes",
+		no: "No",
+		signUp: "Sign-Up",
+		account: "You already have an account !",
+		link: " Sign-Up"
+	},
 	dashboard : {
+		popup_logout: "Successfully logged out ! Redirecting...",
+		popup_login: "You must be logged in",
+		popup_anonymise: "Anonymised. New username: ",
+		popup_username: "Please enter a username",
 		dashboard : "Dashboard",
 		welcome: "Welcome to your personal space",
 		anonymise: "Anonymyse",
@@ -39,20 +55,39 @@ export default {
 		received_req: "Received friend requests",
 		loading_req: "Loading requests...",
 		no_req: "No pending friend requests",
+		req_from: "Request from",
+		waiting: "Awaiting response",
+		accept: "Accept",
+		decline: "Decline",
+		friendship: "Friendship established",
 		my_friends: "My friends",
-		no_friends: "You have no friends yet"
+		remove: "Remove",
+		send_friend: "Friend request send succesfuly",
+		friend_accept : "Friend request accepted !",
+		friend_refuse : "Friend request refused",
+		friend_remove : "Friend removed from your list",
+		no_friends: "You have no friends yet",
+		no_user: "No User found",
+		signed_in: "Signed in as "
+
 	},
 	matches : {
 		history: "Matches history",
 		previous_button: "Previous",
 		no_matches: "No matches found",
 		load: "Loading...",
+		victory: "Victory",
+		defeat: "Defeat",
+		random: "Random Player",
+		youareP1: "You were P1",
+		youareP2: "You were P2",
+		loading: "Loading error",
 	},
 	pong : {
 		play_button: "Play",
 		replay_button: "Replay",
 		back_button: "Back",
-		wins: "Wins!",
+		wins: "Wins",
 		final_scores: "Finale score:",
 		back_menu_button: "Back to menu"
 	},
@@ -95,6 +130,20 @@ export default {
 		are_u_sure: "Are you sure you want to delete your account? This action is irreversible.",
 		log_out: "Log out",
 		desc_log_out: "close your current session and return to the home page",
-		log_out_button: "Log out"
+		log_out_button: "Log out",
+		pp_update: "Profile picture updated !",
+		pp_update_fail: "Error uploading picture!",
+		username_char: "Your usename must be at least 3 characters",
+		username_update: "Your username updated succesfully",
+		email_error : "Please enter a email",
+		email_format : "invalid email format",
+		email_update : "Email updated succesfully",
+		password_fields : "Please fill all password fields",
+		password_match: "Password do not match",
+		password_incorrect: "Current password incorrect",
+		password_incorrect2fa: "Cannot verify current password (2FA?)",
+		password_change: "Password changed successfully!",
+		account_deleted: "Account deleted successfully. Redirecting...",
+		log_out_popup: "Logged out successfully! Redirecting..."
 	}
 }

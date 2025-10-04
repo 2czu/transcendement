@@ -1,3 +1,4 @@
+import { getLanguage, getTranslation } from "./lang";
 import { getUserId } from "./main";
 
 export function createProfilePage(): void {
@@ -223,21 +224,21 @@ export function createProfilePage(): void {
 				currentAvatar.innerHTML = `<img src="${avatarUrl}?t=${Date.now()}" alt="Avatar" class="w-full h-full object-cover">`;
 			}
 			URL.revokeObjectURL(blobUrl);
-			showMessage('Profile picture updated!', 'success');
+			showMessage(getTranslation("profile.pp_update", getLanguage()), 'success');
 		} catch (error) {
-			showMessage('Error updating profile picture', 'error');
+			showMessage(getTranslation("profile.pp_update_fail", getLanguage()), 'error');
 		}
 	});
 
 	saveUsernameBtn.addEventListener('click', async () => {
 		const newUsername = username.value.trim();
 		if (!newUsername) {
-			showMessage('Please enter a username', 'error');
+			showMessage(getTranslation("profile.no_username", getLanguage()), 'error');
 			return;
 		}
 
 		if (newUsername.length < 3) {
-			showMessage('Username must be at least 3 characters', 'error');
+			showMessage(getTranslation("profile.usename_char", getLanguage()), 'error');
 			return;
 		}
 
@@ -254,7 +255,7 @@ export function createProfilePage(): void {
 			});
 
 			if (response.ok) {
-				showMessage('Username updated successfully!', 'success');
+				showMessage(getTranslation("profile.username_update", getLanguage()), 'success');
 			} else {
 				const error = await response.json();
 				showMessage(error.error || 'Error updating username', 'error');
@@ -268,11 +269,11 @@ export function createProfilePage(): void {
 		saveEmailBtn.addEventListener('click', async () => {
 			const newEmail = email.value.trim();
 			if (!newEmail) {
-				if (emailMessage) emailMessage.textContent = 'Please enter an email';
+				if (emailMessage) emailMessage.textContent = getTranslation("profile.email_error", getLanguage());
 				return;
 			}
 			if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(newEmail)) {
-				if (emailMessage) emailMessage.textContent = 'Invalid email format';
+				if (emailMessage) emailMessage.textContent = getTranslation("profile.email_format", getLanguage());
 				return;
 			}
 
@@ -287,7 +288,7 @@ export function createProfilePage(): void {
 				});
 
 				if (response.ok) {
-					if (emailMessage) emailMessage.textContent = 'Email updated successfully!';
+					if (emailMessage) emailMessage.textContent = getTranslation("profile.email_update", getLanguage());
 					showMessage('Email updated successfully!', 'success');
 				} else {
 					const err = await response.json().catch(() => ({}));
@@ -307,11 +308,11 @@ export function createProfilePage(): void {
 			const nw = newPassword.value;
 			const conf = confirmPassword.value;
 			if (!cur || !nw || !conf) {
-				if (passwordMessage) passwordMessage.textContent = 'Please fill all password fields';
+				if (passwordMessage) passwordMessage.textContent = getTranslation("profile.password_fields", getLanguage());
 				return;
 			}
 			if (nw !== conf) {
-				if (passwordMessage) passwordMessage.textContent = 'Passwords do not match';
+				if (passwordMessage) passwordMessage.textContent = getTranslation("profile.password_match", getLanguage());
 				return;
 			}
 
@@ -323,12 +324,12 @@ export function createProfilePage(): void {
 					credentials: "include"
 				});
 				if (!verifyRes.ok) {
-					if (passwordMessage) passwordMessage.textContent = 'Current password incorrect';
+					if (passwordMessage) passwordMessage.textContent = getTranslation("profile.password_incorrect", getLanguage());
 					return;
 				}
 				const verifyBody = await verifyRes.json().catch(() => ({}));
 				if (!verifyBody.token) {
-					if (passwordMessage) passwordMessage.textContent = 'Cannot verify current password (2FA?)';
+					if (passwordMessage) passwordMessage.textContent = getTranslation("profile.password_incorrect2fa", getLanguage());
 					return;
 				}
 
@@ -342,8 +343,8 @@ export function createProfilePage(): void {
 				});
 
 				if (response.ok) {
-					if (passwordMessage) passwordMessage.textContent = 'Password changed successfully!';
-					showMessage('Password changed successfully!', 'success');
+					if (passwordMessage) passwordMessage.textContent = getTranslation("profile.password_change", getLanguage());
+					showMessage((getTranslation("profile.password_change", getLanguage())), 'success');
 					currentPassword.value = '';
 					newPassword.value = '';
 					confirmPassword.value = '';
@@ -375,7 +376,7 @@ export function createProfilePage(): void {
 				method: 'POST',
 				credentials: 'include'
 				});
-				showMessage('Account deleted successfully. Redirecting...', 'success');
+				showMessage((getTranslation("profile.account_deleted", getLanguage())), 'success');
 
 				setTimeout(() => {
 					window.history.pushState({}, '', '/');
@@ -396,7 +397,7 @@ export function createProfilePage(): void {
 			method: 'POST',
 			credentials: 'include'
 		});
-		showMessage('Logged out successfully! Redirecting...', 'success');
+		showMessage((getTranslation("profile.log_out_popup", getLanguage())), 'success');
 		setTimeout(() => {
 			window.history.pushState({}, '', '/');
 			window.dispatchEvent(new PopStateEvent('popstate'));

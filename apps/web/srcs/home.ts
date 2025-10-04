@@ -13,7 +13,7 @@ export function createHomePage(): void {
 			<div class="absolute right-0 top-20 w-72 h-72 bg-indigo-700 rounded-full opacity-20 filter blur-2xl animate-pulse"></div>
 			<div class="absolute left-1/2 bottom-0 w-96 h-96 bg-indigo-900 rounded-full opacity-15 filter blur-3xl transform -translate-x-1/2 animate-pulse"></div>
 
-			<header class="relative z-10 flex justify-end p-6">
+			<header class="relative z-30 flex justify-end p-6">
 				<select id="langSwitcher" class="bg-white/10 text-white rounded px-3 py-2 hover:bg-white/20 transition-colors">
 					<option value="en">EN</option>
 					<option value="fr">FR</option>

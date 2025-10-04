@@ -17,6 +17,7 @@ import {
 	Color4
 } from '@babylonjs/core';
 import { getUserId } from './main';
+import { getTranslation, getLanguage } from "./lang";
 
 export class Pong3D {
 	private canvas: HTMLCanvasElement;
@@ -444,7 +445,7 @@ export class Pong3D {
 					<h2 class="text-3xl font-bold text-white mb-2">🎮 Game Over</h2>
 					<div class="text-6xl mb-4">🏆</div>
 					<h3 class="text-2xl font-bold text-white mb-2">
-						${this.winner === 1 ? this.player1Name : this.player2Name} wins!
+						${this.winner === 1 ? this.player1Name : this.player2Name} ${getTranslation("pong.wins", getLanguage())} !
 					</h3>
 					<div class="text-lg text-gray-300 mb-4">
 						Final score: <span class="text-white">${this.score1}</span> - <span class="text-red-400">${this.score2}</span>
@@ -455,10 +456,10 @@ export class Pong3D {
 				</div>
 				<div class="flex flex-col gap-3">
 					<button id="replayBtn" class="bg-white hover:bg-slate-100 text-black font-bold py-3 px-6 rounded-lg transition-colors">
-						🔄 Replay
+						🔄 ${getTranslation("pong.replay_button", getLanguage())}
 					</button>
 					<button id="backToMenuBtn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">
-						🏠 Back to menu
+						🏠 ${getTranslation("pong.back_menu_button", getLanguage())}
 					</button>
 				</div>
 			</div>
