@@ -96,13 +96,12 @@ export async function createMatchesPage(): Promise<void> {
 			const player2Name = getTranslation("matches.random", getLanguage());
 
 			return `
-		<div class="p-4 bg-white rounded shadow flex items-center justify-between">
-		<div>
-			<div class="text-sm text-gray-600">Match ID #${m.id}</div>
+		    <div class="bg-white/10 backdrop-blur-sm rounded-xl shadow-sm p-6 mb-2 mt-10">
+			<div class="text-sm text-white">Match ID #${m.id}</div>
 			<div class="text-lg font-semibold">${result} ${meScore} - ${oppScore}</div>
-			<div class="text-sm text-gray-500">${player1Name} vs ${player2Name}</div>
+			<div class="text-sm text-white/60">${player1Name} vs ${player2Name}</div>
 		</div>
-		<div class="text-xs text-gray-500">${youAreP1 ? getTranslation("matches.youareP1", getLanguage()) : getTranslation("matches.youareP2", getLanguage())}</div>
+		<div class="text-xs text-white/60">${youAreP1 ? getTranslation("matches.youareP1", getLanguage()) : getTranslation("matches.youareP2", getLanguage())}</div>
 		</div>
 	`;
 		}).join('');

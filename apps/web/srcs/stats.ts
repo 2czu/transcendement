@@ -14,17 +14,24 @@ export async function createStatsPage(): Promise<void> {
     }
 
     app.innerHTML = `
-      <div class="min-h-screen bg-gray-50">
-          <div class="max-w-3xl mx-auto px-4 py-8">
+      <div class="min-h-screen relative overflow-hidden bg-gradient-to-tr from-indigo-900 to-black text-white flex flex-col justify-center items-center">
+			<div class="absolute -left-32 -top-32 w-80 h-80 bg-indigo-800 rounded-full opacity-30 filter blur-3xl animate-pulse"></div>
+			<div class="absolute right-0 top-20 w-72 h-72 bg-indigo-700 rounded-full opacity-20 filter blur-2xl animate-pulse"></div>
+			<div class="absolute left-1/2 bottom-0 w-96 h-96 bg-indigo-900 rounded-full opacity-15 filter blur-3xl transform -translate-x-1/2 animate-pulse"></div>
+          <div class="bg-white/10 backdrop-blur-sm rounded-xl shadow-sm p-6 mb-6 mt-10">
               <div class="flex items-center justify-between mb-6">
-                  <h1 class="text-2xl font-bold text-gray-900">Mes statistiques</h1>
+                  <h1 class="text-2xl font-bold text-white">Mes statistiques</h1>
                   <button id="backBtn" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Retour</button>
               </div>
               <div class="bg-white rounded-lg shadow p-6 mb-8">
-                  <h2 class="text-lg font-semibold mb-2">Victory Ratio</h2>
-                  <canvas id="winRatioChart" width="400" height="200"></canvas>
-                  <h2 class="text-lg font-semibold mt-8 mb-2">Ratio Goaled / Taken</h2>
-                  <canvas id="goalRatioChart" width="400" height="200"></canvas>
+              <h2 class="text-lg font-semibold mb-2">Victory Ratio</h2>
+              <canvas id="winRatioChart" width="400" height="200"></canvas>
+              <h2 class="text-lg font-semibold mt-8 mb-2">Ratio Goaled / Taken</h2>
+              <canvas id="goalRatioChart" width="400" height="200"></canvas>
+              </div>
+              <div class="bg-white/10 backdrop-blur-sm rounded-xl shadow-sm p-4 mb-4 mt-10">
+                  <h2 class="text-lg font-semibold mb-2">Détails des statistiques</h2>
+                  <div id="statsContent" class="text-sm text-black"></div>
               </div>
               <div id="statsDetails" class="space-y-3"></div>
           </div>
@@ -89,7 +96,7 @@ export async function createStatsPage(): Promise<void> {
     const statsDetails = document.getElementById('statsDetails');
     if (statsDetails) {
         statsDetails.innerHTML = `
-            <div class="p-4 bg-gray-100 rounded">
+            <div class="p-4 bg-gray-100 rounded text-black">
                 <p><strong>Parties jouées :</strong> ${stats.game_played}</p>
                 <p><strong>Parties gagnées :</strong> ${stats.games_won}</p>
                 <p><strong>Score total :</strong> ${stats.total_score}</p>

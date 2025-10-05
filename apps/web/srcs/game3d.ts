@@ -55,7 +55,6 @@ export class Pong3D {
 
 	private showOverlayOnGameOver: boolean = true;
 
-	// AI Integration
 	private gameMode: GameMode = 'pvp';
 	private ai: PongAI | null = null;
 	private aiDifficulty: AIDifficulty = 'medium';
@@ -72,7 +71,6 @@ export class Pong3D {
 		this.scene = new Scene(this.engine);
 		this.walls = [];
 
-		// Initialize AI if in PvE mode
 		if (this.gameMode === 'pve') {
 			this.ai = new PongAI(this.aiDifficulty);
 			this.player2Name = `AI (${this.aiDifficulty})`;
@@ -339,11 +337,9 @@ export class Pong3D {
 		}
 
 		if (this.ball.position.x > 8) {
-			// Ball went past right paddle - left player (paddle1) scores
 			this.score2++;
 			this.resetBall();
 		} else if (this.ball.position.x < -8) {
-			// Ball went past left paddle - right player (paddle2) scores
 			this.score1++;
 			this.resetBall();
 		}
@@ -358,7 +354,6 @@ export class Pong3D {
 			}
 		}
 
-		// Update AI if in PvE mode
 		if (this.gameMode === 'pve' && this.ai) {
 			this.updateAI();
 		}
@@ -410,8 +405,6 @@ export class Pong3D {
 	private updateAI(): void {
 		if (!this.ai) return;
 
-		// AI controls left paddle (red) in PvE mode
-		// Update AI decision-making (once per second as per requirements)
 		const currentTime = performance.now();
 		this.ai.update(
 			currentTime,
@@ -432,10 +425,8 @@ export class Pong3D {
 			}
 		);
 
-		// Get AI movement direction (simulates keyboard input)
 		const aiInput = this.ai.getKeyboardInput(this.paddle1.position.y);
 
-		// Apply AI movement to left paddle (simulating human keyboard input)
 		if (aiInput.up && this.paddle1.position.y < 2.5) {
 			this.paddle1.position.y += this.paddleSpeed;
 			this.paddle1Velocity = this.paddleSpeed;
@@ -449,7 +440,6 @@ export class Pong3D {
 
 	private updatePaddles(): void {
 		if (this.gameMode === 'pvp') {
-			// PvP Mode: Player 1 (left paddle, red) uses Arrow keys, Player 2 (right paddle, blue) uses W/S
 			if (this.keys['ArrowUp'] && this.paddle1.position.y < 2.5) {
 				this.paddle1.position.y += this.paddleSpeed;
 				this.paddle1Velocity = this.paddleSpeed;
@@ -470,18 +460,16 @@ export class Pong3D {
 				this.paddle2Velocity = 0;
 			}
 		} else {
-			// PvE Mode: Player controls right paddle (blue) with Arrow keys, AI controls left paddle (red)
-			if (this.keys['ArrowUp'] && this.paddle2.position.y < 2.5) {
+			if (this.keys['KeyW'] && this.paddle2.position.y < 2.5) {
 				this.paddle2.position.y += this.paddleSpeed;
 				this.paddle2Velocity = this.paddleSpeed;
-			} else if (this.keys['ArrowDown'] && this.paddle2.position.y > -2.5) {
+			} else if (this.keys['KeyS'] && this.paddle2.position.y > -2.5) {
 				this.paddle2.position.y -= this.paddleSpeed;
 				this.paddle2Velocity = -this.paddleSpeed;
 			} else {
 				this.paddle2Velocity = 0;
 			}
 		}
-		// AI controls are handled in updateAI() method
 	}
 
 	private resetBall(): void {
@@ -495,7 +483,6 @@ export class Pong3D {
 		this.gameRunning = false;
 		this.ballSpeedMultiplier = 1.0;
 
-		// Reset AI state
 		if (this.ai) {
 			this.ai.reset();
 		}
@@ -586,7 +573,6 @@ export class Pong3D {
 		this.hideGameOverScreen();
 		this.ballSpeedMultiplier = 1.0;
 
-		// Reset AI
 		if (this.ai) {
 			this.ai.reset();
 		}
@@ -608,7 +594,6 @@ export class Pong3D {
 		this.hideGameOverScreen();
 		this.keys = {};
 
-		// Reset AI
 		if (this.ai) {
 			this.ai.reset();
 		}

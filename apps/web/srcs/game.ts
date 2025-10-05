@@ -29,11 +29,12 @@ export function createGamePage(gameMode?: GameMode, difficulty?: AIDifficulty): 
 					<path stroke-linecap="round" stroke-linejoin="round" d="M9 21V12h6v9" />
 				</svg>
 			</button>
-		<div class="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 flex flex-col items-center justify-center px-4 py-8">
+		<div class="w-full max-w-6xl bg-white/10 backdrop-blur-sm rounded-3xl shadow-2xl p-8 flex flex-col items-center border border-indigo-700">
+
 		<div class="w-full max-w-3xl bg-gray-800/80 rounded-3xl shadow-2xl p-8 flex flex-col items-center border border-gray-700 backdrop-blur-md">
 			<div class="w-full text-center mb-8">
 			<h1 class="text-5xl font-extrabold mb-2 text-white drop-shadow-lg animate-pulse">
-				TRANSCENDENCE
+				${selectedGameMode === 'pve' ? `SINGLEPLAYER` : 'MULTIPLAYER'}
 			</h1>
 			<p class="text-lg text-gray-300 mt-2">
 				${selectedGameMode === 'pve' ? `🤖 Player vs AI (${selectedDifficulty})` : '👥 Player vs Player'}
@@ -50,13 +51,13 @@ export function createGamePage(gameMode?: GameMode, difficulty?: AIDifficulty): 
 			<!-- score -->
 			<div class="mt-6 w-full flex justify-center items-center gap-8">
 			<div class="flex flex-col items-center">
-				<span id="player1Name" class="text-2xl font-bold ${selectedGameMode === 'pve' ? 'text-blue-400' : 'text-red-400'} drop-shadow">Player 1</span>
-				<span id="score1" class="text-4xl font-extrabold ${selectedGameMode === 'pve' ? 'text-blue-200 bg-blue-900/60' : 'text-red-200 bg-red-900/60'} px-4 py-1 rounded-lg mt-1 shadow">0</span>
+				<span id="player1Name" class="text-2xl font-bold text-blue-400 drop-shadow">Player 1</span>
+				<span id="score1" class="text-4xl font-extrabold text-blue-200 bg-blue-900/60 px-4 py-1 rounded-lg mt-1 shadow">0</span>
 			</div>
 			<span class="text-3xl font-bold text-gray-400 select-none">|</span>
 			<div class="flex flex-col items-center">
-				<span id="player2Name" class="text-2xl font-bold ${selectedGameMode === 'pve' ? 'text-red-400' : 'text-blue-400'} drop-shadow">Player 2</span>
-				<span id="score2" class="text-4xl font-extrabold ${selectedGameMode === 'pve' ? 'text-red-200 bg-red-900/60' : 'text-blue-200 bg-blue-900/60'} px-4 py-1 rounded-lg mt-1 shadow">0</span>
+				<span id="player2Name" class="text-2xl font-bold text-red-400 drop-shadow">Player 2</span>
+				<span id="score2" class="text-4xl font-extrabold text-red-200 bg-red-900/60 px-4 py-1 rounded-lg mt-1 shadow">0</span>
 			</div>
 			</div>
 			
@@ -287,7 +288,6 @@ export function createGamePage(gameMode?: GameMode, difficulty?: AIDifficulty): 
 		const player2NameElement = document.getElementById('player2Name');
 
 		if (selectedGameMode === 'pve') {
-			// In PvE mode: Show Player on left, AI on right (even though physically AI controls left paddle)
 			if (player1NameElement) {
 				player1NameElement.textContent = player1Name;
 			}
@@ -295,7 +295,6 @@ export function createGamePage(gameMode?: GameMode, difficulty?: AIDifficulty): 
 				player2NameElement.textContent = `AI (${selectedDifficulty})`;
 			}
 		} else {
-			// In PvP mode: Player 1 on left (red), Player 2 on right (blue)
 			if (player1NameElement) {
 				player1NameElement.textContent = player1Name;
 			}

@@ -29,7 +29,7 @@ export function createDashboardPage(): void {
       <div class="container mx-auto px-4 py-8">
         <div class="max-w-4xl mx-auto">
 
-          <div class="bg-white/10 backdrop-blur-sm rounded-xl shadow-sm p-6 mb-6">
+          <div class="bg-white/10 backdrop-blur-sm rounded-xl shadow-sm p-6 mb-6 mt-10">
             <div class="flex justify-between items-center">
               <div>
                 <h1 data-i18n="dashboard.dashboard" class="text-3xl font-bold text-white drop-shadow">Dashboard</h1>
@@ -90,7 +90,7 @@ export function createDashboardPage(): void {
             </div>
 
 
-            <!-- Game -->
+            <!-- game -->
             <div class="bg-white/10 backdrop-blur-sm rounded-xl shadow-sm p-6">
               <div class="flex items-center space-x-4">
                 <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
@@ -128,23 +128,13 @@ export function createDashboardPage(): void {
           </div>
 
           <div class="bg-white/10 backdrop-blur-sm rounded-xl shadow-sm p-6">
-            <h2 data-i18n="dashboard.friends" class="text-2xl font-bold text-white mb-6 flex items-center">
-              <span class="text-2xl mr-3">👥</span>
-              Friends Management
-            </h2>
-
-
-
-			
-			<!-- User Stat -->
-            <div class="bg-white rounded-lg shadow-sm p-6">
               <div class="flex items-center space-x-4">
                 <div class="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center">
                   <span class="text-2xl text-green-600">📈</span>
                 </div>
                 <div>
-                  <h3 class="text-lg font-semibold text-gray-900">User Stats</h3>
-                  <p class="text-gray-600">View your stats</p>
+                  <h3 class="text-lg font-semibold text-white">User Stats</h3>
+                  <p class="text-white/80">View your stats</p>
                 </div>
               </div>
               <div class="mt-4">
@@ -152,11 +142,10 @@ export function createDashboardPage(): void {
                   View Stats
                 </button>
               </div>
-            </div>
           </div>
             
             <!-- friend request -->
-            <div class="mb-8">
+            <div class="mb-8 mt-8">
               <h3 data-i18n="dashboard.send_request" class="text-lg font-semibold text-white mb-4">Send a friend request</h3>
               <div class="flex gap-4 items-end">
                 <div class="flex-1">
@@ -252,7 +241,7 @@ export function createDashboardPage(): void {
 			let avatarUrl = await tryExt('png');
 			if (!avatarUrl) avatarUrl = await tryExt('jpg');
 			if (!avatarUrl) avatarUrl = await tryExt('jpeg');
-			avatarEl.innerHTML = `<img src="${avatarUrl}?t=${Date.now()}" alt="Avatar" class="w-full h-full object-cover">`;
+			avatarEl.innerHTML = `<img src="${avatarUrl}?t=${Date.now()}" alt="👤" class="w-full h-full flex justify-center items-center object-cover">`;
 		} catch (e) {
 			console.error('avatar load error', e);
 		}
@@ -400,7 +389,7 @@ export function createDashboardPage(): void {
 	searchBtn.addEventListener('click', async () => {
 		const searchTerm = searchUser.value.trim();
 		if (!searchTerm) {
-			showMessage(getTranslation("dashboard.popup_usename", getLanguage()), 'error');
+			showMessage(getTranslation("dashboard.popup_username", getLanguage()), 'error');
 			return;
 		}
 
@@ -477,14 +466,14 @@ export function createDashboardPage(): void {
 			usersList.innerHTML = `<p class="text-gray-500 text-sm">${getTranslation("dashboard.no_user", getLanguage())}</p>`;
 		} else {
 			usersList.innerHTML = users.map(user => `
-					<div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg">
-						<div class="flex items-center space-x-3">
+					<div class="bg-white/10 backdrop-blur-sm rounded-xl shadow-sm p-6 flex items-center justify-between">
+						<div class="flex space-x-3">
 							<div class="w-10 h-10 bg-purple-100 rounded-full flex items-center justify-center">
 								<span class="text-lg text-purple-600">👤</span>
 							</div>
 							<div>
-								<p class="font-medium text-gray-900">${escapeHtml(user.username)}</p>
-								<p class="text-sm text-gray-500">${user.isLogged === 'online' ? '🟢 Online' : '🔴 Offline'}</p>
+								<p class="font-medium text-white">${escapeHtml(user.username)}</p>
+								<p class="text-sm text-gray-400">${user.isLogged === 'online' ? '🟢 Online' : '🔴 Offline'}</p>
 							</div>
 						</div>
 						<button onclick="sendFriendRequest(${user.id})" 
@@ -550,16 +539,16 @@ export function createDashboardPage(): void {
 		const idToName = new Map(uniqueIds.map((id, idx) => [id, names[idx]]));
 
 		friendRequests.innerHTML = requests.map(request => `
-				<div class="flex items-center justify-between p-3 bg-yellow-50 border border-yellow-200 rounded-lg">
+				<div class="bg-white/10 backdrop-blur-sm rounded-xl shadow-sm p-6 flex items-center justify-between">
 					<div class="flex items-center space-x-3">
 						<div class="w-10 h-10 bg-yellow-100 rounded-full flex items-center justify-center">
 							<span class="text-lg text-yellow-600">👤</span>
 						</div>
 						<div>
-							<p class="font-medium text-gray-900">
+							<p class="font-medium text-white">
 							${getTranslation("dashboard.req_from", getLanguage())} ${request.user_id === userId ? 'you' : escapeHtml(idToName.get(request.user_id) ?? 'User')}
 							</p>
-							<p class="text-sm text-gray-500">${getTranslation("dashboard.waiting", getLanguage())}</p>
+							<p class="text-sm text-white/60">${getTranslation("dashboard.waiting", getLanguage())}</p>
 						</div>
 					</div>
 					<div class="flex space-x-2">
@@ -590,14 +579,13 @@ export function createDashboardPage(): void {
 		const friendNames = await Promise.all(uniqueFriendIds.map(id => getUsernameById(id)));
 		const idToFriendName = new Map(uniqueFriendIds.map((id, idx) => [id, friendNames[idx]]));
 		friendsList.innerHTML = friends.map(friend => `
-				<div class="flex items-center justify-between p-3 bg-green-50 border border-green-200 rounded-lg">
+				<div class="bg-white/10 backdrop-blur-sm rounded-xl shadow-sm p-6 flex items-center justify-between">
 					<div class="flex items-center space-x-3">
 						<div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
 							<span class="text-lg text-green-600">👤</span>
 						</div>
 						<div>
-							<p class="font-medium text-gray-900">${escapeHtml(idToFriendName.get(friend.friend_id === userId ? friend.user_id : friend.friend_id) ?? 'User')}</p>
-							<p class="text-sm text-gray-500">${getTranslation("dashboard.friendship", getLanguage())}</p>
+							<p class="font-medium text-white">${escapeHtml(idToFriendName.get(friend.friend_id === userId ? friend.user_id : friend.friend_id) ?? 'User')}</p>
 						</div>
 					</div>
 					<button onclick="removeFriend(${userId}, ${friend.friend_id === userId ? friend.user_id : friend.friend_id})" 

@@ -62,7 +62,7 @@ export function createTournamentPage(): void {
           <path stroke-linecap="round" stroke-linejoin="round" d="M9 21V12h6v9" />
         </svg>
       </button>
-      <div class="w-full max-w-6xl bg-white/10 backdrop-blur-sm rounded-3xl shadow-2xl p-8 flex flex-col items-center border border-indigo-700">
+      <div class="mt-8 mb-8 w-full max-w-6xl bg-white/10 backdrop-blur-sm rounded-3xl shadow-2xl p-8 flex flex-col items-center border border-indigo-700">
         <div class="w-full text-center mb-8">
           <h1 data-i18n="tournament.tournament" class="text-5xl font-extrabold mb-2 text-white drop-shadow-lg animate-pulse">
             TOURNAMENT
