@@ -164,6 +164,8 @@ export function createHomePage(): void {
 	if (aiGameBtn) {
 		aiGameBtn.addEventListener("click", () => {
 			window.history.pushState({}, '', '/game');
+			localStorage.setItem('gameMode', 'pve');
+			localStorage.setItem('difficulty', 'medium');
 			createGamePage('pve', 'medium');
 		});
 	}

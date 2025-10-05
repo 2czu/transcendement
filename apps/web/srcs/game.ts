@@ -13,8 +13,16 @@ export function createGamePage(gameMode?: GameMode, difficulty?: AIDifficulty): 
 	if (gameMode) {
 		selectedGameMode = gameMode;
 	}
+	else {
+		const savedMode = localStorage.getItem('gameMode') as GameMode | null;
+		if (savedMode) selectedGameMode = savedMode;
+	}
 	if (difficulty) {
 		selectedDifficulty = difficulty;
+	}
+	else {
+		const savedDiff = localStorage.getItem('difficulty') as AIDifficulty | null;
+		if (savedDiff) selectedDifficulty = savedDiff;
 	}
 	const app = document.getElementById('app');
 	if (!app) return;
@@ -35,7 +43,7 @@ export function createGamePage(gameMode?: GameMode, difficulty?: AIDifficulty): 
 		<div class="w-full max-w-3xl bg-gray-800/80 rounded-3xl shadow-2xl p-8 flex flex-col items-center border border-gray-700 backdrop-blur-md">
 			<div class="w-full text-center mb-8">
 			<h1 class="text-5xl font-extrabold mb-2 text-white drop-shadow-lg animate-pulse">
-				${selectedGameMode === 'pve' ? `SINGLEPLAYER` : 'MULTIPLAYER'}
+				${selectedGameMode === 'pve' ? `${getTranslation("pong.solo" , getLanguage())}` : `${getTranslation("pong.multiplayer" , getLanguage())}`}
 			</h1>
 			<p class="text-lg text-gray-300 mt-2">
 				${selectedGameMode === 'pve' ? `🤖 Player vs AI (${getTranslation(`pong.${selectedDifficulty}`, getLanguage())})` : '👥 Player vs Player'}
@@ -152,6 +160,8 @@ export function createGamePage(gameMode?: GameMode, difficulty?: AIDifficulty): 
 				selectedDifficulty = 'easy';
 				game3D.setAIDifficulty('easy');
 				updatePlayerNames();
+				localStorage.setItem('gameMode', selectedGameMode);
+				localStorage.setItem('difficulty', selectedDifficulty);
 				createGamePage('pve', 'easy');
 			});
 		}
@@ -161,6 +171,8 @@ export function createGamePage(gameMode?: GameMode, difficulty?: AIDifficulty): 
 				selectedDifficulty = 'medium';
 				game3D.setAIDifficulty('medium');
 				updatePlayerNames();
+				localStorage.setItem('gameMode', selectedGameMode);
+				localStorage.setItem('difficulty', selectedDifficulty);
 				createGamePage('pve', 'medium');
 			});
 		}
@@ -170,6 +182,8 @@ export function createGamePage(gameMode?: GameMode, difficulty?: AIDifficulty): 
 				selectedDifficulty = 'hard';
 				game3D.setAIDifficulty('hard');
 				updatePlayerNames();
+				localStorage.setItem('gameMode', selectedGameMode);
+				localStorage.setItem('difficulty', selectedDifficulty);
 				createGamePage('pve', 'hard');
 			});
 		}
@@ -192,6 +206,7 @@ export function createGamePage(gameMode?: GameMode, difficulty?: AIDifficulty): 
 				game3D.dispose();
 			}
 			showGameModeSelection();
+			updateTranslations();
 		});
 	}
 
@@ -318,7 +333,7 @@ function showGameModeSelection(): void {
 			<h1 class="text-5xl font-extrabold mb-2 text-white drop-shadow-lg animate-pulse">
 				TRANSCENDENCE
 			</h1>
-			<p class="text-xl text-gray-300 mt-4">Select Game Mode</p>
+			<p data-i18n="pong.select" class="text-xl text-gray-300 mt-4">Select Game Mode</p>
 			</div>
 			
 			<div class="w-full space-y-6">
@@ -328,9 +343,9 @@ function showGameModeSelection(): void {
 				<div class="flex items-center gap-4">
 					<div class="text-5xl">👥</div>
 					<div>
-					<h3 class="text-2xl font-bold text-white">Player vs Player</h3>
-					<p class="text-gray-400 mt-1">Play against a friend locally</p>
-					<p class="text-sm text-gray-500 mt-2">Controls: Player 1 (↑↓) | Player 2 (W/S)</p>
+					<h3 data-i18n="pong.pvp" class="text-2xl font-bold text-white">Player vs Player</h3>
+					<p data-i18n="pong.pvp_desc" class="text-gray-400 mt-1">Play against a friend locally</p>
+					<p data-i18n="pong.pvp_control" class="text-sm text-gray-500 mt-2">Controls: Player 1 (↑↓) | Player 2 (W/S)</p>
 					</div>
 				</div>
 				<svg class="w-8 h-8 text-blue-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -345,9 +360,9 @@ function showGameModeSelection(): void {
 				<div class="flex items-center gap-4">
 					<div class="text-5xl">🤖</div>
 					<div>
-					<h3 class="text-2xl font-bold text-white">Player vs AI</h3>
-					<p class="text-gray-400 mt-1">Challenge the AI opponent</p>
-					<p class="text-sm text-gray-500 mt-2">Controls: Player (↑↓)</p>
+					<h3 data-i18n="pong.pve" class="text-2xl font-bold text-white">Player vs AI</h3>
+					<p data-i18n="pong.pve_desc" class="text-gray-400 mt-1">Challenge the AI opponent</p>
+					<p data-i18n="pong.pve_control" class="text-sm text-gray-500 mt-2">Controls: Player (↑↓)</p>
 					</div>
 				</div>
 				<svg class="w-8 h-8 text-purple-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -359,30 +374,27 @@ function showGameModeSelection(): void {
 			
 			<!-- AI Difficulty Selection (initially hidden) -->
 			<div id="difficultySelection" class="w-full mt-6 hidden">
-			<h3 class="text-xl font-bold text-white mb-4 text-center">Select AI Difficulty</h3>
+			<h3 data-i18n="pong.select_diff" class="text-xl font-bold text-white mb-4 text-center">Select AI Difficulty</h3>
 			<div class="grid grid-cols-3 gap-4">
 				<button id="selectEasy" class="px-6 py-4 bg-green-600 hover:bg-green-700 text-white font-bold rounded-xl shadow-lg transition-all">
 				<div class="text-3xl mb-2">😊</div>
-				<div>Easy</div>
+				<div data-i18n="pong.easy" >Easy</div>
 				</button>
 				<button id="selectMedium" class="px-6 py-4 bg-yellow-600 hover:bg-yellow-700 text-white font-bold rounded-xl shadow-lg transition-all">
 				<div class="text-3xl mb-2">😐</div>
-				<div>Medium</div>
+				<div data-i18n="pong.medium">Medium</div>
 				</button>
 				<button id="selectHard" class="px-6 py-4 bg-red-600 hover:bg-red-700 text-white font-bold rounded-xl shadow-lg transition-all">
 				<div class="text-3xl mb-2">😈</div>
-				<div>Hard</div>
+				<div data-i18n="pong.hard">Hard</div>
 				</button>
 			</div>
 			</div>
 			
 			<div class="mt-8">
-			<button id="backToHome" class="px-8 py-3 bg-gradient-to-r from-gray-700 to-gray-500 hover:from-gray-800 hover:to-gray-600 text-white font-bold rounded-xl shadow-lg transition-all">
+			<button id="backToHome" class="px-8 py-3 bg-gradient-to-r from-indigo-600 to-indigo-800 text-white font-bold rounded-xl shadow-lg transition-all">
 				<span class="inline-flex items-center gap-2">
-				<svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-					<path d="M15 19l-7-7 7-7"/>
-				</svg>
-				Back
+				<span data-i18n="pong.home_button">Back</span>
 				</span>
 			</button>
 			</div>
@@ -418,6 +430,8 @@ function showGameModeSelection(): void {
 		selectEasy.addEventListener('click', () => {
 			selectedGameMode = 'pve';
 			selectedDifficulty = 'easy';
+			localStorage.setItem('gameMode', selectedGameMode);
+			localStorage.setItem('difficulty', selectedDifficulty);
 			createGamePage('pve', 'easy');
 		});
 	}
@@ -426,6 +440,8 @@ function showGameModeSelection(): void {
 		selectMedium.addEventListener('click', () => {
 			selectedGameMode = 'pve';
 			selectedDifficulty = 'medium';
+			localStorage.setItem('gameMode', selectedGameMode);
+			localStorage.setItem('difficulty', selectedDifficulty);
 			createGamePage('pve', 'medium');
 		});
 	}
@@ -434,6 +450,8 @@ function showGameModeSelection(): void {
 		selectHard.addEventListener('click', () => {
 			selectedGameMode = 'pve';
 			selectedDifficulty = 'hard';
+			localStorage.setItem('gameMode', selectedGameMode);
+			localStorage.setItem('difficulty', selectedDifficulty);
 			createGamePage('pve', 'hard');
 		});
 	}

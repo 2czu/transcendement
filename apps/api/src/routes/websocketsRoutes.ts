@@ -3,28 +3,44 @@ import { Database } from 'sqlite';
 import { updateUserStatus } from '../controllers/usersController.js';
 import { verifyToken } from '../jwt.js';
 
+interface TokenPayload {
+    userId: number;
+}
+
 const websocketsRoutes: FastifyPluginAsync <{ db: Database }> = async (fastify: FastifyInstance, opts: any) => {
 	const { db } = opts;
 
 	fastify.get('/connexionStatus', { websocket: true }, (connection: any, req: FastifyRequest) => {
-		const token = (req as  any).cookies.jwt;
+	// 	console.log(connection);
+	// if (!connection || !connection.socket) {
+    //   console.error('WebSocket connection or socket is undefined');
+    //   return;
+    // }
 		try {
-			const payload = verifyToken(token);
-			if (!payload)
-			{
-				connection.socket.close();
-				return;
+			console.log("\n---------------\n")
+			let token = req.cookies.jwt;
+			if (!token) {
+				connection.close();
+				return ;
 			}
-			const userId = (payload as any).userId;
+			const decoded = verifyToken(token) as TokenPayload | null;
+			if (!decoded?.userId)
+			{
+				connection.close();
+				return ;
+			}
+			const userId = decoded.userId;
+			console.log(userId + "\n\n")
 			updateUserStatus(db, userId, true);
 			console.log(`${userId} is online`);
-			connection.socket.on('close', () => {
+			connection.on('close', () => {
 				updateUserStatus(db, userId, false);
 				console.log(`${userId} is offline`);
 
 			});
-		} catch {
-			connection.socket.close();
+		} catch (err) {
+			console.log(err);
+			connection.close();
 		}
 	});
 }

@@ -8,13 +8,19 @@ import { createProfilePage } from './profile';
 import { createMatchesPage } from './matches';
 import { createStatsPage } from './stats';
 import { updateTranslations } from './lang';
+import { GameMode } from './game3d'
+import { AIDifficulty } from './game/ai'
+import { getSocket } from './websocket';
+
 
 export function showHomePage(): void {
 	createHomePage();
 }
 
 export function showGamePage(): void {
-	createGamePage();
+	const mode = localStorage.getItem('gameMode') as GameMode | null;
+	const diff = localStorage.getItem('difficulty') as AIDifficulty | null;
+	createGamePage(mode ?? 'pvp', diff ?? 'medium');
 }
 
 export function showTournamentPage(): void {
@@ -89,10 +95,27 @@ export function handleRoute(): void {
 			break;
 	}
 	updateTranslations();
+	const socket = getSocket();
+	if (socket)
+	{
+		if (socket.readyState === WebSocket.OPEN)
+			socket.send(JSON.stringify({ type: "user_online"}));
+		else {
+			socket.addEventListener('open', () => {
+				socket.send(JSON.stringify({ type: "user_online" }));
+			});
+		}
+	}
 }
 
 
 export function initRouter(): void {
 	handleRoute();
 	window.addEventListener('popstate', handleRoute);
+
+	const socket = getSocket();
+	window.addEventListener('beforeunload', () => {
+		if (socket && socket.readyState === WebSocket.OPEN)
+			socket.send(JSON.stringify({ type: "user_offline" }))
+	})
 } 

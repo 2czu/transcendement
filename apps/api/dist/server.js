@@ -71,7 +71,7 @@ async function start() {
     await app.register(fastifyCookie);
     const db = await bdd();
     //routes non protegee par un JWT
-    const openPaths = ['/signUp', '/signIn', '/auth/google/callback', '/2fa_req', '/connexionStatus', '/showUsers', '/showStats', '/showFriends', '/showMatches'];
+    const openPaths = ['/signUp', '/signIn', '/auth/google/callback', '/2fa_req', '/connexionStatus', '/showUsers', '/showStats', '/showFriends', '/showMatches', '/connexionStatus'];
     app.addHook('preHandler', (request, reply, done) => {
         if (openPaths.includes(request.routerPath)) {
             done();

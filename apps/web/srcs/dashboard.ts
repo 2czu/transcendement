@@ -150,7 +150,7 @@ export function createDashboardPage(): void {
               <div class="flex gap-4 items-end">
                 <div class="flex-1">
                   <label data-i18n="dashboard.search" class="block text-sm font-medium text-white mb-2">Search for a user</label>
-                  <input data-i18n="dashboard.username_form" type="text" id="searchUser" placeholder="Username..." 
+                  <input data-i18n-placeholder="dashboard.username_form" type="text" id="searchUser" placeholder="Username..." 
                          class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500 bg-white/10 text-white placeholder-white/70">
                 </div>
                 <button data-i18n="dashboard.search_button" id="searchBtn" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-2 rounded-lg transition-colors">

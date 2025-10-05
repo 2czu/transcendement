@@ -32,7 +32,13 @@ export function updateTranslations() {
 		});
 		if (!el.hasChildNodes())
 			el.textContent = translation;
-	})
+	});
+
+	document.querySelectorAll<HTMLInputElement| HTMLTextAreaElement>("input[data-i18n-placeholder], textarea[data-i18n-placeholder]").forEach(el => {
+		const key = el.dataset.i18nPlaceholder!;
+		const translation = getTranslation(key, currentLang);
+		el.placeholder = translation;
+	});
 }
 
 export function setLanguage(lang: Lang) {

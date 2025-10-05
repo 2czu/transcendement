@@ -96,8 +96,18 @@ export default {
 		easy: "Easy",
 		medium: "Medium",
 		hard: "Hard",
-		ai_diff: "AI Difficulty"
-
+		ai_diff: "AI Difficulty",
+		solo: "Solo:",
+		multiplayer: "Multiplayer",
+		select: "Select a game mode",
+		pvp: "Player vs Player",
+		pvp_desc: "Play against a friend locally",
+		pvp_control: "Controls: player 1 (↑↓) | player 2 (W/S)",
+		pve: "Player vs IA",
+		pve_desc: "Challenge the IA, Bip bop bip",
+		pve_control: "Controls: Player (W/S)",
+		select_diff: "Select AI difficulty",
+		home_button: "Home"
 	},
 	tournament: {
 		tournament : "Tournament",
@@ -125,7 +135,7 @@ export default {
 		upload_pic: "Change photo",
 		formats: "Accepted formats: JPG, PNG (max 1MB)",
 		username: "username",
-		username_form: "Your username",
+		username_form: "New username",
 		no_username: "please enter a username",
 		token: "token expired",
 		save_button: "Submit",
@@ -153,7 +163,12 @@ export default {
 		password_incorrect2fa: "Cannot verify current password (2FA?)",
 		password_change: "Password changed successfully!",
 		account_deleted: "Account deleted successfully. Redirecting...",
-		log_out_popup: "Logged out successfully! Redirecting..."
+		log_out_popup: "Logged out successfully! Redirecting...",
+		curr_password: "Current password",
+		newpass: "New password",
+		confirm: "Confirm new password",
+		new_email: "New Email",
+
 	},
 	stats: {
 		my_stats: "My stats",

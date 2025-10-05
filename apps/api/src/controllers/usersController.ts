@@ -151,7 +151,8 @@ export const req_2fa = async (db: Database, id: number, secret_2fa: string) => {
 };
 
 export const updateUserStatus = async (db: Database, id:number, status: boolean) => {
-	await db.run(`UPDATE users SET isLogged = ? WHERE id = ?`, status, id);
+	const textStatus = status ? 'online' : 'offline';
+	await db.run(`UPDATE users SET isLogged = ? WHERE id = ?`, textStatus, id);
 };
 
 export const upload = async (db: Database, id: number, avatar: string) => {

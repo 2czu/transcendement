@@ -3,23 +3,35 @@ import { verifyToken } from '../jwt.js';
 const websocketsRoutes = async (fastify, opts) => {
     const { db } = opts;
     fastify.get('/connexionStatus', { websocket: true }, (connection, req) => {
-        const token = req.cookies.jwt;
+        // 	console.log(connection);
+        // if (!connection || !connection.socket) {
+        //   console.error('WebSocket connection or socket is undefined');
+        //   return;
+        // }
         try {
-            const payload = verifyToken(token);
-            if (!payload) {
-                connection.socket.close();
+            console.log("\n---------------\n");
+            let token = req.cookies.jwt;
+            if (!token) {
+                connection.close();
                 return;
             }
-            const userId = payload.userId;
+            const decoded = verifyToken(token);
+            if (!decoded?.userId) {
+                connection.close();
+                return;
+            }
+            const userId = decoded.userId;
+            console.log(userId + "\n\n");
             updateUserStatus(db, userId, true);
             console.log(`${userId} is online`);
-            connection.socket.on('close', () => {
+            connection.on('close', () => {
                 updateUserStatus(db, userId, false);
                 console.log(`${userId} is offline`);
             });
         }
-        catch {
-            connection.socket.close();
+        catch (err) {
+            console.log(err);
+            connection.close();
         }
     });
 };

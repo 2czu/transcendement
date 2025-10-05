@@ -1,7 +1,9 @@
 import "./style.css";
 import { initRouter } from './router';
+import { initSocket } from './websocket'
 
 document.addEventListener('DOMContentLoaded', () => {
+	initSocket();
 	initRouter();
 });
 
