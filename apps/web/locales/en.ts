@@ -68,8 +68,10 @@ export default {
 		friend_remove : "Friend removed from your list",
 		no_friends: "You have no friends yet",
 		no_user: "No User found",
-		signed_in: "Signed in as "
-
+		signed_in: "Signed in as ",
+		stats: "Stats",
+		desc_stats: "Your pong stats",
+		view_stats: "Stats"
 	},
 	matches : {
 		history: "Matches history",
@@ -116,7 +118,7 @@ export default {
 		finished: "Tournament finished",
 		restart: "Tournament will automatically restart in 2.5s…",
 	},
-	profile: { //les plaeholder vont surement peter
+	profile: {
 		my_profile: "my profile",
 		personal_info: "Personal Information",
 		profile_pic: "profile picture",
@@ -152,5 +154,22 @@ export default {
 		password_change: "Password changed successfully!",
 		account_deleted: "Account deleted successfully. Redirecting...",
 		log_out_popup: "Logged out successfully! Redirecting..."
+	},
+	stats: {
+		my_stats: "My stats",
+		back_button: "Back",
+		victory_title: "Victories/Defeats",
+		victory: "Victories",
+		defeat: "Defeats",
+		goals: "Goals: ",
+		goal: "Scored",
+		taken: "Taken",
+		details: "Stats summary: ",
+		game_played: "Games played: ",
+		game_won: "Games won: ",
+		total_score: "Total scores: ",
+		goal_taken: "Goals taken: ",
+		ratio: "Victories ratio: ",
+		no_stats: "No stats found: ",
 	}
 }

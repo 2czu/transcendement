@@ -68,12 +68,15 @@ export default {
 		friend_remove : "Ami supprimé de votre liste",
 		no_friends: "Vous n'avez pas encore d'amis",
 		no_user: "Aucun utilisateur trouve",
-		signed_in: "Connecte en tant que "
+		signed_in: "Connecte en tant que ",
+		stats: "Statistiques",
+		desc_stats: "Tes statistiques de jeu",
+		view_stats: "Statistiques"
 	},
 	matches : {
 		history: "Historique de matches",
 		previous_button: "Retour",
-		no_matches: "Aucun matche joue",
+		no_matches: "Aucun match joue",
 		load: "Chargement...",
 		victory: "Victoire",
 		defeat: "Défaite",
@@ -150,6 +153,22 @@ export default {
 		password_change: "Mot de passe changé avec succès !",
 		account_deleted: "Compte supprimé avec succès. Redirection...",
 		log_out_popup: "Déconnecté avec succès ! Redirection...",
-
+	},
+	stats: {
+		my_stats: "Mes statistiques",
+		back_button: "Retour",
+		victory_title: "Victoires/Defaites",
+		victory: "Victoire",
+		defeat: "Defeat",
+		goals: "Buts: ",
+		goal: "Marque",
+		taken: "Encaisse",
+		details: "Details de statistiques :",
+		game_played: "Parties jouees: ",
+		game_won: "Parties gagnee: ",
+		total_score: "Score total: ",
+		goal_taken: "Buts encaisses: ",
+		ratio: "Ratio de victoire: ",
+		no_stats: "Aucune statistiques: "
 	}
 }

@@ -1,5 +1,6 @@
 import Chart from 'chart.js/auto';
 import { getUserId } from './main';
+import { getLanguage, getTranslation, updateTranslations } from './lang';
 
 export async function createStatsPage(): Promise<void> {
     const app = document.getElementById('app');
@@ -7,7 +8,6 @@ export async function createStatsPage(): Promise<void> {
 
     const userId = await getUserId();
     if (!userId) {
-        console.log("--------------");
         window.history.pushState({}, '', '/signIn');
         window.dispatchEvent(new PopStateEvent('popstate'));
     return;
@@ -20,24 +20,24 @@ export async function createStatsPage(): Promise<void> {
 			<div class="absolute left-1/2 bottom-0 w-96 h-96 bg-indigo-900 rounded-full opacity-15 filter blur-3xl transform -translate-x-1/2 animate-pulse"></div>
           <div class="bg-white/10 backdrop-blur-sm rounded-xl shadow-sm p-6 mb-6 mt-10">
               <div class="flex items-center justify-between mb-6">
-                  <h1 class="text-2xl font-bold text-white">Mes statistiques</h1>
-                  <button id="backBtn" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Retour</button>
+                  <h1 data-i18n="stats.my_stats" class="text-2xl font-bold text-white">Mes statistiques</h1>
+                  <button data-i18n="stats.back_button" id="backBtn" class="px-4 py-2 bg-gray-700 text-white rounded hover:bg-gray-800">Retour</button>
               </div>
-              <div class="bg-white rounded-lg shadow p-6 mb-8">
-              <h2 class="text-lg font-semibold mb-2">Victory Ratio</h2>
+              <div class="bg-white/10 backdrop-blur-sm rounded-xl shadow-sm p-6">
+              <h2 data-i18n="stats.ratio" class="text-lg font-semibold mb-2">Victory Ratio</h2>
               <canvas id="winRatioChart" width="400" height="200"></canvas>
-              <h2 class="text-lg font-semibold mt-8 mb-2">Ratio Goaled / Taken</h2>
+              <h2 data-i18n="stats.goals" class="text-lg font-semibold mt-8 mb-2">Ratio Goaled / Taken</h2>
               <canvas id="goalRatioChart" width="400" height="200"></canvas>
               </div>
               <div class="bg-white/10 backdrop-blur-sm rounded-xl shadow-sm p-4 mb-4 mt-10">
-                  <h2 class="text-lg font-semibold mb-2">Détails des statistiques</h2>
+                  <h2 data-i18n="stats.details" class="text-lg font-semibold mb-2">Détails des statistiques</h2>
                   <div id="statsContent" class="text-sm text-black"></div>
+                  <div id="statsDetails" class="space-y-3"></div>
               </div>
-              <div id="statsDetails" class="space-y-3"></div>
           </div>
       </div>
       `;
-
+    updateTranslations();
     document.getElementById('backBtn')?.addEventListener('click', () => {
         window.history.pushState({}, '', '/dashboard');
         window.dispatchEvent(new PopStateEvent('popstate'));
@@ -46,7 +46,7 @@ export async function createStatsPage(): Promise<void> {
             credentials: "include"
         });
         if (!res.ok) {
-            app.innerHTML += `<div class="text-sm text-gray-500">Aucune statistique trouvée</div>`;
+            app.innerHTML += `<div class="text-sm text-gray-500">${getTranslation("stats.no_stats", getLanguage())}</div>`;
             return;
         }
     const stats = await res.json();
@@ -58,10 +58,12 @@ export async function createStatsPage(): Promise<void> {
         new Chart(winCtx, {
             type: 'doughnut',
             data: {
-                labels: ['Victory', 'Defeat'],
+                labels: [getTranslation("stats.victory", getLanguage()), getTranslation("stats.defeat", getLanguage())],
                 datasets: [{
                     data: [stats.games_won, stats.game_played - stats.games_won],
-                    backgroundColor: ['#10b981','#ef4444']
+                    backgroundColor: ['#10b981','#ef4444'],
+                    borderColor: ['#10b981','#ef4444'],
+                    borderWidth: 2
                 }]
             },
             options: {
@@ -78,10 +80,12 @@ export async function createStatsPage(): Promise<void> {
         new Chart(goalCtx, {
             type: 'pie',
             data: {
-                labels: ['Goaled', 'Taken'],
+                labels: [getTranslation("stats.goal", getLanguage()), getTranslation("stats.taken", getLanguage())],
                 datasets: [{
                     data: [stats.total_score, stats.goal_taken],
-                    backgroundColor: ['#3b4ef6ff', '#f56642ff']
+                    backgroundColor: ['#3b4ef6ff', '#f56642ff'],
+                    borderColor: ['#3b4ef6ff','#f56642ff'],
+                    borderWidth: 2
                 }]
             },
             options: {
@@ -96,13 +100,11 @@ export async function createStatsPage(): Promise<void> {
     const statsDetails = document.getElementById('statsDetails');
     if (statsDetails) {
         statsDetails.innerHTML = `
-            <div class="p-4 bg-gray-100 rounded text-black">
-                <p><strong>Parties jouées :</strong> ${stats.game_played}</p>
-                <p><strong>Parties gagnées :</strong> ${stats.games_won}</p>
-                <p><strong>Score total :</strong> ${stats.total_score}</p>
-                <p><strong>Buts encaissés :</strong> ${stats.goal_taken}</p>
-                <p><strong>Ratio de victoire :</strong> ${(winRatio * 100).toFixed(1)}%</p>
-            </div>
+                <p><strong>${getTranslation("stats.game_played", getLanguage())}</strong> ${stats.game_played}</p>
+                <p><strong>${getTranslation("stats.game_won", getLanguage())}</strong> ${stats.games_won}</p>
+                <p><strong>${getTranslation("stats.total_score", getLanguage())}</strong> ${stats.total_score}</p>
+                <p><strong>${getTranslation("stats.goal_taken", getLanguage())}</strong> ${stats.goal_taken}</p>
+                <p><strong>${getTranslation("stats.ratio", getLanguage())}</strong> ${(winRatio * 100).toFixed(1)}%</p>
         `;
     }
 }

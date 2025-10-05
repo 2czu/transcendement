@@ -129,16 +129,16 @@ export function createDashboardPage(): void {
 
           <div class="bg-white/10 backdrop-blur-sm rounded-xl shadow-sm p-6">
               <div class="flex items-center space-x-4">
-                <div class="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center">
-                  <span class="text-2xl text-green-600">📈</span>
+                <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
+                  <span class="text-2xl text-blue-600">📈</span>
                 </div>
                 <div>
-                  <h3 class="text-lg font-semibold text-white">User Stats</h3>
-                  <p class="text-white/80">View your stats</p>
+                  <h3 data-i18n="dashboard.stats" class="text-lg font-semibold text-white">User Stats</h3>
+                  <p data-i18n="dashboard.desc_stats" class="text-white/80">View your stats</p>
                 </div>
               </div>
               <div class="mt-4">
-                <button id="userStatBtn" class="w-full bg-green-600 hover:bg-green-700 text-white py-2 rounded-lg transition-colors">
+                <button data-i18n="dashboard.view_stats" id="userStatBtn" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-lg transition-colors">
                   View Stats
                 </button>
               </div>
@@ -375,7 +375,6 @@ export function createDashboardPage(): void {
 		window.history.pushState({}, '', '/matches');
 		window.dispatchEvent(new PopStateEvent('popstate'));
 	});
-
 
 	tournamentBtn.addEventListener('click', () => {
 		window.history.pushState({}, '', '/tournament');
