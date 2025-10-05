@@ -1,8 +1,8 @@
 export default {
 	home : {
-		singleplayer: "Single-Player",
-		multiplayer: "Multi-Player",
-		tournament: "Tournament (8 players)"
+		singleplayer: "Solo",
+		multiplayer: "Multiplayer",
+		tournament: "Tournament"
 	},
 	signIn : {
 		connexion: "Connexion",
@@ -89,7 +89,13 @@ export default {
 		back_button: "Back",
 		wins: "Wins",
 		final_scores: "Finale score:",
-		back_menu_button: "Back to menu"
+		back_menu_button: "Back to menu",
+		change_button: "Change mode",
+		easy: "Easy",
+		medium: "Medium",
+		hard: "Hard",
+		ai_diff: "AI Difficulty"
+
 	},
 	tournament: {
 		tournament : "Tournament",
@@ -138,6 +144,7 @@ export default {
 		email_error : "Please enter a email",
 		email_format : "invalid email format",
 		email_update : "Email updated succesfully",
+		password_title : "Change password",
 		password_fields : "Please fill all password fields",
 		password_match: "Password do not match",
 		password_incorrect: "Current password incorrect",

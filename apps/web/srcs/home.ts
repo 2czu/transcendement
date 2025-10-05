@@ -123,7 +123,7 @@ export function createHomePage(): void {
 					</button>
 				</div>
 
-				<div class="mt-10 w-full max-w-xl bg-white/10 backdrop-blur-sm rounded-xl p-6">
+<!--				<div class="mt-10 w-full max-w-xl bg-white/10 backdrop-blur-sm rounded-xl p-6">
 					<div class="flex items-center gap-4">
 						<div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center">
 							<span class="text-2xl">📊</span>
@@ -132,10 +132,10 @@ export function createHomePage(): void {
 							<h3 class="text-lg font-semibold">Statistics</h3>
 							<p class="text-sm opacity-80">Graphana statistics</p>
 						</div>
-					</div>
+					</div> 
 					<div class="mt-4">
 						<button id="statsBtn" class="w-full bg-white text-indigo-700 py-2 rounded-md font-medium hover:bg-white/90 transition-colors">View statistics</button>
-					</div>
+					</div> -->
 				</div>
 			</main>
 		</div>
@@ -172,8 +172,7 @@ export function createHomePage(): void {
 	if (tournamentBtn) {
 		tournamentBtn.addEventListener("click", () => {
 			window.history.pushState({}, '', '/tournament');
-			// handleRoute(); BIZARE
-			showTournamentPage();
+			handleRoute();
 		});
 	}
 

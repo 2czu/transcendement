@@ -1,8 +1,8 @@
 export default {
 	home : {
-		singleplayer: "Jeu Solo",
+		singleplayer: "Solo",
 		multiplayer: "Multijoueur",
-		tournament: "Tournois (8 joueurs)"
+		tournament: "Tournois"
 	},
 	signIn : {
 		connexion: "Connection",
@@ -88,15 +88,20 @@ export default {
 		back_button: "Retour",
 		wins: "gagne!",
 		final_scores: "score final:",
-		back_menu_button: "Retour au menu"
+		back_menu_button: "Retour au menu",
+		change_button: "Changer de mode",
+		easy: "Facile",
+		medium: "Normal",
+		hard: "Difficile",
+		ai_diff: "Difficulté:"
 	},
 	tournament: {
 		tournament : "Tournoi",
 		desc_tournament: "Tournoi a 8 joueurs",
 		brackets: "Arbre du tournoi",
 		progress: "Aucun match en cours",
-		first_round: "premier tour",
-		semi_finals : "Demie-finale",
+		first_round: "Premier tour",
+		semi_finals : "Demi-finale",
 		final: "Finale",
 		to_be_determined: "A determiner",
 		current_match: "Match en cours",
@@ -118,10 +123,10 @@ export default {
 		username: "Nom d'utilisateur",
 		username_form: "Ton nom d'utilisateur",
 		no_username: "Nom d'utilisateur vide",
-		token: "token expire",
+		token: "Token expire",
 		save_button: "Envoyer",
-		email_cannot: "email ne peux pas etre changer",
-		connection_status: "status de connexion",
+		email_cannot: "Email ne peux pas etre changer",
+		connection_status: "Status de connexion",
 		danger_zone: "Zone dangereuse",
 		delete_my_acc: "Supprimer mon compte",
 		irreversible: "Cette action est irreversible. toutes tes donnees, amis et statistique vont etre efface de facon permanente",
@@ -137,12 +142,14 @@ export default {
 		email_error : "Veuillez entrer un email",
 		email_format : "Format d'email invalide",
 		email_update : "Email mis à jour avec succès",
+		password_title : "Change le mot de passe",
 		password_fields : "Veuillez remplir tous les champs de mot de passe",
 		password_match: "Les mots de passe ne correspondent pas",
 		password_incorrect: "Mot de passe actuel incorrect",
 		password_incorrect2fa: "Impossible de vérifier le mot de passe actuel (2FA ?)",
 		password_change: "Mot de passe changé avec succès !",
 		account_deleted: "Compte supprimé avec succès. Redirection...",
-		log_out_popup: "Déconnecté avec succès ! Redirection..."
+		log_out_popup: "Déconnecté avec succès ! Redirection...",
+
 	}
 }
