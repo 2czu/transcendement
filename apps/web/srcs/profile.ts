@@ -58,9 +58,9 @@ export function createProfilePage(): void {
             <div class="mb-6">
               <label data-i18n="profile.username" for="username" class="block text-sm font-medium text-white mb-2">Username</label>
               <div class="flex space-x-2">
-                <input data-i18n="profile.username_form"  type="text" id="username" placeholder="Your username" 
+                <input type="text" id="username" placeholder="Your username" 
                        class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white/10 text-white placeholder-white/70">
-                <button data-i18n="profile.save_button"  id="saveUsernameBtn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors">
+                <button data-i18n="profile.save_button" id="saveUsernameBtn" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-colors">
                   Save
                 </button>
               </div>
@@ -71,18 +71,18 @@ export function createProfilePage(): void {
 							<div class="flex space-x-2">
 								<input type="email" id="email" 
 											 class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500 bg-white/10 text-white placeholder-white/70">
-								<button id="saveEmailBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">Save</button>
+								<button data-i18n="profile.save_button" id="saveEmailBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">Save</button>
 							</div>
 							<p id="emailMessage" class="text-sm mt-2 text-white/80"></p>
 						</div>
 						<div class="mb-6 border-t pt-6">
-							<h3 class="text-lg font-medium text-white mb-2">Change password</h3>
+							<h3 data-i18n="profile.password_title" class="text-lg font-medium text-white mb-2">Change password</h3>
 							<div class="space-y-3">
 								<input id="currentPassword" type="password" placeholder="Current password" class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white/10 text-white placeholder-white/70">
 								<input id="newPassword" type="password" placeholder="New password" class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white/10 text-white placeholder-white/70">
 								<input id="confirmPassword" type="password" placeholder="Confirm new password" class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white/10 text-white placeholder-white/70">
 								<div class="flex items-center space-x-2">
-									<button id="changePasswordBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">Change password</button>
+									<button data-i18n="profile.save_button" id="changePasswordBtn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-colors">Change password</button>
 									<p id="passwordMessage" class="text-sm text-white/80"></p>
 								</div>
 							</div>

@@ -1,4 +1,5 @@
 import { Pong3D } from './game3d';
+import { getLanguage, getTranslation } from './lang';
 import { getUserId } from './main';
 
 interface Player {
@@ -67,7 +68,7 @@ export function createTournamentPage(): void {
           <h1 data-i18n="tournament.tournament" class="text-5xl font-extrabold mb-2 text-white drop-shadow-lg animate-pulse">
             TOURNAMENT
           </h1>
-          <p class="text-lg text-white/80 mb-1 tracking-wide">8-player tournament</p>
+          <p data-i18n="tournament.desc_tournament" class="text-lg text-white/80 mb-1 tracking-wide">8-player tournament</p>
         </div>
         
         <div class="w-full flex flex-col gap-8 mb-8">
@@ -309,8 +310,8 @@ function initializeTournament(): void {
 		for (let i = 0; i < matchesInRound; i++) {
 			matches.push({
 				id: matches.length + 1,
-				player1: { id: 0, name: "To be determined", isAI: true, wins: 0, losses: 0 },
-				player2: { id: 0, name: "To be determined", isAI: true, wins: 0, losses: 0 },
+				player1: { id: 0, name: getTranslation("tournament.to_be_determined", getLanguage()), isAI: true, wins: 0, losses: 0 },
+				player2: { id: 0, name: getTranslation("tournament.to_be_determined", getLanguage()), isAI: true, wins: 0, losses: 0 },
 				score1: 0,
 				score2: 0,
 				isFinished: false,
@@ -357,7 +358,7 @@ function updateTournamentDisplay(): void {
       </div>
     `;
 	} else {
-		currentMatchElement.innerHTML = '<p class="text-gray-400">Tournament finished</p>';
+		currentMatchElement.innerHTML = `<p class="text-gray-400">${getTranslation("tournament.finished", getLanguage())}</p>`;
 	}
 
 	updatePlayerNames();
@@ -367,7 +368,7 @@ function generateBracketHTML(): string {
 	let html = '';
 
 	html += '<div class="mb-6">';
-	html += '<h3 data-i18n="tournament.first_round" class="text-lg font-bold text-blue-400 mb-2">First round</h3>';
+	html += `<h3 class="text-lg font-bold text-blue-400 mb-2">${getTranslation("tournament.first_round", getLanguage())}</h3>`;
 	for (let i = 0; i < 4; i++) {
 		const match = tournament.matches[i];
 		html += generateMatchHTML(match, i);
@@ -375,7 +376,7 @@ function generateBracketHTML(): string {
 	html += '</div>';
 
 	html += '<div class="mb-6">';
-	html += '<h3 data-i18n="tournament.semi_finals" class="text-lg font-bold text-green-400 mb-2">Semifinals</h3>';
+	html += `<h3 data-i18n="tournament.semi_finals" class="text-lg font-bold text-green-400 mb-2">${getTranslation("tournament.semi_finals", getLanguage())}</h3>`;
 	for (let i = 4; i < 6; i++) {
 		const match = tournament.matches[i];
 		html += generateMatchHTML(match, i);
@@ -383,7 +384,7 @@ function generateBracketHTML(): string {
 	html += '</div>';
 
 	html += '<div>';
-	html += '<h3 data-i18n="tournament.final" class="text-lg font-bold text-yellow-400 mb-2">Final</h3>';
+	html += `<h3 data-i18n="tournament.final" class="text-lg font-bold text-yellow-400 mb-2">${getTranslation("tournament.final", getLanguage())}</h3>`;
 	const finalMatch = tournament.matches[6];
 	html += generateMatchHTML(finalMatch, 6);
 	html += '</div>';

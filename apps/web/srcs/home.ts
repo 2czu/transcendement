@@ -172,8 +172,7 @@ export function createHomePage(): void {
 	if (tournamentBtn) {
 		tournamentBtn.addEventListener("click", () => {
 			window.history.pushState({}, '', '/tournament');
-			// handleRoute(); BIZARE
-			showTournamentPage();
+			handleRoute();
 		});
 	}
 

@@ -144,6 +144,7 @@ export default {
 		email_error : "Please enter a email",
 		email_format : "invalid email format",
 		email_update : "Email updated succesfully",
+		password_title : "Change password",
 		password_fields : "Please fill all password fields",
 		password_match: "Password do not match",
 		password_incorrect: "Current password incorrect",

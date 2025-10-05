@@ -1,7 +1,7 @@
 import { getUserId } from './main';
 import { Pong3D, GameMode } from './game3d';
 import { AIDifficulty } from './game/ai';
-import { getLanguage, getTranslation } from './lang';
+import { getLanguage, getTranslation, updateTranslations } from './lang';
 
 let game3D: Pong3D;
 let player1Name: string = "Player 1";
@@ -82,16 +82,16 @@ export function createGamePage(gameMode?: GameMode, difficulty?: AIDifficulty): 
 			<!-- buttons -->
 			<div class="mt-10 flex flex-wrap gap-6 justify-center w-full">
 			<button id="playBtn" class="px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 text-white font-bold rounded-xl shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-300">
-				<span data-i18n="pong.play_button" class="inline-flex items-center gap-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 3v18l15-9L5 3z"/></svg>Play</span>
+				<span data-i18n="pong.play_button" class="inline-flex items-center gap-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 3v18l15-9L5 3z"/></svg><span data-i18n="pong.play_button" >Play</span></span>
 			</button>
 			<button id="replayBtn" class="px-8 py-3 bg-gradient-to-r from-green-600 to-green-400 hover:from-green-700 hover:to-green-500 text-white font-bold rounded-xl shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-300">
-				<span data-i18n="pong.replay_button" class="inline-flex items-center gap-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h.582M20 20v-5h-.581M5.455 19.045A9 9 0 1 1 19.045 5.455"/></svg>Replay</span>
+				<span data-i18n="pong.replay_button" class="inline-flex items-center gap-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h.582M20 20v-5h-.581M5.455 19.045A9 9 0 1 1 19.045 5.455"/></svg><span data-i18n="pong.replay_button" >Replay</span></span>
 			</button>
 			<button id="changeModeBtn" class="px-8 py-3 bg-gradient-to-r from-purple-600 to-purple-400 hover:from-purple-700 hover:to-purple-500 text-white font-bold rounded-xl shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-300">
-				<span class="inline-flex items-center gap-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path data-i18n="pong.change_button" d="M8 7h12M8 12h12M8 17h12M3 7h.01M3 12h.01M3 17h.01"/></svg>Change Mode</span>
+				<span class="inline-flex items-center gap-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path data-i18n="pong.change_button" d="M8 7h12M8 12h12M8 17h12M3 7h.01M3 12h.01M3 17h.01"/></svg><span data-i18n="pong.change_button" >Change Mode</span></span>
 			</button>
 			<button  id="backBtn" class="px-8 py-3 bg-gradient-to-r from-gray-700 to-gray-500 hover:from-gray-800 hover:to-gray-600 text-white font-bold rounded-xl shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400">
-				<span data-i18n="pong.back_button" class="inline-flex items-center gap-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg>Back</span>
+				<span data-i18n="pong.back_button" class="inline-flex items-center gap-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg><span data-i18n="pong.back_button" >Back</span></span>
 			</button>
 			
 				</div>
@@ -305,6 +305,7 @@ export function createGamePage(gameMode?: GameMode, difficulty?: AIDifficulty): 
 			}
 		}
 	}
+	updateTranslations();
 }
 
 function showGameModeSelection(): void {
