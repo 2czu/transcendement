@@ -11,13 +11,7 @@ const websocketsRoutes: FastifyPluginAsync <{ db: Database }> = async (fastify: 
 	const { db } = opts;
 
 	fastify.get('/connexionStatus', { websocket: true }, (connection: any, req: FastifyRequest) => {
-	// 	console.log(connection);
-	// if (!connection || !connection.socket) {
-    //   console.error('WebSocket connection or socket is undefined');
-    //   return;
-    // }
 		try {
-			console.log("\n---------------\n")
 			let token = req.cookies.jwt;
 			if (!token) {
 				connection.close();
@@ -30,7 +24,6 @@ const websocketsRoutes: FastifyPluginAsync <{ db: Database }> = async (fastify: 
 				return ;
 			}
 			const userId = decoded.userId;
-			console.log(userId + "\n\n")
 			updateUserStatus(db, userId, true);
 			console.log(`${userId} is online`);
 			connection.on('close', () => {

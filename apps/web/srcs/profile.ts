@@ -1,5 +1,6 @@
 import { getLanguage, getTranslation } from "./lang";
 import { getUserId } from "./main";
+import { popup } from "./popup";
 
 export function createProfilePage(): void {
 	const app = document.getElementById('app');
@@ -357,10 +358,9 @@ export function createProfilePage(): void {
 	}
 
 	deleteAccountBtn.addEventListener('click', async () => {
-		if (!confirm('Are you sure you want to delete your account? This action is irreversible.')) {
+		const bool = await (popup('Are you sure you want to delete your account? This action is irreversible.'))
+		if (!bool)
 			return;
-		}
-
 		try {
 			const response = await fetch(`https://localhost:8443/users/${userId}`, {
 				method: 'DELETE',

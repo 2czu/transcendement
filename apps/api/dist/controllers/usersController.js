@@ -50,24 +50,17 @@ export const anonymiseUser = async (db, id) => {
 };
 export const updateUser = async (db, id, updates) => {
     const obj = Object.keys(updates);
-    console.log("1\n");
     if (obj.length == 0)
         return getUser(db, id);
-    console.log("2\n");
     if ('password_hash' in updates && updates.password_hash) {
         const saltRounds = 10;
         const hash = await bcrypt.hash(updates.password_hash, saltRounds);
         updates.password_hash = hash;
     }
-    console.log("3\n");
     const Datas = obj.map(obj => `${obj} = ?`).join(', ');
-    console.log("4\n");
     const values = obj.map(obj => updates[obj]);
-    console.log("5\n");
     values.push(id);
-    console.log("6\n");
     await db.run(`UPDATE users SET ${Datas} WHERE id = ?`, values);
-    console.log("7\n");
     return getUser(db, id);
 };
 export const deleteUser = async (db, id) => {

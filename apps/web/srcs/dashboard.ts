@@ -1,5 +1,6 @@
 import { getTranslation, getLanguage } from "./lang";
 import { getUserId } from "./main";
+import { popup } from "./popup";
 
 export function createDashboardPage(): void {
 	const app = document.getElementById('app');
@@ -291,14 +292,10 @@ export function createDashboardPage(): void {
 				const resR = await fetch(`https://localhost:8443/friendReq`, { credentials: "include" });
 				if (resR.ok) {
 					const list = await resR.json();
-					console.log(list);
 					if (Array.isArray(list)) {
 						for (const item of list) {
 							if (typeof item.user_id === 'number') ids.add(item.user_id);
 							if (typeof item.friend_id === 'number') ids.add(item.friend_id);
-							console.log(item.friend_id);
-							console.log(item.user_id);
-
 						}
 					}
 				}
@@ -332,9 +329,9 @@ export function createDashboardPage(): void {
 
 	// anonymise
 	anonymiseBtn.addEventListener('click', async () => {
-		if (!confirm('Confirmer l\'anonymisation de votre compte ? Cette action est irréversible.')) {
+		const bool = await (popup('Confirmer l\'anonymisation de votre compte ? Cette action est irréversible.'))
+		if (!bool)
 			return;
-		}
 		try {
 			let userId = await getUserId();
 			if (!userId) {
@@ -396,7 +393,7 @@ export function createDashboardPage(): void {
 			const url = `https://localhost:8443/checkUser/${encodeURIComponent(searchTerm)}`;
 
 			const response = await fetch(url, { method: 'GET', credentials: "include" });
-
+			console.log(response);
 			if (response.status === 200) {
 				const data = await response.json();
 				const id = data?.id ?? data?.user?.id ?? null;
@@ -406,6 +403,17 @@ export function createDashboardPage(): void {
 					return;
 				}
 				const username = await getUsernameById(id).catch(() => searchTerm);
+				let online: string;
+				try {
+					const res = await fetch(`https://localhost:8443/users/${id}`, {
+						method: 'GET',
+						credentials: "include"
+					});
+					if (res.ok) {
+						const data = await res.json();
+						online = data.user.isLogged;
+					}
+				} catch { }
 				const userObj = { id, username, isLogged: 'offline' };
 				displaySearchResults([userObj]);
 				return;
@@ -612,9 +620,6 @@ export function createDashboardPage(): void {
 				}),
 				credentials: "include"
 			});
-
-			console.log('API response:', response.status, response.statusText);
-
 			if (response.ok) {
 				showMessage(getTranslation("dashboard.send_friend", getLanguage()), 'success');
 				searchUser.value = '';

@@ -22,7 +22,7 @@ export class PongAI {
 	private difficulty: AIDifficulty;
 	private targetY: number = 0;
 	private lastUpdateTime: number = 0;
-	private updateInterval: number = 1000;
+	private updateInterval: number = 10;
 	private reactionDelay: number = 0;
 	private errorMargin: number = 0;
 	private moveSpeed: number = 0;
@@ -62,11 +62,11 @@ export class PongAI {
 				
 			case 'hard':
 				this.reactionDelay = 50;
-				this.errorMargin = 0.15;
-				this.moveSpeed = 0.15;
-				this.aggressiveness = 0.9;
-				this.maxSpeed = 0.15;
-				this.acceleration = 0.008;
+				this.errorMargin = -500;
+				this.moveSpeed = 1.0;
+				this.aggressiveness = 10000000;
+				this.maxSpeed = 0.50;
+				this.acceleration = 0.015;
 				break;
 		}
 	}
@@ -159,7 +159,7 @@ export class PongAI {
 	
 	public getMovementDirection(currentPaddleY: number): number {
 		const diff = this.targetY - currentPaddleY;
-		const threshold = 0.1; // Dead zone to prevent jittering
+		const threshold = 0.1;
 		
 		if (Math.abs(diff) < threshold) {
 			this.currentVelocity *= 0.9;
