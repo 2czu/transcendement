@@ -36,7 +36,7 @@ function escapeHtml(str: string): string {
 		.replace(/>/g, "&gt;")
 		.replace(/"/g, "&quot;")
 		.replace(/'/g, "&#039;");
-	}
+}
 
 let tournament: Tournament;
 let game3D: Pong3D;
@@ -45,6 +45,90 @@ let player1Name: string = "Player 1";
 let player2Name: string = "Player 2";
 let nextMatchScheduled: boolean = false;
 let tournamentOverlayShown: boolean = false;
+
+export function createTournamentSetupPage(): void {
+	const app = document.getElementById('app');
+	if (!app) return;
+
+	const defaultNames = [
+		'Player 1', 'Alfa', 'Bravo', 'Charlie', 'Delta', 'Echo', 'Foxtrot', 'Golf'
+	];
+
+	app.innerHTML = `
+    <div class="min-h-screen relative overflow-hidden bg-gradient-to-tr from-indigo-900 to-black text-white flex flex-col justify-center items-center">
+      <button id="homeBtn" aria-label="Home" title="Home" class="absolute z-30 top-4 left-4 bg-white/10 text-white border rounded p-2 shadow-sm hover:bg-white/20 transition-colors">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3 9.75L12 3l9 6.75V21a.75.75 0 01-.75.75H3.75A.75.75 0 013 21V9.75z" />
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9 21V12h6v9" />
+        </svg>
+      </button>
+      <div class="w-full max-w-2xl bg-white/10 backdrop-blur-sm rounded-3xl shadow-2xl p-8 flex flex-col items-center border border-indigo-700">
+        <h2 class="text-3xl font-bold mb-6">Setup: Tournament Players</h2>
+        <form id="tSetupForm" class="w-full grid grid-cols-1 gap-3">
+          ${defaultNames.map((n, i) => `
+          <div>
+            <label class="block text-sm mb-1">Player ${i + 1}</label>
+            <input id="tp${i + 1}" type="text" class="w-full px-3 py-2 rounded bg-white/10 border border-white/20 placeholder-white/50 focus:outline-none" placeholder="${n}" />
+          </div>`).join('')}
+          <p id="tSetupHint" class="text-xs text-white/60"></p>
+          <div class="mt-4 flex gap-3 justify-center">
+            <button type="submit" class="px-6 py-2 bg-indigo-600 rounded hover:bg-indigo-700">Start tournament</button>
+            <button type="button" id="tSetupBack" class="px-6 py-2 bg-gray-600 rounded hover:bg-gray-700">Back</button>
+          </div>
+        </form>
+      </div>
+    </div>`;
+
+	const homeBtn = document.getElementById('homeBtn') as HTMLButtonElement | null;
+	homeBtn?.addEventListener('click', () => {
+		window.history.pushState({}, '', '/');
+		window.dispatchEvent(new PopStateEvent('popstate'));
+	});
+
+	const hint = document.getElementById('tSetupHint') as HTMLParagraphElement | null;
+	getUserId().then((uid) => {
+		if (!uid) player1Name = 'Player 1';
+		return loadPlayerNames();
+	}).then(() => {
+		for (let i = 1; i <= 8; i++) {
+			const el = document.getElementById(`tp${i}`) as HTMLInputElement | null;
+			if (!el) continue;
+			if (i === 1) {
+				el.value = player1Name || defaultNames[0];
+				const isConnected = player1Name && player1Name !== 'Player 1';
+				if (isConnected) {
+					el.disabled = true;
+					el.classList.add('opacity-60');
+					if (hint) hint.textContent = 'Player 1 is your username and cannot be edited.';
+				} else {
+					el.disabled = false;
+					el.classList.remove('opacity-60');
+					el.value = defaultNames[0];
+				}
+			} else {
+				if (!el.value || el.value.trim() === '') el.value = defaultNames[i - 1];
+			}
+		}
+	});
+
+	const form = document.getElementById('tSetupForm') as HTMLFormElement | null;
+	form?.addEventListener('submit', (e) => {
+		e.preventDefault();
+		const names: string[] = [];
+		for (let i = 1; i <= 8; i++) {
+			const el = document.getElementById(`tp${i}`) as HTMLInputElement | null;
+			const v = (el?.value || '').trim();
+			names.push(v || defaultNames[i - 1]);
+		}
+		initializeTournamentWithNames(names);
+		createTournamentPage();
+	});
+
+	const back = document.getElementById('tSetupBack') as HTMLButtonElement | null;
+	back?.addEventListener('click', () => {
+		history.back();
+	});
+}
 
 export function createTournamentPage(): void {
 	const app = document.getElementById('app');
@@ -57,7 +141,7 @@ export function createTournamentPage(): void {
       <div class="absolute -left-32 -top-32 w-80 h-80 bg-indigo-800 rounded-full opacity-30 filter blur-3xl animate-pulse"></div>
       <div class="absolute right-0 top-20 w-72 h-72 bg-indigo-700 rounded-full opacity-20 filter blur-2xl animate-pulse"></div>
       <div class="absolute left-1/2 bottom-0 w-96 h-96 bg-indigo-900 rounded-full opacity-15 filter blur-3xl transform -translate-x-1/2 animate-pulse"></div>
-      <button id="homeBtn" aria-label="Home" title="Home" class="absolute top-4 left-4 bg-white/10 text-white border rounded p-2 shadow-sm hover:bg-white/20 transition-colors">
+      <button id="homeBtn" aria-label="Home" title="Home" class="absolute z-30 top-4 left-4 bg-white/10 text-white border rounded p-2 shadow-sm hover:bg-white/20 transition-colors">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
           <path stroke-linecap="round" stroke-linejoin="round" d="M3 9.75L12 3l9 6.75V21a.75.75 0 01-.75.75H3.75A.75.75 0 013 21V9.75z" />
           <path stroke-linecap="round" stroke-linejoin="round" d="M9 21V12h6v9" />
@@ -72,7 +156,7 @@ export function createTournamentPage(): void {
         </div>
         
         <div class="w-full flex flex-col gap-8 mb-8">
-          <div class="w-full bg-gray-900/50 rounded-2xl p-6 border border-gray-600">
+        <div class="w-full bg-gray-900/50 rounded-2xl p-6 border border-gray-600">
             <h2 data-i18n="tournament.brackets" class="text-2xl font-bold text-white mb-4 text-center">Brackets</h2>
             <div id="tournamentBracket" class="space-y-4">
             </div>
@@ -121,7 +205,7 @@ export function createTournamentPage(): void {
     </div>
   `;
 
-	initializeTournament();
+	if (!tournament) initializeTournament();
 	updateTournamentDisplay();
 	if (currentMatch) {
 		player1Name = currentMatch.player1.name;
@@ -131,13 +215,16 @@ export function createTournamentPage(): void {
 
 	loadPlayerNames().then(() => {
 		if (tournament?.players) {
-			const me = tournament.players.find(p => p.id === 1);
-			if (me) me.name = player1Name;
-			updateTournamentDisplay();
-			if (currentMatch) {
-				player1Name = currentMatch.player1.name;
-				player2Name = currentMatch.player2.name;
-				updatePlayerNames();
+			// ovveride le joueur 1 par le username connecte
+			if (player1Name && player1Name !== 'Player 1') {
+				const me = tournament.players.find(p => p.id === 1);
+				if (me) me.name = player1Name;
+				updateTournamentDisplay();
+				if (currentMatch) {
+					player1Name = currentMatch.player1.name;
+					player2Name = currentMatch.player2.name;
+					updatePlayerNames();
+				}
 			}
 		}
 	});
@@ -221,8 +308,6 @@ async function loadPlayerNames(): Promise<void> {
 	try {
 		const userId = await getUserId();
 		if (!userId) {
-			player1Name = "Player 1";
-			updatePlayerNames();
 			return;
 		}
 		try {
@@ -266,19 +351,14 @@ async function loadPlayerNames(): Promise<void> {
 				}
 			}
 		} catch { }
-
-		player1Name = "Player 1";
-		updatePlayerNames();
 	} catch {
-		player1Name = "Player 1";
-		updatePlayerNames();
 	}
 }
 
 function initializeTournament(): void {
 	const players: Player[] = [
 		{ id: 1, name: player1Name, isAI: false, wins: 0, losses: 0 },
-		{ id: 2, name: "Alpha", isAI: true, wins: 0, losses: 0 },
+		{ id: 2, name: "Alfa", isAI: true, wins: 0, losses: 0 },
 		{ id: 3, name: "Bravo", isAI: true, wins: 0, losses: 0 },
 		{ id: 4, name: "Charlie", isAI: true, wins: 0, losses: 0 },
 		{ id: 5, name: "Delta", isAI: true, wins: 0, losses: 0 },
@@ -291,6 +371,58 @@ function initializeTournament(): void {
 		const j = Math.floor(Math.random() * (i + 1));
 		[players[i], players[j]] = [players[j], players[i]];
 	}
+
+	const matches: Match[] = [];
+	for (let i = 0; i < players.length; i += 2) {
+		matches.push({
+			id: matches.length + 1,
+			player1: players[i],
+			player2: players[i + 1],
+			score1: 0,
+			score2: 0,
+			isFinished: false,
+			isCurrent: false
+		});
+	}
+
+	for (let round = 2; round <= 3; round++) {
+		const matchesInRound = Math.pow(2, 4 - round);
+		for (let i = 0; i < matchesInRound; i++) {
+			matches.push({
+				id: matches.length + 1,
+				player1: { id: 0, name: getTranslation("tournament.to_be_determined", getLanguage()), isAI: true, wins: 0, losses: 0 },
+				player2: { id: 0, name: getTranslation("tournament.to_be_determined", getLanguage()), isAI: true, wins: 0, losses: 0 },
+				score1: 0,
+				score2: 0,
+				isFinished: false,
+				isCurrent: false
+			});
+		}
+	}
+
+	tournament = {
+		players,
+		matches,
+		currentRound: 1,
+		isFinished: false
+	};
+
+	if (matches.length > 0) {
+		matches[0].isCurrent = true;
+		currentMatch = matches[0];
+	}
+}
+
+function initializeTournamentWithNames(names: string[]): void {
+	const players: Player[] = names.map((n, idx) => ({
+		id: idx + 1,
+		name: idx === 0 ? (n || player1Name || 'Player 1') : n,
+		isAI: idx !== 0,
+		wins: 0,
+		losses: 0
+	}));
+
+	player1Name = players[0].name;
 
 	const matches: Match[] = [];
 	for (let i = 0; i < players.length; i += 2) {
@@ -352,7 +484,7 @@ function updateTournamentDisplay(): void {
         </div>
         ${currentMatch.isFinished ? `
           <div class="mt-2 text-center">
-            <span class="text-green-400 font-bold">🏆 ${escapeHtml(currentMatch.winner ? currentMatch.winner.name: '')} wins!</span>
+            <span class="text-green-400 font-bold">🏆 ${escapeHtml(currentMatch.winner ? currentMatch.winner.name : '')} wins!</span>
           </div>
         ` : ''}
       </div>
@@ -569,6 +701,7 @@ function updatePlayerNames(): void {
 		player2NameElement.textContent = player2Name;
 	}
 }
+
 
 function updateScore(): void {
 	if (!game3D) return;

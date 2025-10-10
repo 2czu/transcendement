@@ -1,6 +1,6 @@
 export default {
 	home : {
-		singleplayer: "Solo",
+		singleplayer: "Singleplayer",
 		multiplayer: "Multiplayer",
 		tournament: "Tournament"
 	},

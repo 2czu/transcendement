@@ -29,7 +29,6 @@ export function createDashboardPage(): void {
 			</button>
       <div class="container mx-auto px-4 py-8">
         <div class="max-w-4xl mx-auto">
-
           <div class="bg-white/10 backdrop-blur-sm rounded-xl shadow-sm p-6 mb-6 mt-10">
             <div class="flex justify-between items-center">
               <div>

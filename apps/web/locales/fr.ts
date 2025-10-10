@@ -2,10 +2,10 @@ export default {
 	home : {
 		singleplayer: "Solo",
 		multiplayer: "Multijoueur",
-		tournament: "Tournois"
+		tournament: "Tournoi"
 	},
 	signIn : {
-		connexion: "Connection",
+		connexion: "Connexion",
 		email: "Email",
 		password: "Mot de passe",
 		signIn: "Se connecter",

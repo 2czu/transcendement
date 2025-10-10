@@ -18,6 +18,12 @@ export async function createStatsPage(): Promise<void> {
 			<div class="absolute -left-32 -top-32 w-80 h-80 bg-indigo-800 rounded-full opacity-30 filter blur-3xl animate-pulse"></div>
 			<div class="absolute right-0 top-20 w-72 h-72 bg-indigo-700 rounded-full opacity-20 filter blur-2xl animate-pulse"></div>
 			<div class="absolute left-1/2 bottom-0 w-96 h-96 bg-indigo-900 rounded-full opacity-15 filter blur-3xl transform -translate-x-1/2 animate-pulse"></div>
+            <button id="homeBtn" aria-label="Home" title="Home" class="absolute top-4 left-4 bg-white/10 border rounded p-2 shadow-sm hover:bg-white/20 transition-colors">
+				<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+					<path stroke-linecap="round" stroke-linejoin="round" d="M3 9.75L12 3l9 6.75V21a.75.75 0 01-.75.75H3.75A.75.75 0 013 21V9.75z" />
+					<path stroke-linecap="round" stroke-linejoin="round" d="M9 21V12h6v9" />
+				</svg>
+			</button>
           <div class="bg-white/10 backdrop-blur-sm rounded-xl shadow-sm p-6 mb-6 mt-10">
               <div class="flex items-center justify-between mb-6">
                   <h1 data-i18n="stats.my_stats" class="text-2xl font-bold text-white">Mes statistiques</h1>
@@ -107,4 +113,12 @@ export async function createStatsPage(): Promise<void> {
                 <p><strong>${getTranslation("stats.ratio", getLanguage())}</strong> ${(winRatio * 100).toFixed(1)}%</p>
         `;
     }
+
+    const homeBtn = document.getElementById('homeBtn') as HTMLButtonElement | null;
+	if (homeBtn) {
+		homeBtn.addEventListener('click', () => {
+			window.history.pushState({}, '', '/');
+			window.dispatchEvent(new PopStateEvent('popstate'));
+		});
+	}
 }

@@ -2,7 +2,8 @@ import { showGamePage, showDashboardPage, showTournamentPage, showStatsPage, han
 import { showSignInPage } from './router';
 import { getLanguage, setLanguage, updateTranslations } from './lang';
 import { getUserId } from './main';
-import { createGamePage } from './game';
+import { createGameSetupPage } from './game';
+import { createTournamentSetupPage } from './tournament';
 
 export function createHomePage(): void {
 	const app = document.getElementById('app');
@@ -156,7 +157,7 @@ export function createHomePage(): void {
 	if (multiBtn) {
 		multiBtn.addEventListener("click", () => {
 			window.history.pushState({}, '', '/game');
-			createGamePage('pvp');
+			createGameSetupPage('pvp');
 		});
 	}
 
@@ -166,7 +167,7 @@ export function createHomePage(): void {
 			window.history.pushState({}, '', '/game');
 			localStorage.setItem('gameMode', 'pve');
 			localStorage.setItem('difficulty', 'medium');
-			createGamePage('pve', 'medium');
+			createGameSetupPage('pve', 'medium');
 		});
 	}
 
@@ -174,7 +175,7 @@ export function createHomePage(): void {
 	if (tournamentBtn) {
 		tournamentBtn.addEventListener("click", () => {
 			window.history.pushState({}, '', '/tournament');
-			handleRoute();
+			createTournamentSetupPage();
 		});
 	}
 
@@ -182,14 +183,14 @@ export function createHomePage(): void {
 	if (userIcon) {
 		userIcon.addEventListener("click", () => {
 			getUserId().then(userId => {
-			if (!userId) {
-				window.history.pushState({}, '', '/signIn');
-				handleRoute();
-			}
-			else {
-				window.history.pushState({}, '', '/dashboard');
-				handleRoute();
-			}
+				if (!userId) {
+					window.history.pushState({}, '', '/signIn');
+					handleRoute();
+				}
+				else {
+					window.history.pushState({}, '', '/dashboard');
+					handleRoute();
+				}
 			});
 		});
 	}
@@ -206,7 +207,7 @@ export function createHomePage(): void {
 	}
 
 	async function fetchUser() {
-		let userId = await getUserId ();
+		let userId = await getUserId();
 		try {
 			const res = await fetch(`https://localhost:8443/users/${userId}`, {
 				method: 'GET',

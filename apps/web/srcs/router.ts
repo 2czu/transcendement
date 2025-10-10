@@ -1,6 +1,6 @@
 import { createHomePage } from './home';
-import { createGamePage } from './game';
-import { createTournamentPage } from './tournament';
+import { createGameSetupPage } from './game';
+import { createTournamentSetupPage } from './tournament';
 import { createSignInPage } from './signIn';
 import { createSignUpPage } from './signUp';
 import { createDashboardPage } from './dashboard';
@@ -20,11 +20,11 @@ export function showHomePage(): void {
 export function showGamePage(): void {
 	const mode = localStorage.getItem('gameMode') as GameMode | null;
 	const diff = localStorage.getItem('difficulty') as AIDifficulty | null;
-	createGamePage(mode ?? 'pvp', diff ?? 'medium');
+	createGameSetupPage(mode ?? 'pvp', diff ?? 'medium');
 }
 
 export function showTournamentPage(): void {
-	createTournamentPage();
+	createTournamentSetupPage();
 }
 
 export function showSignInPage(): void {
@@ -96,10 +96,9 @@ export function handleRoute(): void {
 	}
 	updateTranslations();
 	const socket = getSocket();
-	if (socket)
-	{
+	if (socket) {
 		if (socket.readyState === WebSocket.OPEN)
-			socket.send(JSON.stringify({ type: "user_online"}));
+			socket.send(JSON.stringify({ type: "user_online" }));
 		else {
 			socket.addEventListener('open', () => {
 				socket.send(JSON.stringify({ type: "user_online" }));

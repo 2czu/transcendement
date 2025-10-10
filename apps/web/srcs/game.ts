@@ -9,6 +9,121 @@ let player2Name: string = "Player 2";
 let selectedGameMode: GameMode = 'pvp';
 let selectedDifficulty: AIDifficulty = 'medium';
 
+async function loadPlayerNames(): Promise<void> {
+	try {
+		let userId = await getUserId();
+		try {
+			const res2 = await fetch(`https://localhost:8443/users/${userId}`, {
+				method: 'GET',
+				credentials: "include"
+			});
+			if (res2.ok) {
+				const data2 = await res2.json();
+				const name = data2?.user?.username || data2?.user?.name || null;
+				if (name) {
+					player1Name = name;
+					return;
+				}
+			}
+		} catch { }
+	} catch {
+
+	}
+}
+
+export function createGameSetupPage(gameMode?: GameMode, difficulty?: AIDifficulty): void {
+	if (gameMode) selectedGameMode = gameMode; else selectedGameMode = (localStorage.getItem('gameMode') as GameMode) || 'pvp';
+	if (difficulty) selectedDifficulty = difficulty; else selectedDifficulty = (localStorage.getItem('difficulty') as AIDifficulty) || 'medium';
+
+	// reset des noms
+	player1Name = 'Player 1';
+	player2Name = 'Player 2';
+
+	const app = document.getElementById('app');
+	if (!app) return;
+
+	app.innerHTML = `
+        <div class="min-h-screen relative overflow-hidden bg-gradient-to-tr from-indigo-900 to-black text-white flex flex-col justify-center items-center">
+            <button id="homeBtn" aria-label="Home" title="Home" class="absolute z-30 top-4 left-4 bg-white/10 border rounded p-2 shadow-sm hover:bg-white/20 transition-colors">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M3 9.75L12 3l9 6.75V21a.75.75 0 01-.75.75H3.75A.75.75 0 013 21V9.75z" />
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9 21V12h6v9" />
+                </svg>
+            </button>
+            <div class="w-full max-w-xl bg-white/10 backdrop-blur-sm rounded-3xl shadow-2xl p-8 flex flex-col items-center border border-indigo-700">
+                <h2 class="text-3xl font-bold mb-6">${selectedGameMode === 'pve' ? 'Setup: Player vs AI' : 'Setup: Player vs Player'}</h2>
+                <form id="gameSetupForm" class="w-full flex flex-col gap-3">
+                    <div>
+                        <label class="block text-sm mb-1">Player 1</label>
+                        <input id="gsP1" type="text" class="w-full px-3 py-2 rounded bg-white/10 border border-white/20 placeholder-white/50 focus:outline-none" placeholder="Player 1" />
+                    </div>
+                    ${selectedGameMode === 'pvp' ? `
+                    <div>
+                        <label class="block text-sm mb-1">Player 2</label>
+                        <input id="gsP2" type="text" class="w-full px-3 py-2 rounded bg-white/10 border border-white/20 placeholder-white/50 focus:outline-none" placeholder="Player 2" />
+                    </div>` : `
+                    <div>
+                        <label class="block text-sm mb-1">Opponent</label>
+                        <input id="gsP2" type="text" disabled class="opacity-60 w-full px-3 py-2 rounded bg-white/10 border border-white/20 placeholder-white/50 focus:outline-none" placeholder="AI" />
+                    </div>`}
+                    <p id="gsHint" class="text-xs text-white/60"></p>
+                    <div class="mt-4 flex gap-3 justify-center">
+                        <button type="submit" class="px-6 py-2 bg-indigo-600 rounded hover:bg-indigo-700">Start</button>
+                        <button type="button" id="gsBack" class="px-6 py-2 bg-gray-600 rounded hover:bg-gray-700">Back</button>
+                    </div>
+                </form>
+            </div>
+        </div>`;
+
+	const homeBtn = document.getElementById('homeBtn') as HTMLButtonElement | null;
+	homeBtn?.addEventListener('click', () => {
+		window.history.pushState({}, '', '/');
+		window.dispatchEvent(new PopStateEvent('popstate'));
+	});
+
+	const p1 = document.getElementById('gsP1') as HTMLInputElement | null;
+	const p2 = document.getElementById('gsP2') as HTMLInputElement | null;
+	const hint = document.getElementById('gsHint') as HTMLParagraphElement | null;
+	const back = document.getElementById('gsBack') as HTMLButtonElement | null;
+	back?.addEventListener('click', () => {
+		showGameModeSelection();
+		updateTranslations();
+	});
+
+	loadPlayerNames().then(() => {
+		if (p1) {
+			p1.value = player1Name || '';
+			const isConnected = player1Name && player1Name !== 'Player 1';
+			if (isConnected) {
+				p1.disabled = true;
+				p1.classList.add('opacity-60');
+				if (hint) hint.textContent = 'Player 1 is your username and cannot be edited.';
+				if (selectedGameMode === 'pve') {
+					createGamePage(selectedGameMode, selectedDifficulty);
+					return;
+				}
+			}
+		}
+
+		if (selectedGameMode === 'pvp' && p2 && (!p2.value || p2.value.trim() === '')) {
+			p2.value = 'Player 2';
+		}
+	});
+
+	const form = document.getElementById('gameSetupForm') as HTMLFormElement | null;
+	form?.addEventListener('submit', (e) => {
+		e.preventDefault();
+		const n1 = (p1?.value || '').trim();
+		const n2 = (p2?.value || '').trim();
+		if (n1) player1Name = n1;
+		if (selectedGameMode === 'pvp') {
+			player2Name = n2 || 'Player 2';
+		}
+		createGamePage(selectedGameMode, selectedDifficulty);
+	});
+	updateTranslations();
+}
+
 export function createGamePage(gameMode?: GameMode, difficulty?: AIDifficulty): void {
 	if (gameMode) {
 		selectedGameMode = gameMode;
@@ -32,7 +147,7 @@ export function createGamePage(gameMode?: GameMode, difficulty?: AIDifficulty): 
 			<div class="absolute -left-32 -top-32 w-80 h-80 bg-indigo-800 rounded-full opacity-30 filter blur-3xl animate-pulse"></div>
 			<div class="absolute right-0 top-20 w-72 h-72 bg-indigo-700 rounded-full opacity-20 filter blur-2xl animate-pulse"></div>
 			<div class="absolute left-1/2 bottom-0 w-96 h-96 bg-indigo-900 rounded-full opacity-15 filter blur-3xl transform -translate-x-1/2 animate-pulse"></div>
-			<button id="homeBtn" aria-label="Home" title="Home" class="absolute top-4 left-4 bg-white/10 border rounded p-2 shadow-sm hover:bg-white/20 transition-colors">
+			<button id="homeBtn" aria-label="Home" title="Home" class="absolute z-30 top-4 left-4 bg-white/10 border rounded p-2 shadow-sm hover:bg-white/20 transition-colors">
 				<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
 					<path stroke-linecap="round" stroke-linejoin="round" d="M3 9.75L12 3l9 6.75V21a.75.75 0 01-.75.75H3.75A.75.75 0 013 21V9.75z" />
 					<path stroke-linecap="round" stroke-linejoin="round" d="M9 21V12h6v9" />
@@ -43,7 +158,7 @@ export function createGamePage(gameMode?: GameMode, difficulty?: AIDifficulty): 
 		<div class="w-full max-w-3xl bg-gray-800/80 rounded-3xl shadow-2xl p-8 flex flex-col items-center border border-gray-700 backdrop-blur-md">
 			<div class="w-full text-center mb-8">
 			<h1 class="text-5xl font-extrabold mb-2 text-white drop-shadow-lg animate-pulse">
-				${selectedGameMode === 'pve' ? `${getTranslation("pong.solo" , getLanguage())}` : `${getTranslation("pong.multiplayer" , getLanguage())}`}
+				${selectedGameMode === 'pve' ? `${getTranslation("pong.solo", getLanguage())}` : `${getTranslation("pong.multiplayer", getLanguage())}`}
 			</h1>
 			<p class="text-lg text-gray-300 mt-2">
 				${selectedGameMode === 'pve' ? `🤖 Player vs AI (${getTranslation(`pong.${selectedDifficulty}`, getLanguage())})` : '👥 Player vs Player'}
@@ -91,13 +206,13 @@ export function createGamePage(gameMode?: GameMode, difficulty?: AIDifficulty): 
 			<!-- buttons -->
 			<div class="mt-10 flex flex-wrap gap-6 justify-center w-full">
 			<button id="playBtn" class="px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-400 hover:from-blue-700 hover:to-blue-500 text-white font-bold rounded-xl shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-300">
-				<span data-i18n="pong.play_button" class="inline-flex items-center gap-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M5 3v18l15-9L5 3z"/></svg><span data-i18n="pong.play_button" >Play</span></span>
+				<span data-i18n="pong.play_button" class="inline-flex items-center gap-2"><span data-i18n="pong.play_button" >Play</span></span>
 			</button>
 			<button id="replayBtn" class="px-8 py-3 bg-gradient-to-r from-green-600 to-green-400 hover:from-green-700 hover:to-green-500 text-white font-bold rounded-xl shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-green-300">
-				<span data-i18n="pong.replay_button" class="inline-flex items-center gap-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4v5h.582M20 20v-5h-.581M5.455 19.045A9 9 0 1 1 19.045 5.455"/></svg><span data-i18n="pong.replay_button" >Replay</span></span>
+				<span data-i18n="pong.replay_button" class="inline-flex items-center gap-2"><span data-i18n="pong.replay_button" >Replay</span></span>
 			</button>
 			<button id="changeModeBtn" class="px-8 py-3 bg-gradient-to-r from-purple-600 to-purple-400 hover:from-purple-700 hover:to-purple-500 text-white font-bold rounded-xl shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-purple-300">
-				<span class="inline-flex items-center gap-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path data-i18n="pong.change_button" d="M8 7h12M8 12h12M8 17h12M3 7h.01M3 12h.01M3 17h.01"/></svg><span data-i18n="pong.change_button" >Change Mode</span></span>
+				<span class="inline-flex items-center gap-2"><span data-i18n="pong.change_button" >Change Mode</span></span>
 			</button>
 			<button  id="backBtn" class="px-8 py-3 bg-gradient-to-r from-gray-700 to-gray-500 hover:from-gray-800 hover:to-gray-600 text-white font-bold rounded-xl shadow-lg transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-gray-400">
 				<span data-i18n="pong.back_button" class="inline-flex items-center gap-2"><svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 19l-7-7 7-7"/></svg><span data-i18n="pong.back_button" >Back</span></span>
@@ -277,28 +392,6 @@ export function createGamePage(gameMode?: GameMode, difficulty?: AIDifficulty): 
 		}
 	}
 
-	async function loadPlayerNames(): Promise<void> {
-		try {
-			let userId = await getUserId();
-			try {
-				const res2 = await fetch(`https://localhost:8443/users/${userId}`, {
-					method: 'GET',
-					credentials: "include"
-				});
-				if (res2.ok) {
-					const data2 = await res2.json();
-					const name = data2?.user?.username || data2?.user?.name || null;
-					if (name) {
-						player1Name = name;
-						return;
-					}
-				}
-			} catch {}
-		} catch {
-			player1Name = "Player 1";
-		}
-	}
-
 	function updatePlayerNames(): void {
 		const player1NameElement = document.getElementById('player1Name');
 		const player2NameElement = document.getElementById('player2Name');
@@ -319,6 +412,7 @@ export function createGamePage(gameMode?: GameMode, difficulty?: AIDifficulty): 
 			}
 		}
 	}
+
 	updateTranslations();
 }
 
@@ -410,7 +504,7 @@ function showGameModeSelection(): void {
 	if (pvpMode) {
 		pvpMode.addEventListener('click', () => {
 			selectedGameMode = 'pvp';
-			createGamePage('pvp');
+			createGameSetupPage('pvp');
 		});
 	}
 
@@ -432,7 +526,7 @@ function showGameModeSelection(): void {
 			selectedDifficulty = 'easy';
 			localStorage.setItem('gameMode', selectedGameMode);
 			localStorage.setItem('difficulty', selectedDifficulty);
-			createGamePage('pve', 'easy');
+			createGameSetupPage('pve', 'easy');
 		});
 	}
 
@@ -442,7 +536,7 @@ function showGameModeSelection(): void {
 			selectedDifficulty = 'medium';
 			localStorage.setItem('gameMode', selectedGameMode);
 			localStorage.setItem('difficulty', selectedDifficulty);
-			createGamePage('pve', 'medium');
+			createGameSetupPage('pve', 'medium');
 		});
 	}
 
@@ -452,7 +546,7 @@ function showGameModeSelection(): void {
 			selectedDifficulty = 'hard';
 			localStorage.setItem('gameMode', selectedGameMode);
 			localStorage.setItem('difficulty', selectedDifficulty);
-			createGamePage('pve', 'hard');
+			createGameSetupPage('pve', 'hard');
 		});
 	}
 
