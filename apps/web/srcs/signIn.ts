@@ -78,7 +78,6 @@ export function createSignInPage(): void {
 					mode: 'cors',
 					credentials: "include"
 				});
-
 			const data = await res.json();
 			if (!res.ok) {
 				message.textContent = data?.error || "Identifiants invalides";

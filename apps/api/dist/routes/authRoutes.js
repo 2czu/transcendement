@@ -25,6 +25,7 @@ const authRoutes = async (fastify, opts) => {
                     secure: true,
                     sameSite: 'none',
                     path: '/',
+                    expires: 60 * 60 * 24
                 })
                     .code(201).send({ message: 'Connected with google' });
             }

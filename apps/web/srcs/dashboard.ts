@@ -392,7 +392,6 @@ export function createDashboardPage(): void {
 			const url = `https://localhost:8443/checkUser/${encodeURIComponent(searchTerm)}`;
 
 			const response = await fetch(url, { method: 'GET', credentials: "include" });
-			console.log(response);
 			if (response.status === 200) {
 				const data = await response.json();
 				const id = data?.id ?? data?.user?.id ?? null;

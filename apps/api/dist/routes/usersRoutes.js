@@ -110,7 +110,6 @@ const userRoutes = async (fastify, opts) => {
                 200: {
                     type: 'object',
                     properties: {
-                        token: { type: 'string' },
                         require2FA: { type: 'string' },
                         userId: { type: 'integer' }
                     },
@@ -139,7 +138,12 @@ const userRoutes = async (fastify, opts) => {
                     reply.code(200).send({ require2FA: true, userId: res.userId });
                     return;
                 }
-                reply.code(200).send({ token: res.token });
+                reply.setCookie('jwt', res.token, {
+                    httpOnly: true,
+                    secure: true,
+                    sameSite: 'none',
+                    path: '/',
+                }).code(200).send({ require2FA: false, userId: res.userId });
             }
             catch (err) {
                 if (err.code === 'SQLITE_CONSTRAINT') {

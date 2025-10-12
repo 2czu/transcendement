@@ -29,6 +29,7 @@ const authRoutes: FastifyPluginAsync <{ db: Database }> = async (fastify: any, o
 					secure: true,
 					sameSite: 'none',
 					path: '/',
+					expires: 60 * 60 * 24
 				})
 				.code(201).send({ message: 'Connected with google'})
 			} catch (err: any) {

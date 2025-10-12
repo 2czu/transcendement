@@ -129,7 +129,6 @@ const userRoutes: FastifyPluginAsync <{ db: Database }> = async (fastify: Fastif
 				200: {
 					type: 'object',
 					properties: {
-						token: { type: 'string'},
 						require2FA: {type: 'string'},
 						userId: {type: 'integer'}
 					},
@@ -164,7 +163,13 @@ const userRoutes: FastifyPluginAsync <{ db: Database }> = async (fastify: Fastif
 					reply.code(200).send({ require2FA: true, userId: res.userId});
 					return ;
 				}
-				reply.code(200).send({ token: res.token });
+				reply.setCookie('jwt', res.token, {
+					httpOnly: true,
+					secure: true,
+					sameSite: 'none',
+					path: '/',
+					expires: 60 * 60 * 24
+				}).code(200).send({ require2FA: false, userId: res.userId});
 			} catch (err: any) {
 				if (err.code === 'SQLITE_CONSTRAINT') {
 						reply.code(409).send({ error: 'constraint problems' });
