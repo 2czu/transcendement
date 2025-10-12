@@ -51,30 +51,31 @@ export function createGameSetupPage(gameMode?: GameMode, difficulty?: AIDifficul
                 </svg>
             </button>
             <div class="w-full max-w-xl bg-white/10 backdrop-blur-sm rounded-3xl shadow-2xl p-8 flex flex-col items-center border border-indigo-700">
-                <h2 class="text-3xl font-bold mb-6">${selectedGameMode === 'pve' ? 'Setup: Player vs AI' : 'Setup: Player vs Player'}</h2>
+                <h2 class="text-3xl font-bold mb-6">${selectedGameMode === 'pve' ? `${getTranslation("pong.pvp", getLanguage())}` : `${getTranslation("pong.pve", getLanguage())}`}</h2>
                 <form id="gameSetupForm" class="w-full flex flex-col gap-3">
                     <div>
-                        <label class="block text-sm mb-1">Player 1</label>
-                        <input id="gsP1" type="text" class="w-full px-3 py-2 rounded bg-white/10 border border-white/20 placeholder-white/50 focus:outline-none" placeholder="Player 1" />
+                        <label class="block text-sm mb-1">${getTranslation("pong.player1", getLanguage())}</label>
+                        <input data-i18n-placeholder="pong.player1" id="gsP1" type="text" class="w-full px-3 py-2 rounded bg-white/10 border border-white/20 placeholder-white/50 focus:outline-none" placeholder="" />
                     </div>
                     ${selectedGameMode === 'pvp' ? `
                     <div>
-                        <label class="block text-sm mb-1">Player 2</label>
-                        <input id="gsP2" type="text" class="w-full px-3 py-2 rounded bg-white/10 border border-white/20 placeholder-white/50 focus:outline-none" placeholder="Player 2" />
+                        <label class="block text-sm mb-1">${getTranslation("pong.player2", getLanguage())}</label>
+                        <input data-i18n-placeholder="pong.player2" id="gsP2" type="text" class="w-full px-3 py-2 rounded bg-white/10 border border-white/20 placeholder-white/50 focus:outline-none" placeholder="" />
                     </div>` : `
                     <div>
-                        <label class="block text-sm mb-1">Opponent</label>
-                        <input id="gsP2" type="text" disabled class="opacity-60 w-full px-3 py-2 rounded bg-white/10 border border-white/20 placeholder-white/50 focus:outline-none" placeholder="AI" />
+                        <label class="block text-sm mb-1">${getTranslation("pong.opponent", getLanguage())}</label>
+                        <input data-i18n-placeholder="pong.IA" id="gsP2" type="text" disabled class="opacity-60 w-full px-3 py-2 rounded bg-white/10 border border-white/20 placeholder-white/50 focus:outline-none" placeholder="AI" />
                     </div>`}
                     <p id="gsHint" class="text-xs text-white/60"></p>
                     <div class="mt-4 flex gap-3 justify-center">
-                        <button type="submit" class="px-6 py-2 bg-indigo-600 rounded hover:bg-indigo-700">Start</button>
-                        <button type="button" id="gsBack" class="px-6 py-2 bg-gray-600 rounded hover:bg-gray-700">Back</button>
+                        <button type="submit" class="px-6 py-2 bg-indigo-600 rounded hover:bg-indigo-700">${getTranslation("pong.start_button", getLanguage())}</button>
+                        <button type="button" id="gsBack" class="px-6 py-2 bg-gray-600 rounded hover:bg-gray-700">${getTranslation("pong.back_button", getLanguage())}</button>
                     </div>
                 </form>
             </div>
         </div>`;
 
+	updateTranslations();
 	const homeBtn = document.getElementById('homeBtn') as HTMLButtonElement | null;
 	homeBtn?.addEventListener('click', () => {
 		window.history.pushState({}, '', '/');
@@ -91,12 +92,12 @@ export function createGameSetupPage(gameMode?: GameMode, difficulty?: AIDifficul
 
 	loadPlayerNames().then(() => {
 		if (p1) {
-			p1.value = player1Name || '';
+			p1.value = getTranslation("pong.player1", getLanguage()) || '';
 			const isConnected = player1Name && player1Name !== 'Player 1';
 			if (isConnected) {
 				p1.disabled = true;
 				p1.classList.add('opacity-60');
-				if (hint) hint.textContent = 'Player 1 is your username and cannot be edited.';
+				if (hint) hint.textContent = getTranslation("pong.edited", getLanguage());
 				if (selectedGameMode === 'pve') {
 					createGamePage(selectedGameMode, selectedDifficulty);
 					return;
@@ -105,7 +106,7 @@ export function createGameSetupPage(gameMode?: GameMode, difficulty?: AIDifficul
 		}
 
 		if (selectedGameMode === 'pvp' && p2 && (!p2.value || p2.value.trim() === '')) {
-			p2.value = 'Player 2';
+			p2.value = getTranslation("pong.player2", getLanguage());
 		}
 	});
 

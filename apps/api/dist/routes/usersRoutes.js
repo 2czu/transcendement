@@ -72,7 +72,8 @@ const userRoutes = async (fastify, opts) => {
                 reply.code(400).send({ error: "Invalid format" });
                 return;
             }
-            const dir = path.join(__dirname, "uploads");
+            const dir = path.join(process.cwd(), "/uploads");
+            console.log(dir);
             if (!fs.existsSync(dir)) {
                 fs.mkdirSync(dir);
             }

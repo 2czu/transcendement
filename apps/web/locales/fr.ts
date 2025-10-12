@@ -88,6 +88,7 @@ export default {
 	pong : {
 		play_button: "Jouer",
 		replay_button: "Rejouer",
+		start_button: "Lancer",
 		back_button: "Retour",
 		wins: "gagne!",
 		final_scores: "score final:",
@@ -107,11 +108,22 @@ export default {
 		pve_desc: "Challenge un robot Bip bop bip",
 		pve_control: "Controles: Joueur (W/S)",
 		select_diff: "Choisis une difficulte",
-		home_button: "Accueil"
-
+		home_button: "Accueil",
+		player1: "Joueur1",
+		player2: "Joueur2",
+		player3: "Joueur3",
+		player4: "Joueur4",
+		player5: "Joueur5",
+		player6: "Joueur6",
+		player7: "Joueur7",
+		player8: "Joueur8",
+		opponent: "Opposant",
+		IA: "AI",
+		edited: "Joueur 1 est ton pseudo et ne peux pas etre edite."
 	},
 	tournament: {
 		tournament : "Tournoi",
+		start : "Lancer",
 		desc_tournament: "Tournoi a 8 joueurs",
 		brackets: "Arbre du tournoi",
 		progress: "Aucun match en cours",
@@ -128,6 +140,16 @@ export default {
 		back_menu_button: "Retour au menu",
 		finished: "Tournois finis",
 		restart: "Le tournoi va se relancer automatiquement dans 2,5 secondes…",
+		player1: "Joueur1",
+		player2: "Joueur2",
+		player3: "Joueur3",
+		player4: "Joueur4",
+		player5: "Joueur5",
+		player6: "Joueur6",
+		player7: "Joueur7",
+		player8: "Joueur8",
+		edited: "Joueur 1 est ton pseudo et ne peux pas etre edite."
+
 	},
 	profile: {
 		my_profile: "Mon profil",

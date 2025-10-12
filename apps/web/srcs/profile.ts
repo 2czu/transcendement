@@ -88,13 +88,6 @@ export function createProfilePage(): void {
 								</div>
 							</div>
 						</div>
-            <div class="mb-6">
-              <label data-i18n="profile.connection_status" class="block text-sm font-medium text-white mb-2">Connection status</label>
-              <div class="flex items-center space-x-2">
-                <span id="statusIndicator" class="w-3 h-3 bg-green-500 rounded-full"></span>
-                <span id="statusText" class="text-sm text-white/80">Online</span>
-              </div>
-            </div>
           </div>
           <div class="bg-white/10 backdrop-blur-sm rounded-xl shadow-sm p-6 border border-red-200">
             <h2 data-i18n="profile.danger_zone" class="text-xl font-semibold text-red-400 mb-4">Danger zone</h2>

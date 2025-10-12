@@ -71,6 +71,8 @@ await app.register(cors, {
 
 await app.register(fastifyWebsocket);
 
+console.log(__dirname);
+
 await app.register(fastifyStatic, {
   root: path.join(__dirname, '../uploads'),
   prefix: '/uploads/',

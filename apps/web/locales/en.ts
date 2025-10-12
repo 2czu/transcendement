@@ -89,6 +89,7 @@ export default {
 		play_button: "Play",
 		replay_button: "Replay",
 		back_button: "Back",
+		start_button: "Start",
 		wins: "Wins",
 		final_scores: "Finale score:",
 		back_menu_button: "Back to menu",
@@ -107,10 +108,23 @@ export default {
 		pve_desc: "Challenge the IA, Bip bop bip",
 		pve_control: "Controls: Player (W/S)",
 		select_diff: "Select AI difficulty",
-		home_button: "Home"
+		home_button: "Home",
+		player1: "Player1",
+		player2: "Player2",
+		player3: "Player3",
+		player4: "Player4",
+		player5: "Player5",
+		player6: "Player6",
+		player7: "Player7",
+		player8: "Player8",
+		opponent: "Opponent",
+		IA: "AI",
+		edited: "Player 1 is your username and cannot be edited."
+
 	},
 	tournament: {
 		tournament : "Tournament",
+		start : "Start",
 		desc_tournament: "8-player tournament",
 		brackets: "Brackets",
 		progress: "No match in progress",
@@ -127,6 +141,16 @@ export default {
 		back_menu_button: "Back to menu",
 		finished: "Tournament finished",
 		restart: "Tournament will automatically restart in 2.5s…",
+		player1: "Player1",
+		player2: "Player2",
+		player3: "Player3",
+		player4: "Player4",
+		player5: "Player5",
+		player6: "Player6",
+		player7: "Player7",
+		player8: "Player8",
+		edited: "Player 1 is your username and cannot be edited."
+
 	},
 	profile: {
 		my_profile: "my profile",

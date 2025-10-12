@@ -63,17 +63,17 @@ export function createTournamentSetupPage(): void {
         </svg>
       </button>
       <div class="w-full max-w-2xl bg-white/10 backdrop-blur-sm rounded-3xl shadow-2xl p-8 flex flex-col items-center border border-indigo-700">
-        <h2 class="text-3xl font-bold mb-6">Setup: Tournament Players</h2>
+        <h2 class="text-3xl font-bold mb-6">${getTranslation("tournament.tournament", getLanguage())}</h2>
         <form id="tSetupForm" class="w-full grid grid-cols-1 gap-3">
           ${defaultNames.map((n, i) => `
           <div>
-            <label class="block text-sm mb-1">Player ${i + 1}</label>
+            <label class="block text-sm mb-1">${getTranslation(`tournament.player${i + 1}`, getLanguage())}</label>
             <input id="tp${i + 1}" type="text" class="w-full px-3 py-2 rounded bg-white/10 border border-white/20 placeholder-white/50 focus:outline-none" placeholder="${n}" />
           </div>`).join('')}
           <p id="tSetupHint" class="text-xs text-white/60"></p>
           <div class="mt-4 flex gap-3 justify-center">
-            <button type="submit" class="px-6 py-2 bg-indigo-600 rounded hover:bg-indigo-700">Start tournament</button>
-            <button type="button" id="tSetupBack" class="px-6 py-2 bg-gray-600 rounded hover:bg-gray-700">Back</button>
+            <button type="submit" class="px-6 py-2 bg-indigo-600 rounded hover:bg-indigo-700">${getTranslation("tournament.start", getLanguage())}</button>
+            <button type="button" id="tSetupBack" class="px-6 py-2 bg-gray-600 rounded hover:bg-gray-700">${getTranslation("tournament.back_button", getLanguage())}</button>
           </div>
         </form>
       </div>
@@ -99,7 +99,7 @@ export function createTournamentSetupPage(): void {
 				if (isConnected) {
 					el.disabled = true;
 					el.classList.add('opacity-60');
-					if (hint) hint.textContent = 'Player 1 is your username and cannot be edited.';
+					if (hint) hint.textContent = getTranslation("tournament.edited", getLanguage());
 				} else {
 					el.disabled = false;
 					el.classList.remove('opacity-60');
