@@ -27,15 +27,15 @@ export function createDashboardPage(): void {
 					<path stroke-linecap="round" stroke-linejoin="round" d="M9 21V12h6v9" />
 				</svg>
 			</button>
-      <div class="container mx-auto px-4 py-8">
+      <div class="container flex-col sm:flex-row mx-auto px-4 py-8">
         <div class="max-w-4xl mx-auto">
           <div class="bg-white/10 backdrop-blur-sm rounded-xl shadow-sm p-6 mb-6 mt-10">
-            <div class="flex justify-between items-center">
+            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
               <div>
                 <h1 data-i18n="dashboard.dashboard" class="text-3xl font-bold text-white drop-shadow">Dashboard</h1>
                 <p data-i18n="dashboard.welcome" class="text-white/80 mt-1">Welcome to your personal space</p>
               </div>
-								<div class="flex items-center space-x-4">
+				<div class="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-4">
 								<div id="userBox" class="flex items-center space-x-2">
 									<div id="userAvatar" class="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-full overflow-hidden flex items-center justify-center text-sm">👤</div>
 									<span data-i18n="dashboard.signed_in" id="usernameDisplay" class="text-sm text-white">Signed in as User</span>
