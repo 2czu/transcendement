@@ -86,8 +86,7 @@ export function createGameSetupPage(gameMode?: GameMode, difficulty?: AIDifficul
 	const hint = document.getElementById('gsHint') as HTMLParagraphElement | null;
 	const back = document.getElementById('gsBack') as HTMLButtonElement | null;
 	back?.addEventListener('click', () => {
-		showGameModeSelection();
-		updateTranslations();
+				history.back();
 	});
 
 	loadPlayerNames().then(() => {

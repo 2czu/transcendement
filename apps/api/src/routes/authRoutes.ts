@@ -17,7 +17,7 @@ const authRoutes: FastifyPluginAsync <{ db: Database }> = async (fastify: any, o
 				}
 			},
 			response: {
-				201: { message: 'string' },
+				200: { message: 'string' },
 				},
 			},
 		handler: async(request: any, reply: any) => {
@@ -29,9 +29,9 @@ const authRoutes: FastifyPluginAsync <{ db: Database }> = async (fastify: any, o
 					secure: true,
 					sameSite: 'none',
 					path: '/',
-					expires: 60 * 60 * 24
+					expires: new Date(Date.now() + 60 * 60 * 24 * 1000)
 				})
-				.code(201).send({ message: 'Connected with google'})
+				.code(200).send({ message: 'Connected with google'})
 			} catch (err: any) {
 				if (err.code === 'SQLITE_CONSTRAINT') {
 						reply.code(409).send({ error: 'Constraint problems' });

@@ -168,7 +168,7 @@ const userRoutes: FastifyPluginAsync <{ db: Database }> = async (fastify: Fastif
 					secure: true,
 					sameSite: 'none',
 					path: '/',
-					expires: 60 * 60 * 24
+					expires: new Date(Date.now() + 60 * 60 * 24 * 1000)
 				}).code(200).send({ require2FA: false, userId: res.userId});
 			} catch (err: any) {
 				if (err.code === 'SQLITE_CONSTRAINT') {

@@ -13,7 +13,7 @@ const authRoutes = async (fastify, opts) => {
                 }
             },
             response: {
-                201: { message: 'string' },
+                200: { message: 'string' },
             },
         },
         handler: async (request, reply) => {
@@ -25,9 +25,9 @@ const authRoutes = async (fastify, opts) => {
                     secure: true,
                     sameSite: 'none',
                     path: '/',
-                    expires: 60 * 60 * 24
+                    expires: new Date(Date.now() + 60 * 60 * 24 * 1000)
                 })
-                    .code(201).send({ message: 'Connected with google' });
+                    .code(200).send({ message: 'Connected with google' });
             }
             catch (err) {
                 if (err.code === 'SQLITE_CONSTRAINT') {

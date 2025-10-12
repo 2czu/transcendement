@@ -143,6 +143,7 @@ const userRoutes = async (fastify, opts) => {
                     secure: true,
                     sameSite: 'none',
                     path: '/',
+                    expires: new Date(Date.now() + 60 * 60 * 24 * 1000)
                 }).code(200).send({ require2FA: false, userId: res.userId });
             }
             catch (err) {
