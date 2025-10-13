@@ -1,5 +1,5 @@
 import { Pong3D } from './game3d';
-import { getLanguage, getTranslation } from './lang';
+import { getLanguage, getTranslation, updateTranslations } from './lang';
 import { getUserId } from './main';
 
 interface Player {
@@ -150,22 +150,22 @@ export function createTournamentPage(): void {
       <div class="mt-8 mb-8 w-full max-w-6xl bg-white/10 backdrop-blur-sm rounded-3xl shadow-2xl p-8 flex flex-col items-center border border-indigo-700">
         <div class="w-full text-center mb-8">
           <h1 data-i18n="tournament.tournament" class="text-5xl font-extrabold mb-2 text-white drop-shadow-lg animate-pulse">
-            TOURNAMENT
+            ${getTranslation(`tournament.tournament`, getLanguage())}
           </h1>
-          <p data-i18n="tournament.desc_tournament" class="text-lg text-white/80 mb-1 tracking-wide">8-player tournament</p>
+          <p data-i18n="tournament.desc_tournament" class="text-lg text-white/80 mb-1 tracking-wide">${getTranslation(`tournament.desc_tournament`, getLanguage())}</p>
         </div>
         
         <div class="w-full flex flex-col gap-8 mb-8">
         <div class="w-full bg-gray-900/50 rounded-2xl p-6 border border-gray-600">
-            <h2 data-i18n="tournament.brackets" class="text-2xl font-bold text-white mb-4 text-center">Brackets</h2>
+            <h2 data-i18n="tournament.brackets" class="text-2xl font-bold text-white mb-4 text-center">${getTranslation(`tournament.brackets`, getLanguage())}</h2>
             <div id="tournamentBracket" class="space-y-4">
             </div>
           </div>
           
           <div class="w-full bg-gray-900/50 rounded-2xl p-6 border border-gray-600">
-            <h2 data-i18n="tournament.current_match" class="text-2xl font-bold text-white mb-4 text-center">🎮 Current Match</h2>
+            <h2 data-i18n="tournament.current_match" class="text-2xl font-bold text-white mb-4 text-center">🎮 ${getTranslation(`tournament.current_match`, getLanguage())}</h2>
             <div id="currentMatch" class="text-center">
-              <p data-i18n="tournament.progress" class="text-gray-400">No match in progress</p>
+              <p data-i18n="tournament.progress" class="text-gray-400">${getTranslation(`tournament.progress`, getLanguage())}</p>
             </div>
             
             <div class="mt-6 relative bg-black border-4 rounded-2xl shadow-lg overflow-hidden">
@@ -175,12 +175,12 @@ export function createTournamentPage(): void {
             
             <div class="mt-4 flex justify-center items-center gap-6">
               <div class="flex flex-col items-center">
-                <span id="player1Name" class="text-lg font-bold text-blue-400">Player 1</span>
+                <span id="player1Name" class="text-lg font-bold text-blue-400">${getTranslation(`tournament.player1`, getLanguage())}</span>
                 <span id="score1" class="text-2xl font-extrabold text-blue-200 bg-blue-900/60 px-3 py-1 rounded-lg">0</span>
               </div>
               <span class="text-xl font-bold text-gray-400">|</span>
               <div class="flex flex-col items-center">
-                <span id="player2Name" class="text-lg font-bold text-red-400">Player 2</span>
+                <span id="player2Name" class="text-lg font-bold text-red-400">${getTranslation(`tournament.player2`, getLanguage())}</span>
                 <span id="score2" class="text-2xl font-extrabold text-red-200 bg-red-900/60 px-3 py-1 rounded-lg">0</span>
               </div>
             </div>
@@ -204,6 +204,7 @@ export function createTournamentPage(): void {
       </div>
     </div>
   `;
+	updateTranslations();
 
 	if (!tournament) initializeTournament();
 	updateTournamentDisplay();
@@ -476,7 +477,7 @@ function updateTournamentDisplay(): void {
 	if (currentMatch) {
 		currentMatchElement.innerHTML = `
       <div class="bg-gray-800 rounded-lg p-4">
-        <h3 class="text-lg font-bold text-white mb-2">Match #${currentMatch.id}</h3>
+        <h3 class="text-lg font-bold text-white mb-2">${getTranslation(`tournament.match`, getLanguage())}${currentMatch.id}</h3>
         <div class="flex justify-between items-center">
           <div class="text-blue-400 font-semibold">${escapeHtml(currentMatch.player1.name)}</div>
           <div class="text-gray-400">vs</div>
@@ -520,6 +521,7 @@ function generateBracketHTML(): string {
 	const finalMatch = tournament.matches[6];
 	html += generateMatchHTML(finalMatch, 6);
 	html += '</div>';
+	updateTranslations();
 
 	return html;
 }
@@ -548,6 +550,7 @@ function generateMatchHTML(match: Match, index: number): string {
       </div>
     </div>
   `;
+  
 }
 
 function startCurrentMatch(): void {
@@ -738,8 +741,8 @@ function showTournamentWinnerOverlay(name: string): void {
 		<div class="mb-6">
 			<h2 data-i18n="tournament.finished" class="text-3xl font-bold text-white mb-2">🏆 Tournament finished</h2>
 			<div class="text-6xl mb-4">🥇</div>
-			<h3 class="text-2xl font-bold text-yellow-400 mb-2">${escapeHtml(name)} won the tournament!</h3>
-			<p data-i18n="tournament.restart" class="text-sm text-gray-400">Tournament will automatically restart in 2.5s…</p>
+			<h3 class="text-2xl font-bold text-yellow-400 mb-2">${escapeHtml(name)} ${getTranslation(`tournament.win`, getLanguage())}</h3>
+			<p data-i18n="tournament.restart" class="text-sm text-gray-400">${getTranslation(`tournament.restart`, getLanguage())}</p>
 		</div>
 		<div class="flex flex-col gap-3">
 			<button data-i18n="tournament.new_tournament_button" id="tournamentRestartBtn" class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">
@@ -751,6 +754,7 @@ function showTournamentWinnerOverlay(name: string): void {
 		</div>
 		</div>
 	`;
+	updateTranslations();
 	document.body.appendChild(overlay);
 
 	const restartBtn = overlay.querySelector('#tournamentRestartBtn');

@@ -1,5 +1,5 @@
 import { getUserId } from "./main";
-import { getTranslation, getLanguage } from "./lang";
+import { getTranslation, getLanguage, updateTranslations } from "./lang";
 
 export async function createMatchesPage(): Promise<void> {
 	const app = document.getElementById('app');
@@ -35,6 +35,7 @@ export async function createMatchesPage(): Promise<void> {
 	</div>
 	`;
 
+	updateTranslations();
 	const backBtn = document.getElementById('backBtn');
 	backBtn?.addEventListener('click', () => {
 		window.history.pushState({}, '', '/dashboard');

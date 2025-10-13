@@ -161,7 +161,7 @@ export function createGamePage(gameMode?: GameMode, difficulty?: AIDifficulty): 
 				${selectedGameMode === 'pve' ? `${getTranslation("pong.solo", getLanguage())}` : `${getTranslation("pong.multiplayer", getLanguage())}`}
 			</h1>
 			<p class="text-lg text-gray-300 mt-2">
-				${selectedGameMode === 'pve' ? `🤖 Player vs AI (${getTranslation(`pong.${selectedDifficulty}`, getLanguage())})` : '👥 Player vs Player'}
+				${selectedGameMode === 'pve' ? `🤖 ${getTranslation(`pong.pve`, getLanguage())} (${getTranslation(`pong.${selectedDifficulty}`, getLanguage())})` : `👥 ${getTranslation(`pong.pvp`, getLanguage())}`}
 			</p>
 			</div>
 			

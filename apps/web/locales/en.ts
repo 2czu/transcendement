@@ -132,10 +132,10 @@ export default {
 		semi_finals : "Semifinals",
 		final: "Final",
 		to_be_determined: "To be determined",
-		current_math: "Current Match",
+		current_match: "Current Match",
 		match: "Match #",
 		startmatch_button: "Start match",
-		nextmath_button: "Next match",
+		nextmatch_button: "Next match",
 		new_tournament_button: "New tournament",
 		back_button: "Back",
 		back_menu_button: "Back to menu",
@@ -149,7 +149,9 @@ export default {
 		player6: "Player6",
 		player7: "Player7",
 		player8: "Player8",
-		edited: "Player 1 is your username and cannot be edited."
+		edited: "Player 1 is your username and cannot be edited.",
+		win: "win the tournament",
+
 
 	},
 	profile: {
