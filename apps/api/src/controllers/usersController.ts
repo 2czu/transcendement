@@ -55,7 +55,7 @@ export const anonymiseUser = async (db: Database, id: number) => {
 	const username = `username${user.id}`
 	const email = `email${user.id}@anonyme.com`
 	const avatar = 'placeholder.jpg';
-	await db.run('UPDATE users SET username = ?, email = ?, avatar_url = ? WHERE id = ?', [username, email, avatar, id]);
+	await db.run('UPDATE users SET username = ?, email = ?, avatar_url = ?, is_2fa = false WHERE id = ?', [username, email, avatar, id]);
 	return { username, email };
 };
 

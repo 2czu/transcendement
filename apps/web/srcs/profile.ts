@@ -99,26 +99,7 @@ export function createProfilePage(): void {
               </p>
               <button data-i18n="profile.delete_button" id="deleteAccountBtn" class="bg-red-600 hover:bg-red-700 text-white px-6 py-2 rounded-lg transition-colors">
                 Delete my account
-              </button> <div class="bg-white/10 backdrop-blur-sm rounded-xl shadow-sm p-6 mb-6 mt-10">
-            <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-              <div>
-                <h1 data-i18n="dashboard.dashboard" class="text-3xl font-bold text-white drop-shadow">Dashboard</h1>
-                <p data-i18n="dashboard.welcome" class="text-white/80 mt-1">Welcome to your personal space</p>
-              </div>
-								<div class="flex items-center space-x-4">
-								<div id="userBox" class="flex items-center space-x-2">
-									<div id="userAvatar" class="w-8 h-8 bg-indigo-100 text-indigo-600 rounded-full overflow-hidden flex items-center justify-center text-sm">👤</div>
-									<span data-i18n="dashboard.signed_in" id="usernameDisplay" class="text-sm text-white">Signed in as User</span>
-								</div>
-                <button data-i18n="dashboard.anonymise" id="anonymiseBtn" class="bg-slate-900 hover:bg-slate-700 text-white px-4 py-2 rounded-lg transition-colors">
-                  Anonymise
-                </button>
-                <button data-i18n="dashboard.log_out" id="logoutBtn" class="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-lg transition-colors">
-                  Log out
-                </button>
-              </div>
-            </div>
-            </div>
+              </button>
             <div>
               <h3 data-i18n="profile.log_out" class="text-lg font-medium text-white mb-2">Log out</h3>
               <p data-i18n="profile.desc_log_out" class="text-sm text-white/80 mb-4">
